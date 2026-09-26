@@ -5,8 +5,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 // Auth
 import Login from './features/auth/pages/Login.jsx';
-import Count from './features/auth/pages/Count.jsx';
-import CountAdmin from './features/auth/pages/CountAdmin.jsx';
+import Count from './features/count/pages/Count.jsx';
+import CountAdmin from './features/count/pages/CountAdmin.jsx';
 import ChangePassword from './features/auth/pages/ChangePassword.jsx';
 
 import VehicleInventory from './features/admin/VehicleInventory/pages/VehicleInventory.jsx';

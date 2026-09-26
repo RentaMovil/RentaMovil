@@ -6,7 +6,7 @@ import FooterAdmin from "../../../../shared/components/layout/FooterAdmin";
 import "./InsuranceTypes.css";
 import { useInsurance } from "../hooks/useInsurance";
 import { useDeleteInsurance } from "../hooks/useDeleteInsurance";
-import { useUpdateService } from "../hooks/useUpdateInsurance";
+import { useUpdateInsurance } from "../hooks/useUpdateInsurance";
 import { useCreateInsurance } from "../hooks/useCreateInsurance";
 
 export default function InsuranceTypes() {
@@ -15,7 +15,7 @@ export default function InsuranceTypes() {
 
     const { insurance: types, isLoading, error, refetch } = useInsurance();
     const { createInsurance, isLoading: isCreating } = useCreateInsurance();
-    const { updateService, isLoading: isUpdating } = useUpdateService();
+    const { updateService, isLoading: isUpdating } = useUpdateInsurance();
     const { deleteInsurance, isLoading: isDeleting } = useDeleteInsurance();
 
     const [editingItem, setEditingItem] = useState(undefined);

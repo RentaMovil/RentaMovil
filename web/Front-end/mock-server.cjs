@@ -198,6 +198,26 @@ server.patch('/auth/me/password', requireAuth, (req, res) => {
     res.json({ message: 'Contraseña actualizada' });
 });
 
+
 server.use(router); // /vehicles, /maintenances siguen igual
 
 server.listen(3001, () => console.log('Mock API con JWT en http://localhost:3001'));
+
+// PATCH /auth/me — actualizar perfil del usuario logueado
+server.patch('/auth/me', requireAuth, (req, res) => {
+    const { first_name, last_name, phone, username, photo } = req.body;
+
+    db.get('users').find({ id: req.auth.sub })
+        .assign({ first_name, last_name, phone, username, photo })
+        .write();
+
+    const updated = db.get('users').find({ id: req.auth.sub }).value();
+    res.json(toPublicUser(updated));
+});
+
+// DELETE /auth/me — cierre de cuenta (para cuando actives el modal de borrado)
+server.delete('/auth/me', requireAuth, (req, res) => {
+    db.get('sessions').remove({ user_id: req.auth.sub }).write();
+    db.get('users').remove({ id: req.auth.sub }).write();
+    res.status(204).end();
+});

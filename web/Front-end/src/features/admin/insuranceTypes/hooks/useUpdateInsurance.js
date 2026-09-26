@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { insuranceService } from "../services/insuranceService";
 
-    export function useUpdateService() {
+    export function useUpdateInsurance() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    async function updateService(id, formData) {
+    async function updateInsurance(id, formData) {
         setIsLoading(true);
         setError(null);
         try {
@@ -18,6 +18,6 @@ import { insuranceService } from "../services/insuranceService";
         }
     }
 
-    return { updateService, isLoading, error };
+    return { updateInsurance, isLoading, error };
 
 }
