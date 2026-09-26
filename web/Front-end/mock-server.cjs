@@ -221,3 +221,19 @@ server.delete('/auth/me', requireAuth, (req, res) => {
     db.get('users').remove({ id: req.auth.sub }).write();
     res.status(204).end();
 });
+
+// GET /users — lista todos los usuarios (requiere sesión)
+server.get('/users', requireAuth, (req, res) => {
+    const users = db.get('users').value().map(toPublicUser);
+    res.json(users);
+});
+
+// PATCH /users/:id/role — cambia el rol de un usuario (requiere sesión)
+server.patch('/users/:id/role', requireAuth, (req, res) => {
+    const { role } = req.body;
+    const user = db.get('users').find({ id: req.params.id }).value();
+    if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+
+    db.get('users').find({ id: req.params.id }).assign({ role }).write();
+    res.json(toPublicUser(db.get('users').find({ id: req.params.id }).value()));
+});
