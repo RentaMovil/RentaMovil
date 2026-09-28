@@ -150,7 +150,11 @@ function Home() {
 
         {!isMobile && (
           <aside className="sidebar-container">
-            <h3 className="filters-title">Filtros</h3>
+
+            <h3 className="filters-title">
+              <span className="catalog-sidebar-dot" aria-hidden="true" />
+              Filtros
+            </h3>
 
             <FiltrerBrand cars={cars} onFilter={setBrandFilter} />
             <FiltrerPrice cars={cars} onFilter={setPriceFilter} />

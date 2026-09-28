@@ -9,6 +9,7 @@ import { calculateDays } from "../utils/calculateDays";
 import { calculateInvoiceTotal } from "../utils/calculateIvoiceTotal";
 
 import { buildReservationRequest } from "../../booking/utils/buildReservationRequest";
+import { isValidTermsAcceptance } from "../../booking/data/rentalTerms";
 import { createReservation } from "../../booking/services/reservationServices";
 import { createPayment } from "../services/PaymentServices";
 
@@ -26,8 +27,8 @@ export function usePaymentForm() {
      */
     const days = useMemo(() => {
         if (
-            !reservation?.pickupDate ||
-            !reservation?.returnDate
+            !reservation.pickupDate ||
+            !reservation.returnDate
         ) {
             return 0;
         }
@@ -37,8 +38,8 @@ export function usePaymentForm() {
             reservation.returnDate
         );
     }, [
-        reservation?.pickupDate,
-        reservation?.returnDate,
+        reservation.pickupDate,
+        reservation.returnDate,
     ]);
 
     /**
@@ -47,10 +48,10 @@ export function usePaymentForm() {
     const selectedInsurance = useMemo(() => {
         return insurance.find(
             (item) =>
-                item.id === reservation?.insuranceId
+                item.id === reservation.insuranceId
         );
     }, [
-        reservation?.insuranceId,
+        reservation.insuranceId,
     ]);
 
     /**
@@ -66,7 +67,7 @@ export function usePaymentForm() {
      * vehículo + seguro
      */
     const invoice = useMemo(() => {
-        const vehicle = reservation?.vehicle;
+        const vehicle = reservation.vehicle;
 
         if (!vehicle || days <= 0) {
             return {
@@ -83,7 +84,7 @@ export function usePaymentForm() {
         );
     }, [
         days,
-        reservation?.vehicle,
+        reservation.vehicle,
         selectedInsurance,
     ]);
 
@@ -93,28 +94,36 @@ export function usePaymentForm() {
         totalAmount,
     } = invoice;
 
+    const hasValidTermsAcceptance = useMemo(() => {
+        return isValidTermsAcceptance(
+            reservation.termsAcceptance
+        );
+    }, [reservation.termsAcceptance]);
+
     /**
      * Verifica que la información necesaria
      * para crear la Reservation esté completa.
      */
     const canCreateReservation = useMemo(() => {
         return Boolean(
-            reservation?.vehicle?.vehicleId &&
-            reservation?.pickupBranch?.id &&
-            reservation?.returnBranch?.id &&
-            reservation?.pickupDate &&
-            reservation?.returnDate &&
+            reservation.vehicle?.vehicleId &&
+            reservation.pickupBranch?.id &&
+            reservation.returnBranch?.id &&
+            reservation.pickupDate &&
+            reservation.returnDate &&
             days > 0 &&
-            totalAmount > 0
+            totalAmount > 0 &&
+            hasValidTermsAcceptance
         );
     }, [
-        reservation?.vehicle?.vehicleId,
-        reservation?.pickupBranch?.id,
-        reservation?.returnBranch?.id,
-        reservation?.pickupDate,
-        reservation?.returnDate,
+        reservation.vehicle?.vehicleId,
+        reservation.pickupBranch?.id,
+        reservation.returnBranch?.id,
+        reservation.pickupDate,
+        reservation.returnDate,
         days,
         totalAmount,
+        hasValidTermsAcceptance,
     ]);
 
     /**

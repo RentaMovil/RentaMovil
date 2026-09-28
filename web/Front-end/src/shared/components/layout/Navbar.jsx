@@ -42,7 +42,7 @@ import { useTranslation } from "react-i18next";
             </Link>
 
             <Link
-                to="/Count"
+                to="/account"
                 className="profile-link"
                 onClick={() => setOpen(false)}
             >

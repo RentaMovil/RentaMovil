@@ -48,6 +48,14 @@
   align-self: start;
 }
 
+.catalog-sidebar-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  flex-shrink: 0;
+}
+
 
 .sidebar-sticky-content {
   position: sticky;
@@ -65,13 +73,14 @@
 
 
 .filters-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin: 0;
-
-  font-size: 24px;
+  font-family: var(--heading);
+  font-size: 18px;
   font-weight: 700;
-
-  color: var(--text);
-
+  color: var(--text-h);
   line-height: 1.2;
 }
 

@@ -40,12 +40,6 @@
             <div className="reservation-vehicle-image-wrap">
             <img className="reservation-vehicle-image" src={img} alt={name} />
             </div>
-            <div className="reservation-vehicle-badges">
-            <span className="reservation-badge-score">✈️</span>
-            {branch?.name && (
-                <span className="reservation-badge-brand">{branch.name}</span>
-            )}
-            </div>
         </div>
 
         {/* COLUMNA DERECHA: Información, Features e Inclusiones */}
@@ -71,28 +65,13 @@
             ))}
             </div>
 
-            <div className="reservation-vehicle-divider" />
-
-            {/* Sección de Inclusiones */}
-            <div className="reservation-vehicle-includes">
-            <h3>Esta reserva incluye</h3>
-
-            <ul>
-                {beneficios.length > 0 ? (
-                beneficios.map((beneficio) => (
-                    <li key={beneficio}>
-                    <FiCheck className="check-icon" />
-                    <span>{beneficio}</span>
-                    </li>
-                ))
-                ) : (
-                <li>
-                    <FiCheck className="check-icon" />
-                    <span>Protección estándar incluida</span>
-                </li>
-                )}
-            </ul>
+            <div className="reservation-vehicle-badges">
+            <span className="reservation-badge-score">✈️</span>
+            {branch?.name && (
+                <span className="reservation-badge-brand">{branch.name}</span>
+            )}
             </div>
+
         </div>
 
         </div>

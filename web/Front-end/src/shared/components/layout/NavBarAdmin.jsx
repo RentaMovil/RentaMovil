@@ -51,7 +51,7 @@ function NavbarAdmin() {
               {t("navbar.linkPanelAdmin")}
             </span>
 
-            <Link to="/CountAdmin" className="navbar-admin-profile" onClick={closeAll}>
+            <Link to="/account/admin" className="navbar-admin-profile" onClick={closeAll}>
               <MdPerson />
             </Link>
           </nav>

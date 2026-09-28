@@ -28,6 +28,7 @@ import {
  * - returnDate    -> Reservation.endDate
  * - pickupBranch  -> Reservation.pickupBranchId (FK Branch)
  * - returnBranch  -> Reservation.returnBranchId (FK Branch; can differ from pickupBranch, no extra cost)
+ * - termsAcceptance -> evidence of the version accepted before payment
  *
  * @typedef {Object} ReservationDraft
  * @property {Vehicle|Object|null} vehicle
@@ -36,6 +37,7 @@ import {
  * @property {Date|null} returnDate
  * @property {Branch|Object|null} pickupBranch
  * @property {Branch|Object|null} returnBranch
+ * @property {{accepted: boolean, version: string, acceptedAt: string}|null} termsAcceptance
  */
 
 const ReservationContext =
@@ -58,6 +60,7 @@ export function ReservationProvider({
         returnDate: null,
         pickupBranch: null,
         returnBranch: null,
+        termsAcceptance: null,
 
     });
 
@@ -97,6 +100,7 @@ export function ReservationProvider({
             returnDate: null,
             pickupBranch: null,
             returnBranch: null,
+            termsAcceptance: null,
 
         });
 

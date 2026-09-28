@@ -106,7 +106,10 @@ function Home() {
           {!isMobile && (
             <aside className="catalog-sidebar">
               <div className="sidebar-sticky-content">
-                <h3 className="filters-title">Flota Disponible</h3>
+                <h3 className="filters-title">
+                  <span className="catalog-sidebar-dot" aria-hidden="true" />
+                  Flota Disponible
+                </h3>
                 <p className="filters-subtitle">Encuentra el vehículo perfecto para tu viaje.</p>
 
                 <FiltrerBrand cars={carsFiltered} onFilter={setBrandFilter} />

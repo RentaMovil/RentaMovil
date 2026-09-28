@@ -5,8 +5,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 // Auth
 import Login from './features/auth/pages/Login.jsx';
-import Count from './features/count/pages/Count.jsx';
-import CountAdmin from './features/count/pages/CountAdmin.jsx';
+import Account from './features/count/pages/Account.jsx';
+import AccountAdmin from './features/count/pages/AccountAdmin.jsx';
+
 import ChangePassword from './features/auth/pages/ChangePassword.jsx';
 
 import VehicleInventory from './features/admin/VehicleInventory/pages/VehicleInventory.jsx';
@@ -100,8 +101,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<RegisterForm />} />
-        <Route path="/count" element={<Count theme={theme} setTheme={setTheme} />} />
-        <Route path="/CountAdmin" element={<CountAdmin theme={theme} setTheme={setTheme} />} />
+        <Route path="/account" element={<Account theme={theme} setTheme={setTheme} />} />
+        <Route path="/account/admin" element={<AccountAdmin theme={theme} setTheme={setTheme} />} />
         <Route path="/ChangePassword" element={<ChangePassword />} />
         <Route path="/home" element={<Home />} />
         <Route path="/homeS" element={<HomeS />} />

@@ -1,121 +1,378 @@
+/* ============================================================
+   Modal de detalle de reserva (historial).
+
+   Reutiliza a propósito los mismos tokens y clases globales que
+   ya usan HistorialReservation.css (.reserva-card, .reserva-id,
+   .reserva-badge/.estado-*, .btn/.btn-primario) y el modal base
+   (.modal-overlay/.modal-content) de esa misma página, en vez de
+   redefinir estilos paralelos que podrían desalinearse con el
+   resto del historial de reservas.
+   ============================================================ */
+
+/* Coincide 1:1 con .modal-overlay de HistorialReservation.css
+   (mismo z-index y color) para que ambos modales de esta página
+   se vean y comporten igual. */
 .modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
+    inset: 0;
     display: flex;
-    justify-content: center;
     align-items: center;
-    z-index: 1000;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+    background: rgba(75, 75, 75, 0.5);
+    z-index: 3000;
     padding: 20px;
+    box-sizing: border-box;
+    overflow: scroll;
 }
 
+/* .modal-content ya define fondo/color/borde/radio/padding base
+   (ver HistorialReservation.css). Acá solo se ajusta el ancho y
+   se neutraliza el padding/gap del modal genérico porque este
+   modal maneja su propio spacing por sección (header/body/footer). */
 .modal-content.modal-detalles {
-    background-color: var(--card-bg);
+    padding: 0;
+    gap: 0;
     width: 100%;
-    max-width: 500px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-    display: flex;
-    flex-direction: column;
+    max-width: 460px;
+    border-radius: 16px;
     overflow: hidden;
-    animation: modalFadeIn 0.3s ease-out;
+    animation: modalFadeIn 0.25s ease-out;
 }
+
+/* --- Encabezado --- */
 
 .modal-details-header {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-details-title-row {
+    display: flex;
     align-items: center;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border-color);
+    gap: 10px;
 }
 
 .modal-details-header h3 {
-    margin: 0 0 1px 0;
+    margin: 0;
+    font-family: var(--heading);
     font-size: 1.25rem;
-    color: var(--text-color);
-    font-weight: 600;
+    font-weight: 700;
+    color: var(--text-h);
 }
 
-.modal-details-header .reserva-id {
-    font-size: 0.85rem;
-    color: #71717a;
-    font-family: monospace;
-    background-color: var(--card-bg);
-    padding: 2px 6px;
-    border-radius: 4px;
+.reserva-codigo {
+    margin: 8px 0 0;
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    color: var(--placeholder);
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
+
+/* La pastilla del código reutiliza la clase global .reserva-id
+   (mismo font-family, tamaño, --code-bg y radio que en las
+   tarjetas de la lista de reservas) — no se redefine acá. */
 
 .btn-close-x {
     background: none;
     border: none;
-    font-size: 1.75rem;
+    font-size: 1.6rem;
     color: var(--placeholder);
     cursor: pointer;
     line-height: 1;
-    padding: 4px;
+    padding: 2px 4px;
     transition: color 0.2s;
+    flex-shrink: 0;
 }
 
 .btn-close-x:hover {
-    color: var(--text-color);
+    color: var(--text-h);
 }
 
+/* .reserva-badge y .estado-activa/.estado-completada/.estado-cancelada
+   ya están definidas en HistorialReservation.css y se cargan junto
+   con este modal (solo se usa desde HistorialReservation.jsx), así
+   que no se duplican acá para evitar que ambas definiciones se
+   desalineen con el tiempo. */
+
+
+/* --- Cuerpo --- */
 
 .modal-details-body {
-    padding: 24px;
+    padding: 22px 24px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
 }
 
-/* Resumen del Vehículo */
+/* Resumen del vehículo */
 .modal-vehiculo-resumen {
     display: flex;
     align-items: center;
     gap: 16px;
-    background-color: var(--placeCards);
+    background-color: var(--card-brand);
     padding: 16px;
-    border-radius: 8px;
+    border-radius: 12px;
     border: 1px solid var(--bordercard);
 }
 
 .modal-vehiculo-resumen img {
-    width: 90px;
-    height: 60px;
+    width: 92px;
+    height: 68px;
     object-fit: contain;
     background-color: var(--card-bg);
-    border-radius: 6px;
-    padding: 4px;
+    border: 1px solid var(--bordercard);
+    border-radius: 10px;
+    padding: 6px;
+    flex-shrink: 0;
 }
 
-.modal-vehiculo-resumen div {
+.modal-vehiculo-resumen > div {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    min-width: 0;
 }
 
 .modal-vehiculo-resumen h4 {
     margin: 0;
+    font-family: var(--heading);
     font-size: 1.05rem;
-    color: var(--text-color);
+    color: var(--text-h);
     font-weight: 600;
 }
 
 .modal-vehiculo-resumen p {
     margin: 0;
     font-size: 0.87rem;
-    color: #64748b;
+    color: var(--placeholder);
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
-/* Tabla de Desglose */
+.modal-vehiculo-resumen .dot-sep {
+    font-size: 0.6rem;
+}
+
+.modal-vehiculo-resumen .vehiculo-plate {
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 0.72rem;
+    color: var(--text-h);
+    background: var(--code-bg);
+    padding: 2px 8px;
+    border-radius: 6px;
+}
+
+/* Mismo token de color y tamaño que .facturacion-cobertura, que
+   ya muestra "✓ Cobertura incluida" en las tarjetas del historial. */
+.incluido-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
+    font-size: 12px;
+    color: var(--success);
+}
+
+.incluido-check svg {
+    font-size: 0.85rem;
+}
+
+/* Bloques de sucursal */
+.sucursal-block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sucursal-label-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sucursal-label {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: var(--text-h);
+    opacity: 0.75;
+}
+
+.btn-modificar-sucursal {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent);
+    cursor: pointer;
+}
+
+.btn-modificar-sucursal:hover {
+    text-decoration: underline;
+}
+
+.sucursal-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--input);
+    border: 1px solid var(--bordercard);
+    border-radius: 12px;
+    padding: 12px 14px;
+}
+
+.sucursal-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+}
+
+.sucursal-icon-pickup {
+    background: color-mix(in srgb, var(--success) 15%, transparent);
+    color: var(--success);
+}
+
+.sucursal-icon-return {
+    background: color-mix(in srgb, var(--primary) 15%, transparent);
+    color: var(--primary);
+}
+
+.sucursal-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.sucursal-text strong {
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-h);
+}
+
+.sucursal-text small {
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    color: var(--placeholder);
+}
+
+/* Edición de sucursal de devolución (único campo editable) */
+.sucursal-edit {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: var(--input);
+    border: 1px solid var(--bordercard);
+    border-radius: 12px;
+    padding: 12px 14px;
+}
+
+.sucursal-edit select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--bordercard);
+    border-radius: 9px;
+    background: var(--card-bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 0.9rem;
+}
+
+.sucursal-edit select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-hover, rgba(197,155,39,.15));
+}
+
+.sucursal-edit-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Mismos radios/paddings que .btn-danger / .btn-negative del
+   modal de cancelación, para que ambos pares de botones "se
+   sientan" del mismo set. */
+.btn-sucursal-guardar,
+.btn-sucursal-cancelar {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    font-family: var(--sans);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-sucursal-guardar {
+    border: none;
+    background: var(--button);
+    color: var(--text-btn);
+}
+
+.btn-sucursal-guardar:hover {
+    background: var(--modal-hover);
+}
+
+.btn-sucursal-cancelar {
+    border: 1px solid var(--bordercard);
+    background: var(--hover);
+    color: var(--text);
+}
+
+.btn-sucursal-guardar:disabled,
+.btn-sucursal-cancelar:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Mensaje de error al guardar la sucursal de devolución. */
+.sucursal-edit-error {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    color: var(--danger, #ef4444);
+}
+
+/* Aviso cuando ya no se puede modificar la sucursal de devolución
+   (INV-013: solo editable hasta 3 días antes de la fecha de
+   devolución). Mismo tono que .placeholder para no competir
+   visualmente con el contenido principal del modal. */
+.sucursal-hint {
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    color: var(--placeholder);
+    line-height: 1.4;
+}
+
+/* Tabla de desglose */
 .desglose-tabla {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
+    padding-top: 4px;
+    border-top: 1px solid var(--border);
 }
 
 .detail-row {
@@ -131,76 +388,74 @@
 }
 
 .detail-concept span {
-    font-size: 0.95rem;
-    color: #3f3f46;
-    font-weight: 500;
+    font-family: var(--sans);
+    font-size: 0.92rem;
+    color: var(--text-h);
+    font-weight: 600;
 }
 
 .detail-concept small {
+    font-family: var(--sans);
     font-size: 0.8rem;
-    color: #71717a;
+    color: var(--placeholder);
 }
 
 .detail-value {
-    font-size: 0.95rem;
-    color: var(--text-color);
-    font-weight: 500;
+    font-family: var(--sans);
+    font-size: 0.92rem;
+    color: var(--text-h);
+    font-weight: 600;
 }
 
-/* Fila Totalizadora */
+/* Fila totalizadora */
 .total-row {
-    margin-top: 8px;
-    padding-top: 16px;
-    border-top: 2px dashed #e4e4e7;
+    margin-top: 4px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--bordercard);
     align-items: center;
 }
 
 .total-label {
-    font-size: 1.05rem;
-    color: var(--text-color);
+    font-family: var(--sans);
+    font-size: 1rem;
+    color: var(--text-h);
     font-weight: 600;
 }
 
 .total-row .total-value {
-    font-size: 1.35rem;
-    color: var(--text-color);
+    font-family: var(--sans);
+    font-size: 1.5rem;
+    color: var(--text-h);
     font-weight: 700;
 }
 
 .total-row .total-value small {
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     color: var(--accent);
-    font-weight: 500;
+    font-weight: 600;
     margin-left: 2px;
 }
 
 
+/* --- Pie ---
+   El botón usa .btn.btn-primario ya definido globalmente en
+   HistorialReservation.css (mismo radio 8px, padding y hover
+   var(--modal-hover) que el botón "Ver Detalles" de cada
+   tarjeta) — solo se ajusta acá el contenedor y, en pantallas
+   más anchas, el ancho del botón, igual que ya hacía este
+   mismo modal antes del rediseño. */
 .modal-details {
     padding: 16px 24px;
-    border-top: 1px solid var(--border-color);
+    border-top: 1px solid var(--border);
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
 }
 
-.btn.btn-primario {
-    background-color: var(--button);
-    color: var(--text-color);
-    border: none;
-    padding: 10px 20px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s;
-    width: 100%;
-}
-
-.btn.btn-primario:hover {
-    background-color: var(--accent);
-}
-
-.btn.btn-primario:active {
-    transform: scale(0.98);
+@media (min-width: 480px) {
+    .modal-details .btn.btn-primario {
+        width: auto;
+        min-width: 120px;
+    }
 }
 
 
@@ -212,12 +467,5 @@
     to {
         opacity: 1;
         transform: translateY(0);
-    }
-}
-
-@media (min-width: 480px) {
-    .btn.btn-primario {
-        width: auto;
-        min-width: 120px;
     }
 }

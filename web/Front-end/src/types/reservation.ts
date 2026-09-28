@@ -50,4 +50,10 @@ export type Reservation = {
   /** = vehicleSubtotal + insuranceSubtotal (INV-008). */
   totalAmount: Money;
   status: ReservationStatus;
+  /** Evidence of accepting the published rental terms before payment. */
+  termsAcceptance: {
+    accepted: true;
+    version: string;
+    acceptedAt: ISODateTime;
+  };
 };

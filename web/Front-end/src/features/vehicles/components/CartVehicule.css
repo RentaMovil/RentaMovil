@@ -10,7 +10,7 @@
     padding: 20px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.08);
     transition: 0.3s;
-    border-left: 5px solid var(--bordercard);
+    border-left: 5px solid color-mix(in srgb, var(--primary) 60%, transparent);
 }
 
 .car-price {

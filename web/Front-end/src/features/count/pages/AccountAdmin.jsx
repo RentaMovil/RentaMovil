@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./Count.css";
+import "./Account.css";
 import login from "../../../assets/login.png";
 import { FaEdit, FaMoon, FaGlobe, FaSave, FaTimes } from "react-icons/fa";
 import Navbar from "../../../shared/components/layout/NavBarAdmin";
@@ -12,7 +12,7 @@ import english from "../../../assets/img/eeuu.png";
 import french from "../../../assets/img/francia2.png";
 import portuguese from "../../../assets/img/portugal.png";
 
-function Count({ theme, setTheme }) {
+function AccountAdmin({ theme, setTheme }) {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const [showThemeModal, setShowThemeModal] = useState(false);
@@ -97,7 +97,7 @@ const [image, setImage] = useState(() => {
               <label>
                 <img className="imgPerfile" src={image} alt="preview" />
                 <p className={`edit ${isEditing ? "editingText" : ""}`}>
-                  {t("count.cambiarFoto")}
+                  {t("account.cambiarFoto")}
                 </p>
                 <input
                   type="file"
@@ -109,7 +109,7 @@ const [image, setImage] = useState(() => {
             </div>
 
             <div className="form-groupC">
-              <label className="form-labelC">{t("count.nombre")}:</label>
+              <label className="form-labelC">{t("account.nombre")}:</label>
               <input
                 className={`inputC ${isEditing ? "editing" : ""}`}
                 type="text"
@@ -120,7 +120,7 @@ const [image, setImage] = useState(() => {
             </div>
 
             <div className="form-groupC">
-              <label className="form-labelC">{t("count.telefono")}:</label>
+              <label className="form-labelC">{t("account.telefono")}:</label>
               <input
                 className={`inputC ${isEditing ? "editing" : ""}`}
                 type="text"
@@ -131,7 +131,7 @@ const [image, setImage] = useState(() => {
             </div>
 
             <div className="form-groupC">
-              <label className="form-labelC">{t("count.correo")}:</label>
+              <label className="form-labelC">{t("account.correo")}:</label>
               <input
                 className={`inputC ${isEditing ? "editing" : ""}`}
                 type="email"
@@ -142,7 +142,7 @@ const [image, setImage] = useState(() => {
             </div>
 
             <div className="form-groupC">
-              <label className="form-labelC">{t("count.password")}:</label>
+              <label className="form-labelC">{t("account.password")}:</label>
               <input
                 className="inputC"
                 type="password"
@@ -152,10 +152,10 @@ const [image, setImage] = useState(() => {
             </div>
 
             <Link to="/ChangePassword" className="linkC">
-              {t("count.modificarPassword")}
+              {t("account.modificarPassword")}
             </Link>
               <p className="status2">
-              {isEditing ? t("count.modoEdicion") : t("count.perfilActualizado")}
+              {isEditing ? t("account.modoEdicion") : t("account.perfilActualizado")}
             </p>
           </div>
         </div>
@@ -165,7 +165,7 @@ const [image, setImage] = useState(() => {
       {showThemeModal && (
         <div className="modal-overlay" onClick={() => setShowThemeModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <p className="modal-title">{t("count.seleccionaTema")}</p>
+            <p className="modal-title">{t("account.seleccionaTema")}</p>
             <div className="theme-grid">
               {[
                 { id: "skylight", label: "Modo azul claro",     desc: "Fondo blanco, texto oscuro" },
@@ -189,7 +189,7 @@ const [image, setImage] = useState(() => {
             </div>
             <div className="modal-actions">
               <button className="close-btn" onClick={() => setShowThemeModal(false)}>
-                {t("count.cancelar")}
+                {t("account.cancelar")}
               </button>
               <button className="btn-times" onClick={() => setShowThemeModal(false)}>
                 <FaTimes />
@@ -203,7 +203,7 @@ const [image, setImage] = useState(() => {
       {showLangModal && (
         <div className="modal-overlay" onClick={() => setShowLangModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <p className="modal-title">{t("count.seleccionaIdioma")}</p>
+            <p className="modal-title">{t("account.seleccionaIdioma")}</p>
             <div className="theme-grid">
               {[
                 { id: "es", label: "Español",   flag: espanish,   desc: "Spanish"   },
@@ -229,7 +229,7 @@ const [image, setImage] = useState(() => {
             </div>
             <div className="modal-actions">
               <button className="close-btn" onClick={() => setShowLangModal(false)}>
-                {t("count.cancelar")}
+                {t("account.cancelar")}
               </button>
               <button className="btn-times" onClick={() => setShowLangModal(false)}>
                 <FaTimes />
@@ -244,4 +244,4 @@ const [image, setImage] = useState(() => {
   );
 }
 
-export default Count;
+export default AccountAdmin;

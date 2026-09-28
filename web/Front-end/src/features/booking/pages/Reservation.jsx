@@ -2,7 +2,7 @@ import "./Reservation.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import L from "leaflet";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
@@ -17,9 +17,14 @@ import MapComponent from "../components/MapComponents";
 import { useReservationForm } from "../hooks/useReservationForm";
 import InsuranceSelector from "../components/InsuranceSelector";
 import VehicleReservationCard from "../components/VehicleReservationCard";
+import TermsAndConditions from "../components/TermsAndConditions";
 
 import { useReservation } from "../context/ReservationContext";
 import { insurance } from "./../data/mocks/insurance";
+import {
+    createTermsAcceptance,
+    isValidTermsAcceptance,
+} from "../data/rentalTerms";
 
 const DefaultIcon = L.icon({
     iconUrl: markerIcon,
@@ -70,6 +75,10 @@ function Reservation() {
         ({ id }) => id === reservation?.insuranceId
     );
 
+    const [termsAccepted, setTermsAccepted] = useState(() =>
+        isValidTermsAcceptance(reservation?.termsAcceptance)
+    );
+
     const {
         selectedBranch,
         setSelectedBranch,
@@ -88,10 +97,27 @@ function Reservation() {
         rentalSearch
     );
 
+    const finalPickupBranch = pickupBranch ?? branch;
+    const finalReturnBranch =
+        selectedBranch ?? finalPickupBranch;
+
+    const reservationTotal =
+        Number(total) + Number(selectedInsurance?.price ?? 0);
+
     const currentCalendarValue = {
         branch: pickupBranch,
         startDate: pickupDate,
         endDate: returnDate,
+    };
+
+    const handleTermsAcceptanceChange = (accepted) => {
+        setTermsAccepted(accepted);
+
+        // Si se desmarca una aceptación previa, la ruta de pago tampoco
+        // debe conservar una autorización antigua para esta reserva.
+        if (!accepted) {
+            updateReservation({ termsAcceptance: null });
+        }
     };
 
     /**
@@ -104,10 +130,10 @@ function Reservation() {
             return;
         }
 
-        const finalPickupBranch = pickupBranch ?? branch;
-
-        const finalReturnBranch =
-            selectedBranch ?? finalPickupBranch;
+        if (!termsAccepted) {
+            alert(t("terms.acceptError"));
+            return;
+        }
 
         updateReservation({
             vehicle: {
@@ -128,6 +154,8 @@ function Reservation() {
 
             pickupDate,
             returnDate,
+
+            termsAcceptance: createTermsAcceptance(),
         });
 
         navigate("/Payment");
@@ -220,10 +248,12 @@ function Reservation() {
                         />
 
                         <div className="card-location">
-
-                            <p className="title-brand">
-                                Cambie la sucursal de recogida:
-                            </p>
+                            <div className="reservation-section-header">
+                                <span className="reservation-section-dot" aria-hidden="true" />
+                                <h3 className="reservation-section-title">
+                                    Cambie la sucursal de recogida:
+                                </h3>
+                            </div>
 
                             <div className="info-location">
 
@@ -314,9 +344,12 @@ function Reservation() {
                                 }}
                             >
 
-                                <h3>
-                                    {t("reservation.summary")}
-                                </h3>
+                                <div className="reservation-section-header">
+                                    <span className="reservation-section-dot" aria-hidden="true" />
+                                    <h3 className="reservation-section-title">
+                                        {t("reservation.summary")}
+                                    </h3>
+                                </div>
 
                                 <p>
                                     {days} {t("reservation.days")} × ${price}
@@ -331,16 +364,29 @@ function Reservation() {
                                 </p>
 
                                 <h4>
-                                    {t("reservation.total")} ${total}
+                                    {t("reservation.total")} ${reservationTotal}
                                 </h4>
 
                                 <InsuranceSelector
                                     options={insurance}
                                 />
 
+                                <TermsAndConditions
+                                    accepted={termsAccepted}
+                                    onAcceptChange={handleTermsAcceptanceChange}
+                                    vehicle={{ name }}
+                                    pickupDate={pickupDate}
+                                    returnDate={returnDate}
+                                    pickupBranch={finalPickupBranch}
+                                    returnBranch={finalReturnBranch}
+                                    total={reservationTotal}
+                                />
+
                                 <button
                                     className="btn-booking"
                                     type="submit"
+                                    disabled={!termsAccepted}
+                                    aria-disabled={!termsAccepted}
                                 >
                                     {t("reservation.submit")}
                                 </button>

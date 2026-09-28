@@ -1,9 +1,15 @@
     import img from "../../../../assets/carts/car1.jpg";
-    
+
+    // Las reservas del historial guardan pickupBranchId / returnBranchId
+    // (ver src/types/reservation.ts — Reservation), NO un objeto de
+    // sucursal embebido. El nombre/ciudad para mostrar se resuelve en
+    // pantalla contra el catálogo único (shared/mocks/branches.js /
+    // getBranchById), igual que haría un backend real que solo entrega
+    // el id como foreign key.
     export const reservationsMock = [
     {
         id: "RES-9428",
-        created_at: "24 Abr 2026",
+        created_at: "20 Sep 2026",
         status: "activa",
         currency: "COP",
         
@@ -18,15 +24,17 @@
         img: img
         },
         
-        branch: {
-        id: "BR-01",
-        name: "Aeropuerto El Dorado",
-        city: "Bogotá"
-        },
+        pickupBranchId: "BR-01",
+        returnBranchId: "BR-02",
         
         tiempos: {
-        start_date: "01 May 2026 10:00 AM",
-        end_date: "05 May 2026 10:00 AM",
+        // Fechas a futuro respecto a "hoy" para que la reserva "activa"
+        // siga cayendo dentro de la ventana editable de INV-013 (más de
+        // 3 días antes de end_date) y el flujo de edición de sucursal
+        // de devolución sea verificable en la demo. "days" se deja en 4
+        // para que siga cuadrando con billing.subtotal_vehicle (80000 x 4).
+        start_date: "24 Sep 2026 10:00 AM",
+        end_date: "01 Oct 2026 10:00 AM",
         days: 4
         },
         
@@ -57,11 +65,8 @@
         img: img
         },
         
-        branch: {
-        id: "BR-02",
-        name: "El Poblado",
-        city: "Medellín"
-        },
+        pickupBranchId: "BR-01",
+        returnBranchId: "BR-02",
         
         tiempos: {
         start_date: "15 Mar 2026 08:00 AM",
@@ -95,11 +100,8 @@
         img: img
         },
         
-        branch: {
-        id: "BR-01",
-        name: "Aeropuerto El Dorado",
-        city: "Bogotá"
-        },
+        pickupBranchId: "BR-01",
+        returnBranchId: "BR-02",
         
         tiempos: {
         start_date: "10 Feb 2026 02:00 PM",

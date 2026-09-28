@@ -5,6 +5,7 @@ import Footer from "../../../shared/components/layout/Footer.jsx";
 import ReservationDetailModal from "../components/HistoryReservationDetail.jsx";
 import { useTranslation } from "react-i18next";
 import { useReservations } from "../hooks/useReservations.js";
+import { getBranchById } from "../../../shared/mocks/branches.js";
 
 function HistorialReservation() {
   const { t } = useTranslation();
@@ -16,6 +17,7 @@ function HistorialReservation() {
     setSelectedReserva,
     setShowCancelModal,
     handleCancelReservation,
+    handleUpdateReturnBranch,
   } = useReservations();
 
   const [showDetailsModal, setShowDetailsModal] = useState(false);
@@ -23,7 +25,6 @@ function HistorialReservation() {
   return (
     <>
       <Navbar />
-
       <div className="historial-page">
         <div className="cards-container">
           
@@ -31,7 +32,11 @@ function HistorialReservation() {
             {t("historyReservation.myReservations", "Mis Reservas")}
           </h2>
 
-          {reservas.map((r) => (
+          {reservas.map((r) => {
+            const pickUpBranch = getBranchById(r.pickupBranchId);
+            const returnBranch = getBranchById(r.returnBranchId);
+
+            return (
             <article key={r.id} className="reserva-card">
               
               {/* Barra superior de metadatos de la reserva */}
@@ -64,11 +69,6 @@ function HistorialReservation() {
                       <span>⚙️ {r.vehicle.transmission}</span>
                       <span>👥 {r.vehicle.seats} {t("historyReservation.seats", "Pasajeros")}</span>
                     </div>
-                    {r.branch && (
-                      <div className="vehiculo-sucursal">
-                        📍 {r.branch.name}, {r.branch.city}
-                      </div>
-                    )}
                   </div>
                 </section>
 
@@ -133,7 +133,8 @@ function HistorialReservation() {
 
               </div>
             </article>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -161,7 +162,8 @@ function HistorialReservation() {
       <ReservationDetailModal 
         isOpen={showDetailsModal} 
         reserva={selectedReserva} 
-        onClose={() => setShowDetailsModal(false)} 
+        onClose={() => setShowDetailsModal(false)}
+        onUpdateReturnBranch={handleUpdateReturnBranch}
       />
 
       <Footer />

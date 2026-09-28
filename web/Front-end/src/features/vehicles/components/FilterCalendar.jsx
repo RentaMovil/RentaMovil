@@ -167,27 +167,35 @@ const FilterCalendar = forwardRef(
      * BUSCAR SUCURSAL
      * ============================================================
      */
-    const handleChange = (e) => {
+  /*
+   * ============================================================
+   * BUSCAR SUCURSAL
+   * ============================================================
+   */
+  const handleChange = async (e) => { // 1. Agregamos async aquí
 
-      const inputValue = e.target.value;
+    const inputValue = e.target.value;
 
-      setQuery(inputValue);
-      setSeleccionado(null);
-      setErrorSucursal("");
+    setQuery(inputValue);
+    setSeleccionado(null);
+    setErrorSucursal("");
 
-      if (!inputValue.trim()) {
-        setSugerencias([]);
-        return;
-      }
+    if (!inputValue.trim()) {
+      setSugerencias([]);
+      return;
+    }
 
-      const filtradas = branches.filter((s) =>
-        s.name
-          .toLowerCase()
-          .includes(inputValue.toLowerCase())
-      );
-
+    try {
+      // 2. Llamamos al servicio de manera asíncrona usando await
+      const filtradas = await branchService.searchBranches(inputValue);
       setSugerencias(filtradas);
-    };
+    } catch (error) {
+      console.error("Error al obtener las sucursales:", error);
+      // Aquí puedes gestionar un estado de error visual si lo deseas
+      setSugerencias([]);
+    }
+  };
+
 
 
     /*

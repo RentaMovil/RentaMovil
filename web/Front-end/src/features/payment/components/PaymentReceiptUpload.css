@@ -1,5 +1,5 @@
 /* Contenido interno de "Comprobante de pago". El contenedor
-   (fondo, borde, radio, encabezado) lo aporta .pay-card /
+    (fondo, borde, radio, encabezado) lo aporta .pay-card /
    .pay-card-header, compartidos en Payment.css. */
 
 .payment-receipt-body {

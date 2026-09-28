@@ -29,6 +29,78 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.pay-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.85fr);
+  align-items: start;
+  gap: 24px;
+}
+
+.pay-main-column,
+.pay-side-column {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pay-side-column {
+  position: sticky;
+  top: 96px;
+}
+
+.pay-vehicle-section .reservation-vehicle-card {
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.pay-submit-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pay-submit-panel > * {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pay-invoice-card .pay-resumen-row {
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.pay-invoice-card .pay-insurance-label-group {
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.pay-invoice-card .pay-resumen-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.pay-invoice-card .pay-resumen-value {
+  flex-shrink: 0;
+  text-align: right;
+}
+
+.pay-invoice-card .pay-total-amount {
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  overflow-wrap: anywhere;
+}
+
+.pay-invoice-card .pay-warning-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .pay-card-header {
   display: flex;
   align-items: flex-start;
@@ -53,7 +125,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: var(--primary);
+  background-color: var(--accent);
   flex-shrink: 0;
 }
 
@@ -206,5 +278,28 @@
   .pay-card-header {
     flex-direction: column;
     gap: 10px;
+  }
+
+  .pay-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .pay-main-column,
+  .pay-side-column {
+    gap: 16px;
+  }
+
+  .pay-side-column {
+    position: static;
+  }
+
+  .pay-invoice-card .pay-resumen-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .pay-invoice-card .pay-resumen-value {
+    text-align: left;
   }
 }

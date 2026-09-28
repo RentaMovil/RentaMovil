@@ -14,7 +14,7 @@ return (
         <div className="links">
         <Link to="/home">{t("footer.linkInit")}</Link>
         <Link to="/notification">{t("footer.linkNotifications")}</Link>
-        <Link to="/count">{t("footer.linkCount")}</Link>
+        <Link to="/account">{t("footer.linkAccount")}</Link>
 
     </div>
         </div>

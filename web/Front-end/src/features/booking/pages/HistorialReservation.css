@@ -309,7 +309,7 @@
   justify-content: center;
   backdrop-filter: blur(4px);
   background: rgba(0, 0, 0, 0.5);
-  z-index: 999;
+  z-index: 3000;
 }
 
 .modal-content {
