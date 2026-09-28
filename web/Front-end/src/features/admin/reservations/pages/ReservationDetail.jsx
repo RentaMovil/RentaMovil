@@ -151,13 +151,6 @@ export default function ReservationDetail() {
       <div className="rs-wrapper rd-wrapper">
         <div className="rd-top">
           <div>
-            <nav className="rs-breadcrumb">
-              <span>{t("reservations.breadcrumbAdmin")}</span>
-              <FiChevronRight />
-              <Link to="/reservations">{t("reservations.title")}</Link>
-              <FiChevronRight />
-              <span className="current">#{reservation.id}</span>
-            </nav>
             <div className="rd-title-row">
               <h1 className="rd-title">{t("reservations.detailTitle", { id: reservation.id })}</h1>
               <span className={`rs-status-badge ${meta.className}`}>
