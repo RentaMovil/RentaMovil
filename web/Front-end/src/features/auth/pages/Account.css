@@ -26,14 +26,34 @@
     }
 
     /* Header Page: Regresar */
+
+    /* El header es UNA fila: volver + estado a la izquierda, acciones a la
+       derecha, todo con el mismo eje vertical.
+
+       Antes `.header-page` era `position: static` pero declaraba `top` y `left`, que
+       no hacen nada sin `position`, y `.actions` era `position: absolute`
+       con `top: 20px`. Medido: el boton de volver caia en y=139 y las
+       acciones en y=104, o sea 35px desalineadas. */
     .header-page {
-    top: 40px;
-    left: 45px;
-    border-bottom: 1px solid var(--border-Card);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        width: 100%;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--border-Card);
+        box-sizing: border-box;
     }
 
-    .header-page button,
-    .header-page a {
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-width: 0;
+    }
+
+    .header-page button:not(.icon-btnC),
+    .header-page a:not(.icon-btnC) {
     color: var(--button) !important;
     font-family: var(--sans);
     font-weight: 600;
@@ -75,12 +95,15 @@
     }
 
     /* Botones Circulares de Acción (Editar, Tema, Idioma) */
+
+    /* Se quedo dentro del header, asi que ya no va en absolute: el
+       flex del header lo coloca a la derecha y comparte eje con el
+       boton de volver. */
     .actions {
-    position: absolute;
-    top: 20px;
-    right: 45px;
-    display: flex;
-    gap: 14px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex: none;
     }
 
     .icon-btnC {
@@ -98,12 +121,49 @@
     transition: transform 0.2s ease, background-color 0.3s ease, opacity 0.2s;
     }
 
+
+    /* Boton de editar: se marca cuando el modo edicion esta abierto, para
+       que se sepa que los campos ya no son de solo lectura. */
+    .icon-btnC--on {
+        background-color: var(--accent);
+        color: var(--text-btn);
+    }
+
     .icon-btnC:hover {
     opacity: 0.9;
     transform: translateY(-2px);
     }
 
     /* Formulario en Grid */
+
+    /* El enlace de cambiar contrasena y el boton Guardar ocupan las dos
+       columnas, para que queden centrados y no descuadrados. */
+    .form-groupC--full {
+        grid-column: 1 / -1;
+    }
+
+    .btn-saveProfile {
+        background: var(--button);
+        color: var(--text-btn);
+        border: none;
+        padding: 13px 28px;
+        border-radius: 12px;
+        font-family: var(--sans);
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn-saveProfile:hover:not(:disabled) {
+        transform: translateY(-2px);
+    }
+
+    .btn-saveProfile:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
     .formC {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -234,7 +294,15 @@
     margin-bottom: 24px;
     }
 
+
+    /* La tarjeta va en columna: el markup es miniatura arriba y texto
+       abajo. En fila —como estaba, con `align-items: center` y `gap: 12px`—
+       la miniatura se encogia al ancho de su contenido y se veia de 20px. */
     .theme-card {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
     border: 1px solid var(--modal-card-border);
     border-radius: 14px;
     padding: 14px;
@@ -242,9 +310,7 @@
     color: var(--modal-card-text);
     cursor: pointer;
     text-align: left;
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    gap: 0;
     transition: border-color 0.2s, background-color 0.2s;
     }
 
@@ -265,6 +331,111 @@
     font-family: var(--sans);
     font-size: 13px;
     color: var(--modal-subtext);
+    }
+    /* ── Miniatura de referencia del tema ────────────────────────────────
+       Esta miniatura SI existed en el JSX, pero no tenia ningun estilo, asi
+       que salia de 0x0 y no se veia nada: no habia forma de elegir tema.
+
+       Los colores son literales, no `var(--bg)`: con un solo tema
+       activo a la vez, una variable CSS solo da el color del tema que esta
+       puesto, y todas las miniaturas se verian iguales. Los valores salen de
+       los bloques :root de index.css. */
+    .theme-preview {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-self: stretch;
+        flex: none;
+        height: 64px;
+        border-radius: 9px;
+        overflow: hidden;
+        border: 1px solid var(--modal-card-border);
+        margin-bottom: 12px;
+    }
+
+    /* Barra superior, como el navbar real */
+    .theme-preview-bar {
+        height: 14px;
+        flex: none;
+    }
+
+    /* Cuerpo: fondo del tema con una superficie encima, como una tarjeta */
+    .theme-preview-body {
+        flex: 1;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 5px;
+        padding: 6px 7px;
+    }
+
+    .theme-preview-surface {
+        flex: 1;
+        height: 14px;
+        border-radius: 4px;
+    }
+
+    /* Punto de acento, para comparar el color de marca de un vistazo */
+    .theme-preview-accent {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        flex: none;
+    }
+
+    /* Paleta de cada tema, tomada de index.css */
+    .preview-skylight .theme-preview-bar {
+        background: #0A192F;
+    }
+    .preview-skylight .theme-preview-body {
+        background: #F8FAFC;
+    }
+    .preview-skylight .theme-preview-surface {
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+    }
+    .preview-skylight .theme-preview-accent {
+        background: #F2C063;
+    }
+
+    .preview-light .theme-preview-bar {
+        background: #FAFAFA;
+    }
+    .preview-light .theme-preview-body {
+        background: #FAFAFA;
+    }
+    .preview-light .theme-preview-surface {
+        background: #FFFFFF;
+        border: 1px solid #E5E7EB;
+    }
+    .preview-light .theme-preview-accent {
+        background: #F2C063;
+    }
+
+    .preview-dark .theme-preview-bar {
+        background: #1C1C1C;
+    }
+    .preview-dark .theme-preview-body {
+        background: #121212;
+    }
+    .preview-dark .theme-preview-surface {
+        background: #1C1C1C;
+    }
+    .preview-dark .theme-preview-accent {
+        background: #C59B27;
+    }
+
+    .preview-darkPurple .theme-preview-bar {
+        background: #070F22;
+    }
+    .preview-darkPurple .theme-preview-body {
+        background: #030712;
+    }
+    .preview-darkPurple .theme-preview-surface {
+        background: #070F22;
+    }
+    .preview-darkPurple .theme-preview-accent {
+        background: #C59B27;
     }
 
     .lang-preview {
@@ -305,6 +476,30 @@
     opacity: 0.9;
     }
 
+    
+    /* Con el boton de cancelar eliminado, la X pasa a la esquina superior
+       derecha del modal. Se posiciona con `absolute` respecto al
+       modal, asi que .modal-content necesita `position: relative`. */
+    .modal-content {
+        position: relative;
+    }
+
+    .btn-times--corner {
+        position: absolute;
+        top: 14px;
+        right: 16px;
+        z-index: 2;
+        width: 32px;
+        height: 32px;
+        justify-content: center;
+        border-radius: 8px;
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .btn-times--corner:hover {
+        background: var(--hover);
+    }
+
     .btn-times {
     background: transparent;
     border: none;
@@ -327,6 +522,24 @@
         place-items: center;
         color: var(--text-h);
         font-family: var(--sans);
+    }
+
+
+    /* Aviso de confirmacion tras guardar el perfil. Usa --success, que si
+       esta definido en los cuatro temas, a diferencia de un verde fijo. */
+    .account-saved {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 18px 0 0;
+        padding: 11px 16px;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--card-brand);
+        color: var(--success);
+        font-family: var(--sans);
+        font-size: 14px;
+        font-weight: 600;
     }
 
     .account-error {

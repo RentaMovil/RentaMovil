@@ -1,4 +1,42 @@
 {
+  "process": {
+    "title": "4 steps to your next trip",
+    "subtitle": "A simple, clear process designed to take you further.",
+    "steps": {
+      "search": {
+        "title": "Search and choose",
+        "description": "Filter by location, dates and vehicle type to find the ideal car for your trip."
+      },
+      "reserve": {
+        "title": "Reserve",
+        "description": "Choose your coverage, review the details and confirm your reservation with a secure payment."
+      },
+      "pickup": {
+        "title": "Pick up and enjoy",
+        "description": "Head to the selected branch, show your invoice along with your driver's licence and collect the keys with no delays or queues."
+      },
+      "return": {
+        "title": "Enjoy and return",
+        "description": "When your trip is over, return the vehicle at the corresponding branch and enjoy your experience."
+      }
+    }
+  },
+  "insurance": {
+    "title": "Insurance",
+    "subtitle": "Select the coverage you want for your reservation.",
+    "tag": {
+      "base": "Basic",
+      "popular": "Popular",
+      "premium": "Premium"
+    }
+  },
+  "menu": {
+    "title": "Menu",
+    "home": "Home",
+    "reservations": "My reservations",
+    "account": "My account",
+    "logout": "Log out"
+  },
   "navbar": {
     "linkInit": "Home",
     "linkNotifications": "Notifications",
@@ -26,6 +64,7 @@
     "returnHour": "Return time",
     "branch": "Branch",
     "deliveryLocationPlaceholder": "Select a branch",
+    "noBranchResults": "No branch matches your search",
     "search": "Search"
   },
   "cartVehicule": {
@@ -38,6 +77,8 @@
     "location": "Airport",
     "cancellation": "Free cancellation",
     "continue": "Continue",
+    "rent": "Rent",
+    "perDay": "per day",
     "type": "Type"
   },
   "filtersHome": {
@@ -148,7 +189,9 @@
     "placeholderCity": "City of residence",
     "adrress": "Address",
     "placeholderAddress": "Delivery address",
-    "confirm": "Confirm and pay"
+    "confirm": "Confirm and pay",
+    "copyNumber": "Copy number",
+    "copied": "Copied!"
   },
   "buttonBack": {
     "label": "Back"
@@ -346,28 +389,47 @@
     "button": "Maintenance history"
   },
   "notifications": {
-  "unread": "Unread",
-  "all": "All",
-  "confReservations": "Confirmed Reservations",
-  "pays": "Payments",
-  "cancel": "Cancelled",
-  "recordatory": "Reminders",
-  "recibed": "Received",
-  "detail": "Notification details",
-  "message": "Message",
-  "date": "Date",
-  "state": "Status",
-  "vehicle": "Vehicle",
-  "close": "Close"
-},
-"historyReservation": {
-  "myReservations": "My Reservations",
-  "date": "Date: ",
-  "days": "Days: ",
-  "total": "Total: ",
-  "cancel": "Cancel Reservation",
-  "sure": "Are you sure you want to cancel the reservation for",
-  "yes": "Yes, cancel",
-  "no": "No"
-}
+    "unread": "Unread",
+    "all": "All",
+    "confReservations": "Confirmed Reservations",
+    "pays": "Payments",
+    "cancel": "Cancelled",
+    "recordatory": "Reminders",
+    "recibed": "Received",
+    "detail": "Notification details",
+    "message": "Message",
+    "date": "Date",
+    "state": "Status",
+    "vehicle": "Vehicle",
+    "close": "Close",
+    "loading": "Loading notifications...",
+    "empty": "No notifications for this filter.",
+    "statusActive": "Active",
+    "statusPayment": "Payment confirmed",
+    "statusCancelled": "Cancelled",
+    "statusPending": "Pending",
+    "statusUnknown": "No status"
+  },
+  "historyReservation": {
+    "myReservations": "My Reservations",
+    "date": "Date: ",
+    "days": "Days: ",
+    "total": "Total: ",
+    "cancel": "Cancel Reservation",
+    "sure": "Are you sure you want to cancel the reservation for",
+    "yes": "Yes, cancel",
+    "no": "No",
+    "confirm": "Confirm"
+  },
+  "tabs": {
+    "home": "Home",
+    "menu": "Menu",
+    "reservations": "Reservations"
+  },
+  "themes": {
+    "light": "Light green",
+    "dark": "Dark",
+    "darkPurple": "Midnight",
+    "skylight": "Light blue"
+  }
 }

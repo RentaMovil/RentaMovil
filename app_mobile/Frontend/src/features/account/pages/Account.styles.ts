@@ -11,6 +11,7 @@ export const CountStyles = (colors: any) => StyleSheet.create({
     pageTitle: { marginTop: 14, fontSize: 25, fontWeight: "800", color: colors.text },
     pageSubtitle: { marginTop: 4, fontSize: 14, color: colors.secondaryText },
     settingsButton: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12, padding: 17, borderRadius: 16, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card },
+    settingsLabel: { flexDirection: "row", alignItems: "center", gap: 10 },
     settingsTitle: { fontSize: 16, fontWeight: "700", color: colors.text },
     arrow: { fontSize: 15, color: colors.primary },
     settingsCard: { marginTop: 0 },

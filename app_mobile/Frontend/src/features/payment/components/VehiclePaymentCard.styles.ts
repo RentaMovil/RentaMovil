@@ -1,59 +1,61 @@
 import { StyleSheet } from "react-native";
 
-export const createStyles = (colors: any) =>
-    StyleSheet.create({
+import { createTextStyles } from "../../../theme/constants/typography";
 
-        image: {
-            width: "100%",
-            height: 180,
-            borderRadius: 12,
-        },
+export const createStyles = (colors: any) => {
 
-        content: {
-            marginTop: 16,
-        },
+  const text = createTextStyles(colors);
 
-        name: {
-            fontSize: 20,
-            fontWeight: "700",
-            color: colors.text,
-        },
+  return StyleSheet.create({
+    image: {
+      width: "100%",
+      height: 180,
+      borderRadius: 16,
+      backgroundColor: colors.input,
+    },
 
-        price: {
-            marginTop: 4,
-            fontSize: 16,
-            fontWeight: "600",
-            color: colors.primary,
-        },
+    content: {
+      marginTop: 16,
+      gap: 4,
+    },
 
-        toggleButton: {
-            marginTop: 20,
-        },
+    name: {
+      ...text.h3,
+      color: colors.textHeading,
+    },
 
-        toggleText: {
-            color: colors.primary,
-            fontWeight: "600",
-            fontSize: 15,
-        },
+    // El precio es el dato que decide, asi que va en la familia de titulo.
+    price: {
+      ...text.title,
+      fontSize: 16,
+      color: colors.primary,
+    },
 
-        details: {
-            marginTop: 20,
-            gap: 16,
-        },
+    toggleButton: {
+      marginTop: 20,
+    },
 
-        section: {
-            gap: 4,
-        },
+    toggleText: {
+      ...text.bodyMedium,
+      color: colors.primary,
+    },
 
-        label: {
-            fontSize: 14,
-            color: colors.secondaryText,
-        },
+    details: {
+      marginTop: 20,
+      gap: 16,
+    },
 
-        value: {
-            fontSize: 16,
-            color: colors.text,
-            fontWeight: "500",
-        },
+    section: {
+      gap: 4,
+    },
 
-    });
+    label: {
+      ...text.caption,
+    },
+
+    value: {
+      ...text.bodyMedium,
+      color: colors.text,
+    },
+  });
+};

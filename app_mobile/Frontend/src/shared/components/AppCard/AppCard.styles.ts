@@ -1,9 +1,14 @@
 import { StyleSheet } from "react-native";
 
-import { Radius } from "../../../theme/constants/radius";
 import { createCardShadow } from "../../../theme/constants/shadows";
-import { Spacing } from "../../../theme/constants/spacing";
 
+/**
+ * Tarjeta base de la app.
+ *
+ * Spec de `.pay-card` del web: fondo `--card-bg`, borde 1px `--bordercard`,
+ * radio 20px y `--shadow`. Antes el radio venia del token `Radius.lg` (16) y
+ * no llevaba borde, asi que las tarjetas no coincidian con el web.
+ */
 export const createStyles = (colors: any) =>
 
     StyleSheet.create({
@@ -12,11 +17,15 @@ export const createStyles = (colors: any) =>
 
             backgroundColor: colors.card,
 
-            borderRadius: Radius.lg,
+            borderWidth: 1,
 
-            padding: Spacing.lg,
+            borderColor: colors.cardBorder,
 
-            marginVertical: Spacing.sm,
+            borderRadius: 20,
+
+            padding: 24,
+
+            marginBottom: 16,
 
             ...createCardShadow(colors),
 

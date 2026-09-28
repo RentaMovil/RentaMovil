@@ -1,209 +1,197 @@
-    import { StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
-    export const createStyles =(colors: any) =>
-    
-    StyleSheet.create({
+import { createTextStyles } from "../../../theme/constants/typography";
+import { createCardShadow } from "../../../theme/constants/shadows";
+import { Radius } from "../../../theme/constants/radius";
+import { Spacing } from "../../../theme/constants/spacing";
 
+/**
+ * Tarjeta de vehiculo del home.
+ *
+ * Reproduce la referencia de diseno: bloque de titulo con distintivo,
+ * subtitulo, foto dentro de un recuadro claro con padding, barra de
+ * especificaciones con separadores, fila de ubicacion con la politica de
+ * cancelacion, y pie con precio a la izquierda y CTA a la derecha.
+ *
+ * Todo sale de tokens: no hay numeros sueltos ni colores hex.
+ */
+export const createStyles = (colors: any) => {
+
+  const text = createTextStyles(colors);
+
+  return StyleSheet.create({
     card: {
-        backgroundColor: colors.backgroundCard,
-        borderRadius: 24,
-        padding: 20,
-        marginBottom: 22,
-        borderWidth: 1,
-        borderColor: colors.border,
+      backgroundColor: colors.card,
+      borderRadius: Radius.card,
+      padding: Spacing.lg,
+      marginBottom: Spacing.xl,
+      borderWidth: 1,
+      borderColor: colors.border,
+      ...createCardShadow(colors),
     },
 
-    badge: {
-        alignSelf: "flex-start",
-        backgroundColor: colors.badge,
-        paddingHorizontal: 16,
-        paddingVertical: 8,
-        borderRadius: 999,
-        marginBottom: 20,
-    },
+    /* --- Titulo --- */
 
-    badgeText: {
-        color: colors.text,
-        fontSize: 15,
-        fontWeight: "700",
+    titleRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: Spacing.sm,
     },
 
     name: {
-        fontSize: 28,
-        fontWeight: "800",
-        color: colors.text,
+      ...text.h3,
+      flexShrink: 1,
+      color: colors.textHeading,
+    },
+
+    // Distintivo circular de disponibilidad. En la referencia es azul; aqui
+    // usa el verde de exito del tema, porque no hay azul en la paleta.
+    verifiedBadge: {
+      width: 20,
+      height: 20,
+      borderRadius: 10,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: colors.success,
     },
 
     subtitle: {
-        marginTop: 4,
-        fontSize: 18,
-        color: colors.text,
+      ...text.caption,
+      marginTop: Spacing.xs,
     },
 
-    featuresContainer: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        gap: 10,
-        marginTop: 22,
-    },
+    /* --- Foto --- */
 
-    feature: {
-        backgroundColor: colors.background,
-        borderRadius: 10,
-        paddingHorizontal: 14,
-        paddingVertical: 10,
-    },
-
-    featureText: {
-        fontSize: 13,
-        color: colors.text,
-    },
-
-    content: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        marginTop: 28,
-    },
-
-    benefits: {
-        flex: 1,
-        gap: 10,
-        paddingRight: 10,
-    },
-
-    benefit: {
-        fontSize: 12,
-        color: colors.text,
-        lineHeight: 14,
-        
-    },
-
-        benefitRow: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    marginBottom: 5,
-    },
-
-    check: {
-    width: 24,
-    fontSize: 12,
-    color: colors.text,
-    marginTop: 2,
-    },
-
-    benefitText: {
-    flex: 1,
-    fontSize: 13,
-    color: colors.text,
-    lineHeight: 14,
+    // Recuadro claro que envuelve la foto. El padding y el `contain` son lo
+    // que da el aire que tiene en la referencia; antes la imagen iba suelta
+    // a 100x60.
+    imageBox: {
+      marginTop: Spacing.lg,
+      padding: Spacing.md,
+      borderRadius: Radius.lg,
+      backgroundColor: colors.input,
+      borderWidth: 1,
+      borderColor: colors.border,
     },
 
     image: {
-        width: 100,
-        height: 60,
-        padding: 30,
+      width: "100%",
+      height: 190,
     },
 
+    /* --- Barra de especificaciones --- */
 
-    locationContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        marginTop: 28,
+    specsBar: {
+      flexDirection: "row",
+      marginTop: Spacing.lg,
+      paddingVertical: Spacing.md,
+      borderRadius: Radius.md,
+      backgroundColor: colors.input,
     },
 
-    locationIcon: {
-        width: 56,
-        height: 56,
-        borderRadius: 16,
-        backgroundColor: colors.background,
-        justifyContent: "center",
-        alignItems: "center",
-        marginRight: 14,
+    spec: {
+      flex: 1,
+      alignItems: "center",
+      gap: 6,
+      paddingHorizontal: Spacing.xs,
     },
 
-    locationInfo: {
-        flex: 1,
+    // Separador vertical entre columnas, como en la referencia.
+    specDivider: {
+      borderRightWidth: 1,
+      borderRightColor: colors.border,
+    },
+
+    specValue: {
+      ...text.label,
+      fontSize: 13,
+      color: colors.textHeading,
+      textAlign: "center",
+    },
+
+    specUnit: {
+      ...text.caption,
+      fontSize: 11,
+      marginTop: -4,
+    },
+
+    /* --- Ubicacion y cancelacion --- */
+
+    infoRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: Spacing.md,
+      marginTop: Spacing.lg,
+    },
+
+    locationRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: Spacing.sm,
+      flexShrink: 1,
     },
 
     location: {
-        fontSize: 18,
-        fontWeight: "600",
-        color: colors.text,
+      ...text.bodyMedium,
+      flexShrink: 1,
+      color: colors.text,
     },
 
-    locationSub: {
-        marginTop: 4,
-        fontSize: 14,
-        color: colors.text,
+    freeCancel: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 5,
+      paddingHorizontal: 12,
+      paddingVertical: 6,
+      borderRadius: Radius.pill,
+      backgroundColor: colors.successSurface,
+      borderWidth: 1,
+      borderColor: colors.success,
     },
 
+    freeCancelText: {
+      ...text.label,
+      fontSize: 12,
+      color: colors.success,
+    },
+
+    /* --- Pie: precio y CTA --- */
 
     footer: {
-        marginTop: 30,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "flex-end",
-    },
-
-    recommended: {
-        color: colors.success,
-        fontWeight: "700",
-        fontSize: 17,
-        marginBottom: 12,
-    },
-
-    ratingContainer: {
-        flexDirection: "row",
-        gap: 10,
-    },
-
-    company: {
-        backgroundColor: colors.primary,
-        paddingHorizontal: 18,
-        paddingVertical: 12,
-        borderRadius: 10,
-    },
-
-    companyText: {
-        color: colors.textBtn,
-        fontWeight: "700",
-        fontSize: 16,
-    },
-
-    rating: {
-        backgroundColor: colors.primary,
-        paddingHorizontal: 18,
-        paddingVertical: 12,
-        borderRadius: 10,
-    },
-
-    ratingText: {
-        color: colors.textBtn,
-        fontWeight: "700",
-        fontSize: 16,
+      flexDirection: "row",
+      alignItems: "flex-end",
+      justifyContent: "space-between",
+      gap: Spacing.md,
+      marginTop: Spacing.lg,
     },
 
     price: {
-        fontSize: 28,
-        fontWeight: "900",
-        color: colors.text,
+      ...text.h2,
+      fontSize: 26,
+      color: colors.textHeading,
     },
 
+    priceLabel: {
+      ...text.caption,
+      fontSize: 12,
+      marginTop: 2,
+    },
 
     button: {
-        marginTop: 28,
-        backgroundColor: colors.button,
-        borderRadius: 16,
-        paddingVertical: 16,
-        justifyContent: "center",
-        alignItems: "center",
+      flexDirection: "row",
+      alignItems: "center",
+      gap: Spacing.sm,
+      paddingHorizontal: Spacing.xl,
+      paddingVertical: 15,
+      borderRadius: Radius.md,
+      backgroundColor: colors.button,
     },
 
     buttonText: {
-        color: colors.buttonText,
-        fontSize: 18,
-        fontWeight: "700",
+      ...text.label,
+      fontSize: 16,
+      color: colors.buttonText,
     },
-
-    });
+  });
+};

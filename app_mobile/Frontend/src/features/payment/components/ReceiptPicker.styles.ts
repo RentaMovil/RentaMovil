@@ -1,44 +1,81 @@
 import { StyleSheet } from "react-native";
 
-export const createStyles = (colors: any) =>
-  StyleSheet.create({
+import { createTextStyles } from "../../../theme/constants/typography";
+
+/**
+ * Selector del comprobante.
+ *
+ * El area de arrastre mantiene el borde punteado, que el web usa tambien
+ * para los separadores; la cabecera pasa al formato de tarjeta con punto de
+ * acento que define `createCardStyles`.
+ */
+export const createStyles = (colors: any) => {
+
+  const text = createTextStyles(colors);
+
+  return StyleSheet.create({
+    header: {
+      marginBottom: 20,
+      paddingBottom: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+
+    titleRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 10,
+    },
+
+    dot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: colors.button,
+    },
+
     title: {
-      fontSize: 20,
+      ...text.title,
+      fontSize: 18,
       fontWeight: "700",
-      color: colors.text,
-      marginBottom: 4,
+      color: colors.textHeading,
     },
 
     subtitle: {
-      fontSize: 14,
-      color: colors.secondaryText,
-      marginBottom: 18,
+      ...text.caption,
+      marginTop: 6,
+      color: colors.text,
+      opacity: 0.75,
     },
 
     placeholder: {
-      height: 120,
+      height: 130,
       borderWidth: 1,
       borderStyle: "dashed",
-      borderColor: colors.border,
-      borderRadius: 14,
+      borderColor: colors.cardBorder,
+      borderRadius: 16,
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: colors.background,
+      gap: 10,
+      backgroundColor: colors.input,
+    },
+
+    placeholderIcon: {
+      marginBottom: 2,
     },
 
     placeholderText: {
-      fontSize: 15,
-      fontWeight: "600",
+      ...text.bodyMedium,
       color: colors.primary,
     },
 
     preview: {
       width: "100%",
       height: 220,
-      borderRadius: 14,
+      borderRadius: 16,
       borderWidth: 1,
-      borderColor: colors.border,
-      backgroundColor: colors.background,
+      borderColor: colors.cardBorder,
+      backgroundColor: colors.input,
     },
 
     actions: {
@@ -53,7 +90,7 @@ export const createStyles = (colors: any) =>
       alignItems: "center",
       borderWidth: 1,
       borderColor: colors.border,
-      borderRadius: 10,
+      borderRadius: 12,
     },
 
     dangerAction: {
@@ -61,12 +98,12 @@ export const createStyles = (colors: any) =>
     },
 
     actionText: {
+      ...text.label,
       fontSize: 14,
-      fontWeight: "600",
-      color: colors.text,
     },
 
     dangerText: {
       color: colors.error,
     },
   });
+};

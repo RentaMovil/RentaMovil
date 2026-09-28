@@ -13,6 +13,7 @@ import {
 import { useTheme } from "../../../theme/useTheme";
 import { Branch } from "../../../types/branch";
 import { filterStyles } from "./Filter.styles";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
     import { getBranches } from "../../branches/services/branchService";
 
@@ -153,20 +154,57 @@ import { filterStyles } from "./Filter.styles";
             <Text style={styles.error}>{errorBranch}</Text>
             ) : null}
 
+            {query.trim().length > 0 && suggestions.length === 0 && (
+            <View style={styles.suggestions}>
+                <Text style={styles.noSuggestions}>
+                {t("filterCalendar.noBranchResults")}
+                </Text>
+            </View>
+            )}
+
             {suggestions.length > 0 && (
             <FlatList
                 data={suggestions}
                 keyExtractor={(item) => item.id.toString()}
                 keyboardShouldPersistTaps="handled"
-                style={styles.sucursalDropdown}
-                renderItem={({ item }) => (
-                <TouchableOpacity
-                    style={styles.sucursalDropdownItem}
-                    onPress={() => handleSelect(item)}
-                >
-                    <Text style={styles.labelFilter}>{item.name}</Text>
-                </TouchableOpacity>
-                )}
+                style={styles.suggestions}
+                renderItem={({ item }) => {
+                    const isSelected = selectedBranch?.id === item.id;
+
+                    return (
+                    <TouchableOpacity
+                        style={[
+                            styles.suggestion,
+                            isSelected && styles.suggestionSelected,
+                        ]}
+                        onPress={() => handleSelect(item)}
+                    >
+                        <View style={styles.suggestionIcon}>
+                            <FontAwesome
+                                name="map-marker"
+                                size={15}
+                                color={colors.primary}
+                            />
+                        </View>
+
+                        <View style={styles.suggestionText}>
+                            <Text style={styles.suggestionName}>
+                            {item.name}
+                            </Text>
+
+                            <Text style={styles.suggestionAddress}>
+                            {item.address}
+                            </Text>
+
+                            <View style={styles.suggestionCity}>
+                                <Text style={styles.suggestionCityText}>
+                                {item.city.toUpperCase()}
+                                </Text>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                    );
+                }}
             />
             )}
         </View>
@@ -179,10 +217,10 @@ import { filterStyles } from "./Filter.styles";
                 {t("filterCalendar.deliveryDate")}
             </Text>
             <TouchableOpacity
-                style={styles.inputContainer}
+                style={styles.inputButton}
                 onPress={() => setShowStartDate(true)}
             >
-                <Text>{formatDate(startDate)}</Text>
+                <Text style={styles.inputButtonText}>{formatDate(startDate)}</Text>
             </TouchableOpacity>
 
             {showStartDate && (
@@ -203,10 +241,10 @@ import { filterStyles } from "./Filter.styles";
                 {t("filterCalendar.deliveryHour")}
             </Text>
             <TouchableOpacity
-                style={styles.inputContainer}
+                style={styles.inputButton}
                 onPress={() => setShowStartTime(true)}
             >
-                <Text>{formatTime(startTime)}</Text>
+                <Text style={styles.inputButtonText}>{formatTime(startTime)}</Text>
             </TouchableOpacity>
 
             {showStartTime && (
@@ -230,10 +268,10 @@ import { filterStyles } from "./Filter.styles";
                 {t("filterCalendar.returnDate")}
             </Text>
             <TouchableOpacity
-                style={styles.inputContainer}
+                style={styles.inputButton}
                 onPress={() => setShowEndDate(true)}
             >
-                <Text>{formatDate(endDate)}</Text>
+                <Text style={styles.inputButtonText}>{formatDate(endDate)}</Text>
             </TouchableOpacity>
 
             {showEndDate && (
@@ -255,10 +293,10 @@ import { filterStyles } from "./Filter.styles";
                 {t("filterCalendar.returnHour")}
             </Text>
             <TouchableOpacity
-                style={styles.inputContainer}
+                style={styles.inputButton}
                 onPress={() => setShowEndTime(true)}
             >
-                <Text>{formatTime(endTime)}</Text>
+                <Text style={styles.inputButtonText}>{formatTime(endTime)}</Text>
             </TouchableOpacity>
 
             {showEndTime && (

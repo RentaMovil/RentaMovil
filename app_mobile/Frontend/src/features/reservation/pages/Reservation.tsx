@@ -16,225 +16,119 @@ import { getInsuranceOptions } from "../../insurance/services/insuranceService";
 import { buildReservationRequest } from "../utils/buildReservationRequest";
 import { createReservation } from "../services/reservationService";
 
+import { themes } from "../../../theme/themes";
+import { useTheme } from "../../../theme/useTheme";
+
+import { createStyles } from "./Reservation.styles";
+
 import type { Branch } from "../../../types/branch";
 import type { InsuranceType } from "../../../types";
 
-
 export default function ReservationPage() {
-
-const {
+  const {
     reservation,
     updateReturnBranch,
     setCreatedReservation,
-} = useReservation();
-const [
-    showReturnModal,
-    setShowReturnModal
-] = useState(false);
+  } = useReservation();
 
-const [
-    isCreating,
-    setIsCreating,
-] = useState(false);
+  const { themeName } = useTheme();
+  const colors = themes[themeName];
+  const styles = createStyles(colors);
 
-const [
-    branchOptions,
-    setBranchOptions,
-] = useState<Branch[]>([]);
+  const [showReturnModal, setShowReturnModal] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
-const [
-    insuranceOptions,
-    setInsuranceOptions,
-] = useState<InsuranceType[]>([]);
+  const [branchOptions, setBranchOptions] = useState<Branch[]>([]);
+  const [insuranceOptions, setInsuranceOptions] = useState<InsuranceType[]>([]);
 
-useEffect(() => {
-
+  useEffect(() => {
     let cancelled = false;
 
     getBranches().then((loaded) => {
-
-        if (!cancelled) {
-
-            setBranchOptions(loaded);
-
-        }
-
+      if (!cancelled) {
+        setBranchOptions(loaded);
+      }
     });
 
     getInsuranceOptions().then((loaded) => {
-
-        if (!cancelled) {
-
-            setInsuranceOptions(loaded);
-
-        }
-
+      if (!cancelled) {
+        setInsuranceOptions(loaded);
+      }
     });
 
     return () => {
-
-        cancelled = true;
-
+      cancelled = true;
     };
+  }, []);
 
-}, []);
-
-
-
-
-if (!reservation?.vehicle) {
-
-    return (
-
-    <View
-        style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 24
-        }}
-    >
-
-        <Text>
-            No hay una reserva activa en este momento.
-        </Text>
-
-    </View>
-
-    );
-
-}
-
-
-const handleChangePickup = () => {
-
+  const handleChangePickup = () => {
     // Volver al home para cambiar la sucursal/fecha de recogida.
-    // El cast `as never` anterior servia para saltarse el tipado de
-    // rutas; `/` es una ruta valida y no lo necesita.
     router.push("/");
+  };
 
-};
-
-
-/**
- * Crea la reserva y avanza al paso de pago.
- *
- * La reserva se persiste AQUI, no en la pantalla de pago: segun el dominio
- * nace en PENDING_PAYMENT y el pago es un agregado aparte. Por eso esta
- * pantalla no exige metodo de pago ni lo necesita para continuar.
- */
-const handleContinue = async () => {
-
+  /**
+   * Crea la reserva y avanza al paso de pago.
+   *
+   * La reserva se persiste AQUI, no en la pantalla de pago: segun el dominio
+   * nace en PENDING_PAYMENT y el pago es un agregado aparte. Por eso esta
+   * pantalla no exige metodo de pago ni lo necesita para continuar.
+   */
+  const handleContinue = async () => {
     if (!reservation || isCreating) return;
 
     setIsCreating(true);
 
     try {
+      const created = await createReservation(
+        buildReservationRequest(reservation),
+      );
 
-        const created =
-            await createReservation(
-                buildReservationRequest(reservation)
-            );
+      setCreatedReservation(created);
 
-        setCreatedReservation(created);
-
-        router.push("/payment");
-
+      router.push("/payment");
     } catch (error) {
-
-        console.log(
-            "Error creando la reserva:",
-            error
-        );
-
+      console.log("Error creando la reserva:", error);
     } finally {
-
-        setIsCreating(false);
-
+      setIsCreating(false);
     }
+  };
 
-};
+  if (!reservation?.vehicle) {
+    return (
+      <View style={styles.empty}>
+        <Text style={styles.emptyTitle}>No hay una reserva activa</Text>
 
+        <Text style={styles.emptyText}>
+          Elige un vehiculo para empezar una reserva.
+        </Text>
+      </View>
+    );
+  }
 
+  return (
+    <ScrollView contentContainerStyle={styles.content}>
+      <VehicleSummaryCard vehicle={reservation.vehicle} />
 
-const handleChangeReturnBranch = () => {
+      <ReservationInfoCard
+        title="Tu reserva"
+        subtitle="Revisa los datos antes de continuar"
+        onChangePickup={handleChangePickup}
+        onChangeReturnBranch={() => setShowReturnModal(true)}
+      />
 
-    setShowReturnModal(true);
+      <BranchSelectorModal
+        visible={showReturnModal}
+        branches={branchOptions}
+        onClose={() => setShowReturnModal(false)}
+        onSelect={(branch) => updateReturnBranch(branch)}
+      />
 
-};
+      <InsuranceSelector options={insuranceOptions} />
 
-
-
-return (
-
-<ScrollView
-    contentContainerStyle={{
-        padding:16,
-        gap:12
-    }}
->
-
-
-<VehicleSummaryCard
-    vehicle={reservation.vehicle}
-/>
-
-
-
-<ReservationInfoCard
-
-    title="Tu reserva"
-
-    subtitle="Revisa los datos antes de continuar"
-
-    onChangePickup={handleChangePickup}
-
-    onChangeReturnBranch={handleChangeReturnBranch}
-
-/>
-
-
-
-<BranchSelectorModal
-
-    visible={showReturnModal}
-
-    branches={branchOptions}
-
-    onClose={()=>{
-
-        setShowReturnModal(false);
-
-    }}
-
-    onSelect={(branch)=>{
-
-        updateReturnBranch(branch);
-
-    }}
-
-/>
-
-
-
-<InsuranceSelector
-    options={insuranceOptions}
-/>
-
-
-
-<ContinueButton
-
-    title="Continuar"
-
-    onPress={handleContinue}
-
-/>
-
-
-
-</ScrollView>
-
-);
-
+      <ContinueButton
+        title={isCreating ? "Creando reserva..." : "Continuar"}
+        onPress={handleContinue}
+      />
+    </ScrollView>
+  );
 }

@@ -1,104 +1,159 @@
-    import { useTranslation } from "react-i18next";
-import { createStyles } from "./Card.styles";
-
-    import {
-    Image,
-    Text,
-    TouchableOpacity,
-    View,
+import { useTranslation } from "react-i18next";
+import {
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-    import { Vehicle } from "../../../types/vehicle";
+import { Vehicle } from "../../../types/vehicle";
 
-    import { themes } from "../../../theme/themes";
+import { VEHICLE_IMAGE } from "../../../config/assets";
+
+import { themes } from "../../../theme/themes";
 import { useTheme } from "../../../theme/useTheme";
 
-    type Props = {
-    vehicle: Vehicle;
-    onContinue: (vehicle: Vehicle) => void;
-    };
+import { createStyles } from "./Card.styles";
 
-    export default function VehicleCard({
-    vehicle,
-    onContinue,
-    }: Props) {
-    const { t } = useTranslation();
+type Props = {
+  vehicle: Vehicle;
+  onContinue: (vehicle: Vehicle) => void;
+};
 
-    const { themeName } = useTheme();
+/**
+ * Separador de miles es-TH, el mismo que usa el web (`toLocaleString("es-CO")`).
+ * Sin esto, 100000 se veria como "100000" en vez de "100.000".
+ */
+function formatMoney(value: number): string {
+  return value.toLocaleString("es-CO");
+}
 
-    const colors = themes[themeName as keyof typeof themes];
+export default function VehicleCard({ vehicle, onContinue }: Props) {
+  const { t } = useTranslation();
 
-    const styles = createStyles(colors);
+  const { themeName } = useTheme();
 
-    return (
-        <View style={styles.card}>
-        <View style={styles.badge}>
-            <Text style={styles.badgeText}>
-            {vehicle.price} COP/día
-            </Text>
-        </View>
+  const colors = themes[themeName as keyof typeof themes];
 
+  const styles = createStyles(colors);
+
+  /**
+   * `Vehicle` no tiene campo `available` (existe en `VehicleFilters`, que es
+   * otra cosa), asi que la disponibilidad se deduce del `status`, que si
+   * llega desde la API. Asi el distintivo no promete un vehiculo en
+   * mantenimiento.
+   */
+  const isAvailable = !/mantenimiento/i.test(vehicle.status ?? "");
+
+  const specs = [
+    {
+      key: "passengers",
+      value: `${vehicle.capacity}`,
+      unit: t("cartVehicule.capacity"),
+    },
+    { key: "fuel", value: vehicle.fuelType, unit: null },
+    { key: "mileage", value: formatMoney(vehicle.mileage), unit: "km" },
+  ];
+
+  return (
+    <View style={styles.card}>
+      <View style={styles.titleRow}>
         <Text style={styles.name}>
-            {vehicle.brand} {vehicle.model}
+          {vehicle.brand} {vehicle.model}
         </Text>
 
-        <View style={styles.featuresContainer}>
-            <View style={styles.feature}>
-            <Text style={styles.featureText}>
-                {t("cartVehicule.capacity")}: {vehicle.capacity}
-            </Text>
-            </View>
+        {isAvailable && (
+          <View style={styles.verifiedBadge}>
+            <FontAwesome name="check" size={12} color={colors.backgroundCard} />
+          </View>
+        )}
+      </View>
 
-            <View style={styles.feature}>
-            <Text style={styles.featureText}>
-                {t("cartVehicule.year")}: {vehicle.year}
-            </Text>
-            </View>
+      <Text style={styles.subtitle}>
+        {vehicle.vehicleType} • {t("cartVehicule.year")} {vehicle.year}
+      </Text>
 
-            <View style={styles.feature}>
-            <Text style={styles.featureText}>
-                {t("cartVehicule.type")}: {vehicle.vehicleType}
-            </Text>
-            </View>
-        </View>
+      <View style={styles.imageBox}>
+        <Image
+          source={VEHICLE_IMAGE}
+          style={styles.image}
+          resizeMode="contain"
+        />
+      </View>
 
-        <View style={styles.content}>
-
-            <Image
-            source={{ uri: vehicle.image }}
-            style={styles.image}
+      <View style={styles.specsBar}>
+        {specs.map((spec, index) => (
+          <View
+            key={spec.key}
+            style={[
+              styles.spec,
+              index < specs.length - 1 && styles.specDivider,
+            ]}
+          >
+            <FontAwesome
+              name={
+                spec.key === "passengers"
+                  ? "users"
+                  : spec.key === "fuel"
+                    ? "tint"
+                    : "tachometer"
+              }
+              size={15}
+              color={colors.primary}
             />
-        </View>
 
-        <View style={styles.locationContainer}>
-            <View style={styles.locationIcon}>
-            <Text>✈️</Text>
-            </View>
-
-            <View style={styles.locationInfo}>
-            <Text style={styles.location}>
-                {t("cartVehicule.location")}, {vehicle.location}
+            <Text style={styles.specValue}>
+              {spec.value} {spec.unit}
             </Text>
-            </View>
+          </View>
+        ))}
+      </View>
+
+      <View style={styles.infoRow}>
+        <View style={styles.locationRow}>
+          <FontAwesome
+            name="map-marker"
+            size={15}
+            color={colors.button}
+          />
+
+          <Text style={styles.location}>
+            {t("cartVehicule.location")}, {vehicle.location}
+          </Text>
         </View>
 
-            <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-                console.log("Botón presionado");
-                console.log("onContinue =", onContinue);
+        <View style={styles.freeCancel}>
+          <FontAwesome name="check" size={11} color={colors.success} />
 
-                if (onContinue) {
-                onContinue(vehicle);
-                } else {
-                console.log("onContinue es undefined");
-                }
-            }}
-            >
-            <Text style={styles.buttonText}>
-                {t("cartVehicule.continue")}
-            </Text>
-            </TouchableOpacity>
+          <Text style={styles.freeCancelText}>
+            {t("cartVehicule.cancellation")}
+          </Text>
         </View>
-    );
-    }
+      </View>
+
+      <View style={styles.footer}>
+        <View>
+          <Text style={styles.price}>$ {formatMoney(vehicle.price)}</Text>
+
+          <Text style={styles.priceLabel}>
+            COP / {t("cartVehicule.perDay")}
+          </Text>
+        </View>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => onContinue(vehicle)}
+        >
+          <Text style={styles.buttonText}>{t("cartVehicule.rent")}</Text>
+
+          <FontAwesome
+            name="arrow-right"
+            size={15}
+            color={colors.buttonText}
+          />
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}

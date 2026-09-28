@@ -59,4 +59,5 @@ export const API_ROUTES = {
   },
   vehicles: "/vehicles",
   maintenances: "/maintenances",
+  notifications: "/notifications",
 } as const;

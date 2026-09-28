@@ -19,6 +19,8 @@ import { calculateInvoiceTotal } from "../utils/calculateInvoiceTotal";
 
 import type { InsuranceType } from "../../../types";
 
+import { createStyles } from "./PaymentPage.styles";
+
 /**
  * Pantalla de pago.
  *
@@ -42,6 +44,7 @@ export default function PaymentPage() {
 
   const { themeName } = useTheme();
   const colors = themes[themeName];
+  const styles = createStyles(colors);
 
   useEffect(() => {
     let cancelled = false;
@@ -111,36 +114,31 @@ export default function PaymentPage() {
 
   if (payment) {
     return (
-      <ScrollView>
-        <View style={{ padding: 20 }}>
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: "700",
-              color: colors.text,
-            }}
-          >
-            Pago en revision
-          </Text>
-        </View>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={styles.stateTitle}>Pago en revision</Text>
+
+        <Text style={styles.stateText}>
+          Tu pago quedo registrado y esta esperando que un administrador lo
+          confirme.
+        </Text>
       </ScrollView>
     );
   }
 
   if (!createdReservation) {
     return (
-      <ScrollView>
-        <View style={{ padding: 20 }}>
-          <Text style={{ color: colors.text }}>
-            No hay una reserva activa para pagar.
-          </Text>
-        </View>
+      <ScrollView contentContainerStyle={styles.content}>
+        <Text style={styles.stateTitle}>No hay una reserva activa</Text>
+
+        <Text style={styles.stateText}>
+          Crea primero una reserva para poder registrar su pago.
+        </Text>
       </ScrollView>
     );
   }
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={styles.content}>
       <VehiclePaymentCard />
 
       <InvoiceCard />

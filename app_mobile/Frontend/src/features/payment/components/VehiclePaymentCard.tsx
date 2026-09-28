@@ -4,6 +4,8 @@ import AppCard from "../../../shared/components/AppCard/AppCard";
 
 import { useReservation } from "../../reservation/context/ReservationContext";
 
+import { VEHICLE_IMAGE } from "../../../config/assets";
+
 import { createStyles } from "./VehiclePaymentCard.styles";
 
 import { themes } from "../../../theme/themes";
@@ -27,7 +29,7 @@ export default function VehiclePaymentCard() {
         <AppCard>
 
             <Image
-                source={{ uri: reservation.vehicle.image }}
+                source={VEHICLE_IMAGE}
                 style={styles.image}
                 resizeMode="cover"
             />

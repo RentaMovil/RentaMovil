@@ -1,0 +1,482 @@
+.vl-page {
+  background: var(--bg);
+  min-height: 100vh;
+}
+.vl-wrapper {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 28px 24px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ── Breadcrumb ── */
+.vl-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--placeholder);
+}
+.vl-breadcrumb .vl-sep {
+  opacity: 0.5;
+}
+.vl-breadcrumb .current {
+  color: var(--text-h);
+  font-weight: 700;
+}
+
+/* ── Header ── */
+.vl-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+@media (min-width: 1100px) {
+  .vl-header {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+}
+.vl-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-h);
+  margin: 0 0 8px;
+}
+.vl-subtitle {
+  font-size: 14px;
+  color: var(--placeholder);
+  margin: 0;
+  max-width: 620px;
+}
+
+/* ── Botones ── */
+.vl-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text-h);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.vl-btn-outline:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+.vl-btn-outline:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.vl-spin {
+  animation: vl-spin 0.9s linear infinite;
+}
+@keyframes vl-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── KPIs ── */
+/* ── Herramientas de cabecera ── */
+.vl-header-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-self: flex-start;
+}
+
+/* El mapa se refresca solo, asi que se dice cada cuanto. */
+.vl-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--placeholder);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.vl-live svg {
+  width: 13px;
+  height: 13px;
+  color: var(--success);
+}
+
+/* Tracker desconectado: la posicion que se ve es del ultimo reporte
+   guardado, no una senal en vivo. */
+.vl-offline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid #fca5a5;
+  border-left: 4px solid #ef4444;
+  background: var(--card-bg);
+  color: #b91c1c;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.vl-offline svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+
+.vl-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
+}
+.vl-kpi {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.vl-kpi-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--placeholder);
+}
+.vl-kpi-value {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+.vl-kpi-value--on {
+  color: var(--success);
+}
+.vl-kpi-value--time {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ── Estados ── */
+.vl-loading {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 40px;
+  text-align: center;
+  color: var(--placeholder);
+}
+.vl-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--card-bg);
+  border: 1px solid #fca5a5;
+  border-left: 4px solid #ef4444;
+  border-radius: 12px;
+  padding: 16px 18px;
+  color: var(--text-h);
+}
+.vl-error strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+.vl-error p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-h);
+}
+.vl-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 56px 24px;
+  background: var(--card-bg);
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  color: var(--placeholder);
+  text-align: center;
+}
+.vl-empty svg {
+  width: 30px;
+  height: 30px;
+  opacity: 0.6;
+}
+.vl-empty p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+.vl-empty span {
+  font-size: 13px;
+  max-width: 420px;
+}
+.vl-empty--inline {
+  padding: 40px 20px;
+}
+
+/* ── Rejilla principal ── */
+.vl-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: start;
+}
+@media (min-width: 1080px) {
+  .vl-grid {
+    grid-template-columns: 320px 1fr;
+  }
+}
+
+/* ── Lista de vehiculos ── */
+.vl-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.vl-list-title {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--placeholder);
+  margin: 0 0 2px;
+}
+.vl-card {
+  text-align: left;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid transparent;
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font: inherit;
+  color: var(--text-h);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+.vl-card:hover {
+  background: var(--accent-hover);
+}
+.vl-card.active {
+  border-left-color: var(--accent);
+  background: var(--accent-bg);
+}
+.vl-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.vl-plate {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 2px 8px;
+  color: var(--text-h);
+}
+.vl-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: none;
+}
+.vl-dot--moving {
+  background: var(--success);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.18);
+}
+.vl-dot--stopped {
+  background: var(--placeholder);
+  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.18);
+}
+.vl-card-name {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+.vl-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 0;
+}
+.vl-card-meta div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.vl-card-meta dt {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--placeholder);
+}
+.vl-card-meta dd {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+.vl-card-time {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 12px;
+  color: var(--placeholder);
+}
+.vl-card-time svg {
+  width: 12px;
+  height: 12px;
+  flex: none;
+}
+
+/* ── Detalle: mapa + lectura ── */
+.vl-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.vl-map {
+  height: 420px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+}
+@media (max-width: 700px) {
+  .vl-map {
+    height: 300px;
+  }
+}
+
+/* Marcadores del mapa: los crea Leaflet fuera del arbol de React, asi que el
+   estilo tiene que ser global (por eso vive aqui y no en un modulo CSS). */
+.vl-vehicle-marker {
+  background: transparent;
+  border: 0;
+}
+.vl-vehicle-dot {
+  display: block;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.35);
+}
+
+/* ── Lectura de coordenadas ── */
+.vl-readout {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+}
+.vl-readout-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-h);
+  margin: 0 0 14px;
+}
+.vl-readout-title svg {
+  width: 15px;
+  height: 15px;
+  color: var(--accent);
+}
+.vl-readout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+.vl-field {
+  background: var(--card-brand);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.vl-field dt {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--placeholder);
+}
+.vl-field dt svg {
+  width: 11px;
+  height: 11px;
+}
+.vl-field dd {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+.vl-mono {
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: -0.01em;
+}
+.vl-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 3px 10px;
+  border: 1px solid transparent;
+}
+.vl-badge--on {
+  background: rgba(22, 163, 74, 0.12);
+  border-color: rgba(22, 163, 74, 0.3);
+  /* `var(--success)` y no un verde fijo: es lo que hace que el badge siga al
+     tema, igual que el punto verde de la lista. */
+  color: var(--success);
+}
+.vl-badge--off {
+  background: var(--code-bg);
+  border-color: var(--border);
+  color: var(--placeholder);
+}
+.vl-readout-foot {
+  margin: 14px 0 0;
+  font-size: 12px;
+  color: var(--placeholder);
+}

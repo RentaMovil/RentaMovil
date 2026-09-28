@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 import AppCard from "../../../shared/components/AppCard/AppCard";
 
@@ -53,7 +54,8 @@ type Props = {
 export default function ReceiptPicker({ receiptFile, onChange }: Props) {
   const [isPicking, setIsPicking] = useState(false);
   const { themeName } = useTheme();
-  const styles = createStyles(themes[themeName]);
+  const colors = themes[themeName];
+  const styles = createStyles(colors);
 
   async function pick() {
     if (isPicking) {
@@ -96,9 +98,15 @@ export default function ReceiptPicker({ receiptFile, onChange }: Props) {
 
   return (
     <AppCard>
-      <Text style={styles.title}>Comprobante de pago</Text>
+      <View style={styles.header}>
+        <View style={styles.titleRow}>
+          <View style={styles.dot} />
 
-      <Text style={styles.subtitle}>{SUBTITLE}</Text>
+          <Text style={styles.title}>Comprobante de pago</Text>
+        </View>
+
+        <Text style={styles.subtitle}>{SUBTITLE}</Text>
+      </View>
 
       {receiptFile ? (
         <View>
@@ -128,9 +136,17 @@ export default function ReceiptPicker({ receiptFile, onChange }: Props) {
           disabled={isPicking}
         >
           {isPicking ? (
-            <ActivityIndicator color="#FFFFFF" />
+            <ActivityIndicator color={colors.primary} />
           ) : (
-            <Text style={styles.placeholderText}>{PICK_LABEL}</Text>
+            <>
+              <FontAwesome
+                name="paperclip"
+                size={22}
+                color={colors.primary}
+              />
+
+              <Text style={styles.placeholderText}>{PICK_LABEL}</Text>
+            </>
           )}
         </TouchableOpacity>
       )}

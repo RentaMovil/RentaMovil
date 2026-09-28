@@ -1,37 +1,71 @@
-        import { StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
-        export const createStyles = (colors: any) =>
-        StyleSheet.create({
+import { createTextStyles } from "../../../theme/constants/typography";
 
-            title: {
-            fontSize: 18,
-            fontWeight: "700",
-            color: colors.text,
-            },
+/**
+ * Datos de la reserva (recogida y devolucion).
+ *
+ * Cabecera con el punto de acento y la regla inferior que usa el web en
+ * `.pay-card-header`.
+ */
+export const createStyles = (colors: any) => {
 
-            subtitle: {
-            color: colors.text,
-            marginBottom: 20,
-            marginTop: 4,
-            },
+  const text = createTextStyles(colors);
 
-            section: {
-            marginBottom: 18,
-            },
+  return StyleSheet.create({
+    header: {
+      marginBottom: 20,
+      paddingBottom: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
 
-            label: {
-            fontWeight: "600",
-            color: colors.text,
-            },
+    titleRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 10,
+    },
 
-            value: {
-            marginVertical: 4,
-            color: colors.text,
-            },
+    dot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: colors.button,
+    },
 
-            link: {
-            color: colors.primary,
-            fontWeight: "600",
-            },
+    title: {
+      ...text.title,
+      fontSize: 18,
+      fontWeight: "700",
+      color: colors.textHeading,
+    },
 
-        });
+    subtitle: {
+      ...text.caption,
+      marginTop: 6,
+      color: colors.text,
+      opacity: 0.75,
+    },
+
+    section: {
+      marginBottom: 18,
+    },
+
+    // Etiqueta pequena en versal, el patron `.overline` del web.
+    label: {
+      ...text.overline,
+      marginBottom: 4,
+    },
+
+    value: {
+      ...text.bodyMedium,
+      color: colors.textHeading,
+    },
+
+    link: {
+      ...text.bodyMedium,
+      marginTop: 6,
+      color: colors.primary,
+    },
+  });
+};

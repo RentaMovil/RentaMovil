@@ -159,7 +159,12 @@
     "cancelar": "Cancel",
     "retry": "Retry",
     "signIn": "Sign in",
-    "logout": "Log out"
+    "logout": "Log out",
+    "apellido": "Last name",
+    "usuario": "Username",
+    "editar": "Edit profile",
+    "guardar": "Save changes",
+    "guardando": "Saving..."
   },
   "payment": {
     "payTitle": "Confirm Payment",
@@ -205,7 +210,8 @@
     "ins-types": "Insurance types",
     "superadmin": "Super Admin",
     "sa-users": "Users & roles",
-    "sa-bank": "Bank accounts"
+    "sa-bank": "Bank accounts",
+    "loc-fleet": "Fleet location"
   },
   "changePassword": {
     "caracters": "At least 8 characters",
@@ -244,21 +250,21 @@
     "priceRequired": "Price is required",
     "minLenghtPrice": "The price must be greater than or equal to 0",
     "maxLenghtPrice": "The price must not exceed 100000000",
-        "mileage":"Mileage",
-    "mileageRequired":"the mileage is required",
-    "minLenghtMileage":"the mileage must be greater than or equal to 0",
-    "maxLenghtMileage":"the mileage must not exceed 1000000",
-    "invalidMileage":"the mileage can only contain numbers.",
-    "age":"Age",
-    "ageRequired":"Age is required",
-    "minLenghtAge":"Age must be greater than or equal to",
-    "maxLenghtAge":"Age must not exceed",
-    "invalidAge":"Age can only contain numbers.",
-    "capacity":"Capacity",
-    "capacityRequired":"Capacity is required",
-    "minLenghtCapacity":"Capacity must be greater than or equal to 1",
-    "maxLenghtCapacity":"Capacity must not exceed 100",
-    "invalidCapacity":"Capacity can only contain numbers.",
+    "mileage": "Mileage",
+    "mileageRequired": "the mileage is required",
+    "minLenghtMileage": "the mileage must be greater than or equal to 0",
+    "maxLenghtMileage": "the mileage must not exceed 1000000",
+    "invalidMileage": "the mileage can only contain numbers.",
+    "age": "Age",
+    "ageRequired": "Age is required",
+    "minLenghtAge": "Age must be greater than or equal to",
+    "maxLenghtAge": "Age must not exceed",
+    "invalidAge": "Age can only contain numbers.",
+    "capacity": "Capacity",
+    "capacityRequired": "Capacity is required",
+    "minLenghtCapacity": "Capacity must be greater than or equal to 1",
+    "maxLenghtCapacity": "Capacity must not exceed 100",
+    "invalidCapacity": "Capacity can only contain numbers.",
     "Type": "Vehicle type",
     "requiredType": "You must select a vehicle type",
     "disabledType": "Select a type...",
@@ -379,21 +385,6 @@
     "minLenghtMaintenance": "Minimum 3 characters.",
     "maxLenght": "Maximum 60 characters",
     "invalidMaintenance": "Only letters, numbers, hyphens and commas are allowed.",
-    "option1": "Oil change",
-    "option2": "Filter replacement",
-    "option3": "Brake inspection",
-    "option4": "Tire replacement",
-    "option5": "Wheel alignment and balancing",
-    "option6": "General inspection",
-    "option7": "Engine repair",
-    "option8": "Brake repair",
-    "option9": "Electrical repair",
-    "option10": "Suspension repair",
-    "option11": "Transmission repair",
-    "option12": "Car wash",
-    "option13": "Painting",
-    "option14": "Bodywork",
-    "observations": "Observations",
     "placeholderObservations": "Observations",
     "minLenghtObservations": "Minimum 5 characters",
     "maxLenghtObservations": "Maximum 200 characters",
@@ -402,7 +393,7 @@
     "sheduling": "Scheduling maintenance",
     "shedule": "Schedule maintenance",
     "button": "Maintenance history",
-      "options": {
+    "options": {
       "option1": "Oil change",
       "option2": "Filter replacement",
       "option3": "Brake inspection",
@@ -416,11 +407,12 @@
       "option11": "Transmission repair",
       "option12": "Car wash",
       "option13": "Painting",
-      "option14": "Bodywork"
+      "option14": "Bodywork",
+      "observations": "Observations"
     }
   },
-    "FilterVehicle":{
-    "placeholder":"Search by plate, brand or model..."
+  "FilterVehicle": {
+    "placeholder": "Search by plate, brand or model..."
   },
   "notifications": {
     "unread": "Unread",
@@ -912,7 +904,6 @@
     "showingRange": "Showing {{from}} to {{to}} of {{total}} results",
     "previous": "Previous",
     "next": "Next",
-
     "notFound": "The requested reservation could not be found.",
     "backToList": "Back to reservations",
     "detailTitle": "Reservation Detail #{{id}}",
@@ -993,10 +984,10 @@
       "mileageIn": "Odometer in",
       "fuelLevel": "Fuel level",
       "fuel": {
-        "full": "Full (8/8)",
-        "34": "3/4 (6/8)",
         "12": "1/2 (4/8)",
-        "14": "1/4 (2/8)"
+        "14": "1/4 (2/8)",
+        "34": "3/4 (6/8)",
+        "full": "Full (8/8)"
       },
       "gpsDevice": "Telematics GPS device",
       "gpsOption1": "Geotab R-809 (pre-installed and active)",
@@ -1013,5 +1004,74 @@
       "title": "Bank transfer receipt",
       "subtitle": "Reference: {{reference}}"
     }
+  },
+  "process": {
+    "title": "4 steps to your next trip",
+    "subtitle": "A simple, clear process designed to take you further.",
+    "steps": {
+      "search": {
+        "title": "Search and choose",
+        "description": "Filter by location, dates and vehicle type to find the ideal car for your trip."
+      },
+      "reserve": {
+        "title": "Reserve",
+        "description": "Choose your coverage, review the details and confirm your reservation with a secure payment."
+      },
+      "pickup": {
+        "title": "Pick up and enjoy",
+        "description": "Head to the selected branch, show your invoice along with your driver's licence and collect the keys with no delays or queues."
+      },
+      "return": {
+        "title": "Enjoy and return",
+        "description": "When your trip is over, return the vehicle at the corresponding branch and enjoy your experience."
+      }
+    }
+  },
+  "requirements": {
+    "title": "Requirements to rent a vehicle",
+    "license": "Driver's licence",
+    "licenseDescription": "Present a valid and current licence for the type of vehicle reserved.",
+    "insurance": "Selected insurance",
+    "insuranceDescription": "Choose the coverage that best suits the needs of your trip.",
+    "id": "Identity document",
+    "idDescription": "Bring your original document to complete the vehicle handover."
+  },
+  "title": {
+    "rentamovil": "Travel with RentaMovil"
+  },
+  "description": {
+    "info-branches": "Our branches are located in the main cities of the country and offer their service from 8:00 to 18:00."
+  },
+  "vehicleLocation": {
+    "title": "Fleet location",
+    "subtitle": "Map with the position sent by the GPS of the vehicles on rental.",
+    "refresh": "Refresh",
+    "errorTitle": "Could not load the location",
+    "kpiTracked": "Tracked",
+    "kpiMoving": "Moving",
+    "kpiStopped": "Stopped",
+    "kpiLastUpdate": "Last signal",
+    "loading": "Loading the fleet...",
+    "emptyTitle": "No vehicles on rental",
+    "emptyHint": "Location is only available for vehicles with an in-progress reservation and an active GPS.",
+    "listTitle": "Vehicles",
+    "moving": "Moving",
+    "stopped": "Stopped",
+    "rental": "Reservation",
+    "customer": "Customer",
+    "readoutTitle": "Last recorded position",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "speed": "Speed",
+    "kmh": "km/h",
+    "heading": "Heading",
+    "ignition": "Ignition",
+    "ignitionOn": "On",
+    "ignitionOff": "Off",
+    "recordedAt": "Recorded",
+    "selectVehicle": "Select a vehicle",
+    "autoRefresh": "Refreshes every {{seconds}} s",
+    "deviceOffline": "{{model}} is not connected: this is the last reported position.",
+    "device": "Device: {{model}} · {{provider}}"
   }
 }

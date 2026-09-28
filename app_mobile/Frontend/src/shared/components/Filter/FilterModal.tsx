@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 import { createStyles } from "./FilterModal.styles";
 import { themes } from "../../../theme/themes";
@@ -58,13 +59,46 @@ export default function FilterModal({
   onApply,
   onClear,
 }: Props) {
-const { themeName } = useTheme();
-const styles = createStyles(themes[themeName as keyof typeof themes]);
+  const { themeName } = useTheme();
+  const colors = themes[themeName as keyof typeof themes];
+  const styles = createStyles(colors);
 
-const categories = options.categories;
-const brand = options.brands;
-const models = options.models;
-const fuelTypes = options.fuelTypes;
+  const categories = options.categories;
+  const brand = options.brands;
+  const models = options.models;
+  const fuelTypes = options.fuelTypes;
+
+  /**
+   * Fila de opcion con casilla real.
+   *
+   * Antes era un emoji de check dentro del texto ("✔️ Gasolina"), que hacia
+   * de checkbox pero no lo era: no tenia area de pulsacion propia, no era
+   * accesible y el emoji cambiaba de aspecto entre plataformas. Ahora la
+   * casilla es un icono con su propio color de estado.
+   */
+  const renderOption = (
+    item: string,
+    selected: boolean,
+    onPress: () => void,
+  ) => (
+    <TouchableOpacity
+      style={[styles.option, selected && styles.optionSelected]}
+      onPress={onPress}
+      accessibilityRole="checkbox"
+      accessibilityState={{ checked: selected }}
+    >
+      <FontAwesome
+        name={selected ? "check-square" : "square-o"}
+        size={17}
+        color={selected ? colors.primary : colors.secondaryText}
+        style={styles.checkbox}
+      />
+
+      <Text style={[styles.optionText, selected && styles.optionTextSelected]}>
+        {item}
+      </Text>
+    </TouchableOpacity>
+  );
 
   const selectFuelType = (value: string) => {
     setFilters((prev) => ({
@@ -87,13 +121,12 @@ const fuelTypes = options.fuelTypes;
     }));
   };
 
-    const togglebrand = (value: string) => {
+  const togglebrand = (value: string) => {
     setFilters((prev) => ({
       ...prev,
-      brand : prev.brand === value ? "" : value,
+      brand: prev.brand === value ? "" : value,
     }));
   };
-
 
   const updatePrice = (key: "minPrice" | "maxPrice", value: string) => {
     const num = value === "" ? 0 : Number(value);
@@ -117,15 +150,17 @@ const fuelTypes = options.fuelTypes;
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-
         <View style={styles.overlay}>
           <View style={styles.container}>
-
             <View style={styles.header}>
               <Text style={styles.title}>Filtros</Text>
 
-              <TouchableOpacity onPress={onClose}>
-                <Text style={styles.close}>✕</Text>
+              <TouchableOpacity onPress={onClose} accessibilityRole="button">
+                <FontAwesome
+                  name="times"
+                  size={18}
+                  color={colors.secondaryText}
+                />
               </TouchableOpacity>
             </View>
 
@@ -134,7 +169,6 @@ const fuelTypes = options.fuelTypes;
                 keyboardShouldPersistTaps="handled"
                 contentContainerStyle={{ paddingBottom: 20 }}
               >
-
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Precio</Text>
 
@@ -146,9 +180,7 @@ const fuelTypes = options.fuelTypes;
                         style={styles.input}
                         keyboardType="numeric"
                         value={String(filters.minPrice)}
-                        onChangeText={(text) =>
-                          updatePrice("minPrice", text)
-                        }
+                        onChangeText={(text) => updatePrice("minPrice", text)}
                       />
                     </View>
 
@@ -161,9 +193,7 @@ const fuelTypes = options.fuelTypes;
                         style={styles.input}
                         keyboardType="numeric"
                         value={String(filters.maxPrice)}
-                        onChangeText={(text) =>
-                          updatePrice("maxPrice", text)
-                        }
+                        onChangeText={(text) => updatePrice("maxPrice", text)}
                       />
                     </View>
                   </View>
@@ -175,69 +205,45 @@ const fuelTypes = options.fuelTypes;
                   )}
                 </View>
 
-                {/* FUEL TYPE */}
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Tipo de motor</Text>
 
-                  {fuelTypes.map((item) => (
-                    <TouchableOpacity
-                      key={item}
-                      style={styles.option}
-                      onPress={() => selectFuelType(item)}
-                    >
-                      <Text style={styles.optionText}>
-                        {filters.fuelType.includes(item) ? "✔️" : "⬜"} {item}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                  {fuelTypes.map((item) =>
+                    renderOption(item, filters.fuelType.includes(item), () =>
+                      selectFuelType(item),
+                    ),
+                  )}
                 </View>
 
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Marca</Text>
-                  {brand.map((item) => (
-                    <TouchableOpacity
-                      key={item}
-                      style={styles.option}
-                      onPress={() => togglebrand(item)}
-                    >
-                      <Text style={styles.optionText}>
-                        {filters.brand.includes(item) ? "✔️" : "⬜"} {item}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+
+                  {brand.map((item) =>
+                    renderOption(item, filters.brand.includes(item), () =>
+                      togglebrand(item),
+                    ),
+                  )}
                 </View>
 
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Modelo</Text>
-                  {models.map((item) => (
-                    <TouchableOpacity
-                      key={item}
-                      style={styles.option}
-                      onPress={() => toggleModel(item)}
-                    >
-                      <Text style={styles.optionText}>
-                        {filters.model === item ? "✔️" : "⬜"} {item}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+
+                  {models.map((item) =>
+                    renderOption(item, filters.model === item, () =>
+                      toggleModel(item),
+                    ),
+                  )}
                 </View>
 
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Categoría</Text>
 
-                  {categories.map((item) => (
-                    <TouchableOpacity
-                      key={item}
-                      style={styles.option}
-                      onPress={() => toggleCategory(item)}
-                    >
-                      <Text style={styles.optionText}>
-                        {filters.category === item ? "✔️" : "⬜"} {item}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                  {categories.map((item) =>
+                    renderOption(item, filters.category === item, () =>
+                      toggleCategory(item),
+                    ),
+                  )}
                 </View>
-
               </ScrollView>
             </View>
 
@@ -260,10 +266,8 @@ const fuelTypes = options.fuelTypes;
                 <Text style={styles.applyButtonText}>Aplicar</Text>
               </TouchableOpacity>
             </View>
-
           </View>
         </View>
-
       </KeyboardAvoidingView>
     </Modal>
   );

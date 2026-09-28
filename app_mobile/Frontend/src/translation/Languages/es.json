@@ -1,4 +1,42 @@
 {
+  "process": {
+    "title": "4 pasos para tu próximo viaje",
+    "subtitle": "Un proceso simple, claro y pensado para que llegues más lejos.",
+    "steps": {
+      "search": {
+        "title": "Busca y elige",
+        "description": "Filtra por ubicación, fechas y tipo de vehículo para encontrar el coche ideal para tu viaje."
+      },
+      "reserve": {
+        "title": "Reserva",
+        "description": "Elige tu cobertura, revisa los detalles y confirma tu reserva mediante un pago seguro."
+      },
+      "pickup": {
+        "title": "Recoge y disfruta",
+        "description": "Acércate a la sucursal seleccionada, muestra tu factura con tu licencia de conducción y recibe las llaves sin demoras ni filas innecesarias."
+      },
+      "return": {
+        "title": "Disfruta y Devuelve",
+        "description": "Al terminar tu viaje, devuelve el vehículo en la sucursal correspondiente y disfruta de tu experiencia."
+      }
+    }
+  },
+  "insurance": {
+    "title": "Seguro",
+    "subtitle": "Selecciona la cobertura que deseas para tu reserva.",
+    "tag": {
+      "base": "Básico",
+      "popular": "Popular",
+      "premium": "Premium"
+    }
+  },
+  "menu": {
+    "title": "Menú",
+    "home": "Inicio",
+    "reservations": "Mis reservas",
+    "account": "Mi cuenta",
+    "logout": "Cerrar sesión"
+  },
   "navbar": {
     "linkInit": "Inicio",
     "linkNotifications": "Notificaciones",
@@ -26,6 +64,7 @@
     "returnHour": "Hora de devolución",
     "branch": "Sucursal",
     "deliveryLocationPlaceholder": "Selecciona una sucursal",
+    "noBranchResults": "Ninguna sucursal coincide con la búsqueda",
     "search": "Buscar"
   },
   "cartVehicule": {
@@ -38,6 +77,8 @@
     "location": "Aeropuerto",
     "cancellation": "Cancelacion gratis",
     "continue": "Continuar",
+    "rent": "Alquilar",
+    "perDay": "por día",
     "type": "Tipo"
   },
   "filtersHome": {
@@ -50,7 +91,6 @@
     "typeHybrid": "Híbrido",
     "typeDiesel": "Diesel"
   },
-
   "reservation": {
     "ErrorDate": "La fecha de entrega no puede ser anterior a la de recogida",
     "ErrorAge:": "Debes ser mayor de edad",
@@ -68,7 +108,6 @@
     "phone": "Teléfono",
     "submit": "Alquilar"
   },
-
   "login": {
     "createAccount": "Crear cuenta",
     "iniciarSesion": "Iniciar sesión"
@@ -96,19 +135,15 @@
     "email": "Correo electrónico",
     "password": "Contraseña",
     "confirmPassword": "Confirmar contraseña",
-
     "firstNamePlaceholder": "Nombre",
     "lastNamePlaceholder": "Apellido",
     "phonePlaceholder": "3001234567",
     "usernamePlaceholder": "usuario123",
     "emailPlaceholder": "tu@email.com",
     "passwordPlaceholder": "••••••••",
-
     "submit": "Crear cuenta",
     "submitting": "Creando cuenta...",
-
     "haveAccount": "¿Ya tienes cuenta? Inicia sesión",
-
     "errorFields": "Rellena todos los campos",
     "emailInvalid": "Introduce un email válido",
     "phoneInvalid": "Teléfono inválido (10 dígitos)",
@@ -154,7 +189,9 @@
     "placeholderCity": "Ciudad de residencia",
     "adrress": "Dirección",
     "placeholderAddress": "Dirección de entrega",
-    "confirm": "Confirmar y pagar"
+    "confirm": "Confirmar y pagar",
+    "copyNumber": "Copiar número",
+    "copied": "¡Copiado!"
   },
   "buttonBack": {
     "label": "Regresar"
@@ -351,30 +388,48 @@
     "shedule": "Agendar mantenimiento",
     "button": "Historial de mantenimientos"
   },
-  "notifications" : {
-    "unread" : "Sin leer",
-    "all" : "Todas",
-    "confReservations" : "Reservas Confirmadas",
-    "pays" : "Pagos",
-    "cancel" : "Canceladas",
-    "recordatory" : "Recordatorios",
-    "recibed" : "Recibidas",
-    "detail" : "Detalles de notificación",
-    "message" : "Mensaje",
-    "date" : "Fecha",
-    "state" : "Estado",
-    "vehicle" : "Vehiculo",
-    "close" : "Cerrar"
+  "notifications": {
+    "unread": "Sin leer",
+    "all": "Todas",
+    "confReservations": "Reservas Confirmadas",
+    "pays": "Pagos",
+    "cancel": "Canceladas",
+    "recordatory": "Recordatorios",
+    "recibed": "Recibidas",
+    "detail": "Detalles de notificación",
+    "message": "Mensaje",
+    "date": "Fecha",
+    "state": "Estado",
+    "vehicle": "Vehiculo",
+    "close": "Cerrar",
+    "loading": "Cargando notificaciones...",
+    "empty": "No hay notificaciones para este filtro.",
+    "statusActive": "Activa",
+    "statusPayment": "Pago confirmado",
+    "statusCancelled": "Cancelada",
+    "statusPending": "Pendiente",
+    "statusUnknown": "Sin estado"
   },
-"historyReservation" :{
-  "myReservations" : "Mis Reservas",
-  "date" : "Fecha: ",
-  "days" : "Días: ",
-  "total" : "Total: ",
-  "cancel" : "Cancelar Reserva",
-  "sure" : "¿Seguro que deseas cancelar la reserva de",
-  "yes" : "Sí, cancelar",
-  "no" : "No",
-  "confirm" :"Confirmar"
-}
+  "historyReservation": {
+    "myReservations": "Mis Reservas",
+    "date": "Fecha: ",
+    "days": "Días: ",
+    "total": "Total: ",
+    "cancel": "Cancelar Reserva",
+    "sure": "¿Seguro que deseas cancelar la reserva de",
+    "yes": "Sí, cancelar",
+    "no": "No",
+    "confirm": "Confirmar"
+  },
+  "tabs": {
+    "home": "Inicio",
+    "menu": "Menú",
+    "reservations": "Reservas"
+  },
+  "themes": {
+    "light": "Verde claro",
+    "dark": "Oscuro",
+    "darkPurple": "Noche",
+    "skylight": "Azul claro"
+  }
 }

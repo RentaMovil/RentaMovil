@@ -159,7 +159,12 @@
     "cancelar": "Annuler",
     "retry": "Réessayer",
     "signIn": "Se connecter",
-    "logout": "Se déconnecter"
+    "logout": "Se déconnecter",
+    "apellido": "Nom de famille",
+    "usuario": "Nom d'utilisateur",
+    "editar": "Modifier le profil",
+    "guardar": "Enregistrer",
+    "guardando": "Enregistrement..."
   },
   "payment": {
     "payTitle": "Confirmer le paiement",
@@ -205,7 +210,8 @@
     "ins-types": "Types d'assurance",
     "superadmin": "Super Administration",
     "sa-users": "Utilisateurs et rôles",
-    "sa-bank": "Comptes bancaires"
+    "sa-bank": "Comptes bancaires",
+    "loc-fleet": "Localisation de la flotte"
   },
   "changePassword": {
     "caracters": "Au moins 8 caractères",
@@ -244,21 +250,21 @@
     "priceRequired": "Le prix est obligatoire",
     "minLenghtPrice": "Le prix doit être supérieur ou égal à 0",
     "maxLenghtPrice": "Le prix ne doit pas dépasser 100000000",
-    "mileage":"Kilométrage",
-    "mileageRequired":"Le kilométrage est obligatoire",
-    "minLenghtMileage":"Le kilométrage doit être supérieur ou égal à 0",
-    "maxLenghtMileage":"Le kilométrage ne doit pas dépasser 1000000",
-    "invalidMileage":"Le kilométrage ne peut contenir que des nombres.",
-    "age":"Âge",
-    "ageRequired":"L'âge est obligatoire",
-    "minLenghtAge":"L'âge doit être supérieur ou égal à",
-    "maxLenghtAge":"L'âge ne doit pas dépasser",
-    "invalidAge":"L'âge ne peut contenir que des nombres.",
-    "capacity":"Capacité",
-    "capacityRequired":"La capacité est obligatoire",
-    "minLenghtCapacity":"La capacité doit être supérieure ou égale à 1",
-    "maxLenghtCapacity":"La capacité ne doit pas dépasser 100",
-    "invalidCapacity":"La capacité ne peut contenir que des nombres.",
+    "mileage": "Kilométrage",
+    "mileageRequired": "Le kilométrage est obligatoire",
+    "minLenghtMileage": "Le kilométrage doit être supérieur ou égal à 0",
+    "maxLenghtMileage": "Le kilométrage ne doit pas dépasser 1000000",
+    "invalidMileage": "Le kilométrage ne peut contenir que des nombres.",
+    "age": "Âge",
+    "ageRequired": "L'âge est obligatoire",
+    "minLenghtAge": "L'âge doit être supérieur ou égal à",
+    "maxLenghtAge": "L'âge ne doit pas dépasser",
+    "invalidAge": "L'âge ne peut contenir que des nombres.",
+    "capacity": "Capacité",
+    "capacityRequired": "La capacité est obligatoire",
+    "minLenghtCapacity": "La capacité doit être supérieure ou égale à 1",
+    "maxLenghtCapacity": "La capacité ne doit pas dépasser 100",
+    "invalidCapacity": "La capacité ne peut contenir que des nombres.",
     "Type": "Type de véhicule",
     "requiredType": "Vous devez sélectionner un type de véhicule",
     "disabledType": "Sélectionnez un type...",
@@ -379,21 +385,6 @@
     "minLenghtMaintenance": "Minimum 3 caractères.",
     "maxLenght": "Maximum 60 caractères",
     "invalidMaintenance": "Seules les lettres, chiffres, tirets et virgules sont autorisés.",
-    "option1": "Vidange",
-    "option2": "Changement des filtres",
-    "option3": "Vérification des freins",
-    "option4": "Changement des pneus",
-    "option5": "Alignement et équilibrage",
-    "option6": "Inspection générale",
-    "option7": "Réparation moteur",
-    "option8": "Réparation des freins",
-    "option9": "Réparation électrique",
-    "option10": "Réparation de la suspension",
-    "option11": "Réparation de la transmission",
-    "option12": "Lavage",
-    "option13": "Peinture",
-    "option14": "Carrosserie",
-    "observations": "Observations",
     "placeholderObservations": "Observations",
     "minLenghtObservations": "Minimum 5 caractères",
     "maxLenghtObservations": "Maximum 200 caractères",
@@ -402,7 +393,7 @@
     "sheduling": "Planification de la maintenance",
     "shedule": "Planifier la maintenance",
     "button": "Historique des maintenances",
-      "options": {
+    "options": {
       "option1": "Vidange",
       "option2": "Remplacement des filtres",
       "option3": "Révision des freins",
@@ -416,7 +407,8 @@
       "option11": "Réparation de la transmission",
       "option12": "Lavage",
       "option13": "Peinture",
-      "option14": "Carrosserie"
+      "option14": "Carrosserie",
+      "observations": "Observations"
     }
   },
   "notifications": {
@@ -477,8 +469,8 @@
     "all_m": "Tous",
     "all_f": "Toutes"
   },
-    "FilterVehicle":{
-    "placeholder":"Rechercher par plaque, marque ou modèle..."
+  "FilterVehicle": {
+    "placeholder": "Rechercher par plaque, marque ou modèle..."
   },
   "CheckStatus": {
     "checkStatus": "Consulter le statut",
@@ -912,7 +904,6 @@
     "showingRange": "Affichage de {{from}} à {{to}} sur {{total}} résultats",
     "previous": "Précédent",
     "next": "Suivant",
-
     "notFound": "La réservation demandée est introuvable.",
     "backToList": "Retour aux réservations",
     "detailTitle": "Détail de la réservation #{{id}}",
@@ -993,10 +984,10 @@
       "mileageIn": "Kilométrage d'entrée",
       "fuelLevel": "Niveau de carburant",
       "fuel": {
-        "full": "Plein (8/8)",
-        "34": "3/4 (6/8)",
         "12": "1/2 (4/8)",
-        "14": "1/4 (2/8)"
+        "14": "1/4 (2/8)",
+        "34": "3/4 (6/8)",
+        "full": "Plein (8/8)"
       },
       "gpsDevice": "Dispositif GPS télématique",
       "gpsOption1": "Geotab R-809 (préinstallé et actif)",
@@ -1013,5 +1004,74 @@
       "title": "Justificatif de virement bancaire",
       "subtitle": "Référence : {{reference}}"
     }
+  },
+  "process": {
+    "title": "4 étapes pour votre prochain voyage",
+    "subtitle": "Un processus simple et clair, conçu pour vous mener plus loin.",
+    "steps": {
+      "search": {
+        "title": "Cherchez et choisissez",
+        "description": "Filtrez par emplacement, dates et type de véhicule pour trouver la voiture idéale pour votre voyage."
+      },
+      "reserve": {
+        "title": "Réservez",
+        "description": "Choisissez votre couverture, vérifiez les détails et confirmez votre réservation via un paiement sécurisé."
+      },
+      "pickup": {
+        "title": "Récupérez et profitez",
+        "description": "Rendez-vous à la succursale choisie, présentez votre facture avec votre permis de conduire et recevez les clés sans attente."
+      },
+      "return": {
+        "title": "Profitez et rendez",
+        "description": "À la fin de votre voyage, rendez le véhicule à la succursale correspondante et profitez de votre expérience."
+      }
+    }
+  },
+  "requirements": {
+    "title": "Conditions pour louer un véhicule",
+    "license": "Permis de conduire",
+    "licenseDescription": "Présentez un permis valide et en cours de validité pour le type de véhicule réservé.",
+    "insurance": "Assurance choisie",
+    "insuranceDescription": "Choisissez la couverture qui correspond le mieux aux besoins de votre voyage.",
+    "id": "Document d'identité",
+    "idDescription": "Apportez votre document original pour finaliser la remise du véhicule."
+  },
+  "title": {
+    "rentamovil": "Voyagez avec RentaMovil"
+  },
+  "description": {
+    "info-branches": "Nos succursales sont situées dans les principales villes du pays et Shelby propose leur service de 8h00 à 18h00."
+  },
+  "vehicleLocation": {
+    "title": "Localisation de la flotte",
+    "subtitle": "Carte avec la position envoyee par le GPS des vehicules en location.",
+    "refresh": "Actualiser",
+    "errorTitle": "Impossible de charger la localisation",
+    "kpiTracked": "Suivis",
+    "kpiMoving": "En mouvement",
+    "kpiStopped": "À l'arrêt",
+    "kpiLastUpdate": "Dernier signal",
+    "loading": "Chargement de la flotte...",
+    "emptyTitle": "Aucun véhicule en location",
+    "emptyHint": "La localisation n'est disponible que pour les véhicules ayant une réservation en cours et un GPS actif.",
+    "listTitle": "Véhicules",
+    "moving": "En mouvement",
+    "stopped": "À l'arrêt",
+    "rental": "Réservation",
+    "customer": "Client",
+    "readoutTitle": "Dernière position enregistrée",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "speed": "Vitesse",
+    "kmh": "km/h",
+    "heading": "Cap",
+    "ignition": "Contact",
+    "ignitionOn": "Allumé",
+    "ignitionOff": "Éteint",
+    "recordedAt": "Enregistré",
+    "selectVehicle": "Sélectionnez un véhicule",
+    "autoRefresh": "Actualise toutes les {{seconds}} s",
+    "deviceOffline": "{{model}} n'est pas connecte : position du dernier rapport.",
+    "device": "Appareil : {{model}} · {{provider}}"
   }
 }

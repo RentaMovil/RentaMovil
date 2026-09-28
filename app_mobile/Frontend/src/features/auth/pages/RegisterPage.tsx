@@ -1,0 +1,304 @@
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { Link } from "expo-router";
+
+import BrandLogo from "../../../shared/components/Brand/BrandLogo";
+
+import { useAuth } from "../hooks/useAuth";
+import { ApiError } from "../../../shared/api/httpClient";
+import { API_URL } from "../../../config/env";
+
+import { themes } from "../../../theme/themes";
+import { useTheme } from "../../../theme/useTheme";
+
+import { createAuthStyles } from "./authStyles";
+
+/** Misma traduccion de error que el login. */
+function readableError(error: unknown): string {
+  if (error instanceof ApiError) {
+    return error.message;
+  }
+
+  const message = error instanceof Error ? error.message : "";
+
+  if (message.includes("Network request failed")) {
+    return `No se pudo conectar con la API en ${API_URL}. Verifica que este corriendo.`;
+  }
+
+  return message || "Ocurrio un error inesperado.";
+}
+
+type Fields = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  username: string;
+  password: string;
+  confirmPassword: string;
+};
+
+const EMPTY: Fields = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  username: "",
+  password: "",
+  confirmPassword: "",
+};
+
+/**
+ * Alta de cuenta.
+ *
+ * El contrato ya existia: `authService.register()` y el tipo
+ * `RegisterRequest` estaban escritos, y el namespace `register` de i18n
+ * traia los 7 campos y todos los mensajes de validacion. Lo que faltaba era
+ * la pantalla.
+ *
+ * El payload usa `first_name` / `last_name` en snake_case porque
+ * `users` es la unica coleccion de la API en ese formato.
+ */
+export default function RegisterPage() {
+  const { t } = useTranslation();
+
+  const { register } = useAuth();
+
+  const { themeName } = useTheme();
+  const colors = themes[themeName];
+  const styles = createAuthStyles(colors);
+
+  const [fields, setFields] = useState<Fields>(EMPTY);
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  function set<K extends keyof Fields>(key: K, value: string) {
+    setFields((prev) => ({ ...prev, [key]: value }));
+  }
+
+  function validate(): string | null {
+    const empty = [
+      fields.firstName,
+      fields.lastName,
+      fields.email,
+      fields.phone,
+      fields.username,
+      fields.password,
+    ].some((v) => !v.trim());
+
+    if (empty) {
+      return t("register.errorFields");
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(fields.email.trim())) {
+      return t("register.emailInvalid");
+    }
+
+    if (!/^\d{10}$/.test(fields.phone.trim())) {
+      return t("register.phoneInvalid");
+    }
+
+    if (fields.password.length < 6) {
+      return t("register.passwordShort");
+    }
+
+    if (fields.password !== fields.confirmPassword) {
+      return t("register.passwordMatch");
+    }
+
+    return null;
+  }
+
+  /**
+   * Tras registrarse no se navega aqui: `register` deja al usuario
+   * autenticado y el guard de `app/_layout.tsx` lo lleva al menu, igual que
+   * en el login.
+   */
+  async function handleRegister() {
+    if (isSubmitting) {
+      return;
+    }
+
+    const invalid = validate();
+
+    if (invalid) {
+      setError(invalid);
+      return;
+    }
+
+    setError(null);
+    setIsSubmitting(true);
+
+    try {
+      await register({
+        first_name: fields.firstName,
+        last_name: fields.lastName,
+        email: fields.email,
+        phone: fields.phone,
+        username: fields.username,
+        password: fields.password,
+      });
+    } catch (err) {
+      setError(readableError(err));
+      setIsSubmitting(false);
+    }
+  }
+
+  const field = (
+    labelKey: string,
+    placeholderKey: string,
+    value: string,
+    onChange: (v: string) => void,
+    options?: {
+      secureTextEntry?: boolean;
+      keyboardType?: "default" | "email-address" | "phone-pad";
+      autoCapitalize?: "none" | "words" | "sentences";
+    },
+  ) => (
+    <View>
+      <Text style={styles.label}>{t(labelKey)}</Text>
+
+      <TextInput
+        placeholder={t(placeholderKey)}
+        placeholderTextColor={colors.secondaryText}
+        value={value}
+        onChangeText={onChange}
+        secureTextEntry={options?.secureTextEntry}
+        keyboardType={options?.keyboardType ?? "default"}
+        autoCapitalize={options?.autoCapitalize ?? "words"}
+        autoCorrect={false}
+        style={[styles.input, styles.inputWeb]}
+      />
+    </View>
+  );
+
+  return (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        keyboardShouldPersistTaps="handled"
+      >
+        <BrandLogo size="auth" />
+
+        <Text style={styles.title}>{t("register.submit")}</Text>
+
+        <View style={styles.form}>
+          <View style={styles.row}>
+            <View style={styles.rowItem}>
+              {field(
+                "register.firstName",
+                "register.firstNamePlaceholder",
+                fields.firstName,
+                (v) => set("firstName", v),
+                { autoCapitalize: "words" },
+              )}
+            </View>
+
+            <View style={styles.rowItem}>
+              {field(
+                "register.lastName",
+                "register.lastNamePlaceholder",
+                fields.lastName,
+                (v) => set("lastName", v),
+                { autoCapitalize: "words" },
+              )}
+            </View>
+          </View>
+
+          {field(
+            "register.email",
+            "register.emailPlaceholder",
+            fields.email,
+            (v) => set("email", v),
+            { keyboardType: "email-address", autoCapitalize: "none" },
+          )}
+
+          <View style={styles.row}>
+            <View style={styles.rowItem}>
+              {field(
+                "register.phone",
+                "register.phonePlaceholder",
+                fields.phone,
+                (v) => set("phone", v),
+                { keyboardType: "phone-pad", autoCapitalize: "none" },
+              )}
+            </View>
+
+            <View style={styles.rowItem}>
+              {field(
+                "register.username",
+                "register.usernamePlaceholder",
+                fields.username,
+                (v) => set("username", v),
+                { autoCapitalize: "none" },
+              )}
+            </View>
+          </View>
+
+          <View style={styles.row}>
+            <View style={styles.rowItem}>
+              {field(
+                "register.password",
+                "register.passwordPlaceholder",
+                fields.password,
+                (v) => set("password", v),
+                { secureTextEntry: true, autoCapitalize: "none" },
+              )}
+            </View>
+
+            <View style={styles.rowItem}>
+              {field(
+                "register.confirmPassword",
+                "register.passwordPlaceholder",
+                fields.confirmPassword,
+                (v) => set("confirmPassword", v),
+                { secureTextEntry: true, autoCapitalize: "none" },
+              )}
+            </View>
+          </View>
+
+          {error ? <Text style={styles.error}>{error}</Text> : null}
+
+          <TouchableOpacity
+            style={[styles.button, isSubmitting && styles.buttonDisabled]}
+            onPress={handleRegister}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <ActivityIndicator color={colors.buttonText} />
+            ) : (
+              <Text style={styles.buttonText}>
+                {isSubmitting
+                  ? t("register.submitting")
+                  : t("register.submit")}
+              </Text>
+            )}
+          </TouchableOpacity>
+
+          <View style={styles.switchRow}>
+            <Text style={styles.switchText}>{t("register.haveAccount")}</Text>
+
+            <Link href="/auth/login" asChild>
+              <TouchableOpacity>
+                <Text style={styles.switchLink}>{t("loginForm.submit")}</Text>
+              </TouchableOpacity>
+            </Link>
+          </View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
+  );
+}

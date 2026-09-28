@@ -1,4 +1,42 @@
 {
+  "process": {
+    "title": "4 étapes pour votre prochain voyage",
+    "subtitle": "Un processus simple et clair, conçu pour vous mener plus loin.",
+    "steps": {
+      "search": {
+        "title": "Cherchez et choisissez",
+        "description": "Filtrez par emplacement, dates et type de véhicule pour trouver la voiture idéale pour votre voyage."
+      },
+      "reserve": {
+        "title": "Réservez",
+        "description": "Choisissez votre couverture, vérifiez les détails et confirmez votre réservation via un paiement sécurisé."
+      },
+      "pickup": {
+        "title": "Récupérez et profitez",
+        "description": "Rendez-vous à la succursale choisie, présentez votre facture avec votre permis de conduire et recevez les clés sans attente."
+      },
+      "return": {
+        "title": "Profitez et rendez",
+        "description": "À la fin de votre voyage, rendez le véhicule à la succursale correspondante et profitez de votre expérience."
+      }
+    }
+  },
+  "insurance": {
+    "title": "Assurance",
+    "subtitle": "Sélectionnez la couverture souhaitée pour votre réservation.",
+    "tag": {
+      "base": "Basique",
+      "popular": "Populaire",
+      "premium": "Premium"
+    }
+  },
+  "menu": {
+    "title": "Menu",
+    "home": "Accueil",
+    "reservations": "Mes réservations",
+    "account": "Mon compte",
+    "logout": "Se déconnecter"
+  },
   "navbar": {
     "linkInit": "Accueil",
     "linkNotifications": "Notifications",
@@ -17,6 +55,7 @@
   "filterCalendar": {
     "branch": "Succursale",
     "deliveryLocationPlaceholder": "Choisissez une succursale",
+    "noBranchResults": "Aucune succursale ne correspond à la recherche",
     "branch1": "Bogotá - Centre",
     "branch2": "Bogotá - Nord",
     "branch3": "Medellín - El Poblado",
@@ -43,7 +82,10 @@
     "location": "📍 Aéroport, Bogotá",
     "cancellation": "Annulation gratuite",
     "continue": "Continuer",
-    "type": "Mini similaire"
+    "rent": "Louer",
+    "perDay": "par jour",
+    "type": "Mini similaire",
+    "bags": "Valises"
   },
   "filtersHome": {
     "brand": "Marque",
@@ -153,7 +195,9 @@
     "placeholderCity": "Ville de résidence",
     "adrress": "Adresse",
     "placeholderAddress": "Adresse de livraison",
-    "confirm": "Confirmer et payer"
+    "confirm": "Confirmer et payer",
+    "copyNumber": "Copier le numéro",
+    "copied": "Copié !"
   },
   "buttonBack": {
     "label": "Retour"
@@ -351,29 +395,47 @@
     "button": "Historique des maintenances"
   },
   "notifications": {
-  "unread": "Non lues",
-  "all": "Toutes",
-  "confReservations": "Réservations confirmées",
-  "pays": "Paiements",
-  "cancel": "Annulées",
-  "recordatory": "Rappels",
-  "recibed": "Reçues",
-  "detail": "Détails de la notification",
-  "message": "Message",
-  "date": "Date",
-  "state": "Statut",
-  "vehicle": "Véhicule",
-  "close": "Fermer"
-},
-"historyReservation": {
-  "myReservations": "Mes réservations",
-  "date": "Date : ",
-  "days": "Jours : ",
-  "total": "Total : ",
-  "cancel": "Annuler la réservation",
-  "sure": "Êtes-vous sûr de vouloir annuler la réservation de",
-  "yes": "Oui, annuler",
-  "no": "Non"
+    "unread": "Non lues",
+    "all": "Toutes",
+    "confReservations": "Réservations confirmées",
+    "pays": "Paiements",
+    "cancel": "Annulées",
+    "recordatory": "Rappels",
+    "recibed": "Reçues",
+    "detail": "Détails de la notification",
+    "message": "Message",
+    "date": "Date",
+    "state": "Statut",
+    "vehicle": "Véhicule",
+    "close": "Fermer",
+    "loading": "Chargement des notifications...",
+    "empty": "Aucune notification pour ce filtre.",
+    "statusActive": "Active",
+    "statusPayment": "Paiement confirmé",
+    "statusCancelled": "Annulée",
+    "statusPending": "En attente",
+    "statusUnknown": "Sans statut"
+  },
+  "historyReservation": {
+    "myReservations": "Mes réservations",
+    "date": "Date : ",
+    "days": "Jours : ",
+    "total": "Total : ",
+    "cancel": "Annuler la réservation",
+    "sure": "Êtes-vous sûr de vouloir annuler la réservation de",
+    "yes": "Oui, annuler",
+    "no": "Non",
+    "confirm": "Confirmer"
+  },
+  "tabs": {
+    "home": "Accueil",
+    "menu": "Menu",
+    "reservations": "Réservations"
+  },
+  "themes": {
+    "light": "Vert clair",
+    "dark": "Sombre",
+    "darkPurple": "Nuit",
+    "skylight": "Bleu clair"
+  }
 }
-}
-

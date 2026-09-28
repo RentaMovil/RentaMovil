@@ -68,9 +68,45 @@
       "phone": "3164763160",
       "username": "niki",
       "password_hash": "$2b$12$LKHgIaWsZpRmy7s6q8SytuqnAbSwJK5u8VZiYgTaSerJGpwE3rENy",
+      "role": "ADMIN",
+      "status": "ACTIVE",
+      "last_login": "2026-09-28T14:33:41.225Z"
+    },
+    {
+      "id": "fa64c466-8d85-4ec8-917b-8c9bf1c46979",
+      "first_name": "Vista",
+      "last_name": "Prueba",
+      "email": "carrusel@rentamovil.com",
+      "phone": "3000000000",
+      "username": "carrusel",
+      "password_hash": "$2b$12$Jow102KCiMfTq4eewSQUF.PByITqdNM0aeAsIxavsCrPB0s9jYs1u",
       "role": "CLIENT",
       "status": "ACTIVE",
-      "last_login": "2026-09-26T02:11:53.794Z"
+      "last_login": "2026-09-27T20:41:43.807Z"
+    },
+    {
+      "id": "e23fd072-7384-4fe1-a495-810d72555722",
+      "first_name": "Nicole Dayana",
+      "last_name": "Ramirez Vargas",
+      "email": "nicoleramirezvargas@gmail.com",
+      "phone": "3164763160",
+      "username": "kiki12",
+      "password_hash": "$2b$12$fUkr2ru3ceEqV7xEduF5auEg0q/3e0pGfDne5KpKdupC2.4DynBh.",
+      "role": "CLIENT",
+      "status": "ACTIVE",
+      "last_login": null
+    },
+    {
+      "id": "87d2ff61-d123-4672-b98a-bcfc79b59597",
+      "first_name": "Nicole Dayana",
+      "last_name": "Ramirez Vargas",
+      "email": "nicoler@gmail.com",
+      "phone": "3164763160",
+      "username": "niki1",
+      "password_hash": "$2b$12$NPR39Q1aePMaiyGdIThQhu478db5Ul5DAQpZAqZw/bKjokEwjODYi",
+      "role": "CLIENT",
+      "status": "ACTIVE",
+      "last_login": null
     }
   ],
   "sessions": [
@@ -143,7 +179,312 @@
       "ip_address": "::1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
       "revoked": false
+    },
+    {
+      "id": "82526a76-6e83-4165-b4f2-c9b9fc3dac08",
+      "user_id": "91b8db78-090a-4021-90de-73b3b19fe967",
+      "refresh_token": "f497f18a-cb3e-43ff-9061-0361259d491a",
+      "created_at": "2026-09-28T03:44:24.735Z",
+      "expires_at": "2026-10-05T03:44:24.735Z",
+      "ip_address": "::1",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) OpenCode/2.0.16 Chrome/152.0.7977.130 Electron/44.4.3 Safari/537.36",
+      "revoked": false
+    },
+    {
+      "id": "56b95642-a3c4-450c-84dc-225d75c43c1a",
+      "user_id": "91b8db78-090a-4021-90de-73b3b19fe967",
+      "refresh_token": "eb8812c2-a188-4735-a9d8-c522ae472569",
+      "created_at": "2026-09-28T13:21:26.002Z",
+      "expires_at": "2026-10-05T13:21:26.003Z",
+      "ip_address": "::1",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+      "revoked": true
+    },
+    {
+      "id": "38f08425-1b72-4aae-8423-421c8b3c687f",
+      "user_id": "91b8db78-090a-4021-90de-73b3b19fe967",
+      "refresh_token": "6505628a-2471-4dbd-b0af-27cbeee18e65",
+      "created_at": "2026-09-28T13:28:27.027Z",
+      "expires_at": "2026-10-05T13:28:27.027Z",
+      "ip_address": "::1",
+      "user_agent": "Mozilla/5.0 (Windows NT; Windows NT 10.0; es-ES) WindowsPowerShell/5.1.26100.9444",
+      "revoked": false
+    },
+    {
+      "id": "32c08c8f-83a8-4fe7-9d5c-b324dcfa9831",
+      "user_id": "91b8db78-090a-4021-90de-73b3b19fe967",
+      "refresh_token": "cfdd1292-8ff9-4017-ac29-125fc467c6b2",
+      "created_at": "2026-09-28T13:50:46.582Z",
+      "expires_at": "2026-10-05T13:50:46.582Z",
+      "ip_address": "::1",
+      "user_agent": "Mozilla/5.0 (Windows NT; Windows NT 10.0; es-ES) WindowsPowerShell/5.1.26100.9444",
+      "revoked": false
+    },
+    {
+      "id": "db2e3ce6-5538-4688-a0ef-4004c0202723",
+      "user_id": "91b8db78-090a-4021-90de-73b3b19fe967",
+      "refresh_token": "db22640e-10ce-48a3-ae59-914f0cedcdf6",
+      "created_at": "2026-09-28T13:58:46.514Z",
+      "expires_at": "2026-10-05T13:58:46.514Z",
+      "ip_address": "::1",
+      "user_agent": null,
+      "revoked": false
+    },
+    {
+      "id": "1d6cbc86-8b18-4e6d-a638-eef95d165fca",
+      "user_id": "91b8db78-090a-4021-90de-73b3b19fe967",
+      "refresh_token": "9a72f9e8-8391-4422-829d-0026b46164f7",
+      "created_at": "2026-09-28T13:59:55.916Z",
+      "expires_at": "2026-10-05T13:59:55.916Z",
+      "ip_address": "::1",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) OpenCode/2.0.16 Chrome/152.0.7977.130 Electron/44.4.3 Safari/537.36",
+      "revoked": false
+    },
+    {
+      "id": "37fb1747-9fac-4913-b0fd-b6df4a22c188",
+      "user_id": "91b8db78-090a-4021-90de-73b3b19fe967",
+      "refresh_token": "a71269eb-456b-42b0-8635-47a074629fe2",
+      "created_at": "2026-09-28T14:33:08.428Z",
+      "expires_at": "2026-10-05T14:33:08.428Z",
+      "ip_address": "::1",
+      "user_agent": null,
+      "revoked": false
+    },
+    {
+      "id": "eace0734-4629-4802-a2f6-d240adae4214",
+      "user_id": "87d2ff61-d123-4672-b98a-bcfc79b59597",
+      "refresh_token": "ff357e94-e971-4cfb-bdcd-8e54023b158f",
+      "created_at": "2026-09-28T14:33:36.961Z",
+      "expires_at": "2026-10-05T14:33:36.961Z",
+      "ip_address": "::1",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+      "revoked": false
+    },
+    {
+      "id": "546ac746-53d3-4895-8bf0-7e0bc10fc4d9",
+      "user_id": "91b8db78-090a-4021-90de-73b3b19fe967",
+      "refresh_token": "a4c388ed-66ff-4dc7-b2a7-8031e7fee133",
+      "created_at": "2026-09-28T14:33:41.227Z",
+      "expires_at": "2026-10-05T14:33:41.227Z",
+      "ip_address": "::1",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) OpenCode/2.0.16 Chrome/152.0.7977.130 Electron/44.4.3 Safari/537.36",
+      "revoked": false
     }
   ],
-  "verificationCodes": []
+  "verificationCodes": [],
+  "notifications": [
+    {
+      "notification_id": 1,
+      "person_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
+      "type": "reserva_confirmada",
+      "message": "Tu reserva fue confirmada.",
+      "sent_date": "2026-08-28T10:00:00Z",
+      "is_read": true,
+      "reservation_id": 105,
+      "vehicle_id": "lGpIl2fJQAk",
+      "read_at": "2026-09-27T02:59:29.561Z"
+    },
+    {
+      "notification_id": 2,
+      "person_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
+      "type": "pago_confirmado",
+      "message": "Tu pago fue procesado correctamente.",
+      "sent_date": "2026-08-28T11:00:00Z",
+      "is_read": false,
+      "payment_id": 210,
+      "vehicle_id": "lGpIl2fJQAk"
+    },
+    {
+      "notification_id": 3,
+      "person_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
+      "type": "recordatorio",
+      "message": "Recuerda que tu alquiler comienza mañana.",
+      "sent_date": "2026-08-29T08:00:00Z",
+      "is_read": true,
+      "reservation_id": 108,
+      "vehicle_id": "lGpIl2fJQAk",
+      "read_at": "2026-09-27T03:05:01.549Z"
+    },
+    {
+      "notification_id": 4,
+      "person_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
+      "type": "reserva_cancelada",
+      "message": "Tu reserva fue cancelada.",
+      "sent_date": "2026-08-26T12:00:00Z",
+      "is_read": true,
+      "reservation_id": 102,
+      "vehicle_id": "lGpIl2fJQAk"
+    },
+    {
+      "notification_id": 5,
+      "person_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
+      "type": "reserva_confirmada",
+      "message": "Tu reserva está lista para ser recogida.",
+      "sent_date": "2026-08-25T15:30:00Z",
+      "is_read": true,
+      "reservation_id": 101,
+      "vehicle_id": "lGpIl2fJQAk"
+    },
+    {
+      "notification_id": 6,
+      "person_id": "91b8db78-090a-4021-90de-73b3b19fe967",
+      "type": "reserva_confirmada",
+      "message": "Tu reserva está lista para ser recogida.",
+      "sent_date": "2026-08-25T15:30:00Z",
+      "is_read": true,
+      "reservation_id": 101,
+      "vehicle_id": "lGpIl2fJQAk",
+      "read_at": "2026-09-27T03:07:55.850Z"
+    }
+  ],
+  "gpsDevices": [
+    {
+      "id": "gps-geotab-r809",
+      "model": "Geotab R-809",
+      "provider": "Geotab",
+      "serial": null,
+      "sim": null,
+      "status": "PENDING_CONNECTION",
+      "connected": false,
+      "last_seen_at": null,
+      "assigned_vehicle_id": "lGpIl2fJQAk"
+    }
+  ],
+  "rentals": [
+    {
+      "id": 101,
+      "vehicle_id": "lGpIl2fJQAk",
+      "customer_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
+      "status": "COMPLETED",
+      "start_date": "2026-09-12T10:00:00Z",
+      "end_date": "2026-09-16T18:00:00Z",
+      "gps_id": "gps-geotab-r809"
+    },
+    {
+      "id": 102,
+      "vehicle_id": "lGpIl2fJQAk",
+      "customer_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
+      "status": "CANCELLED",
+      "start_date": "2026-09-19T10:00:00Z",
+      "end_date": "2026-09-21T18:00:00Z",
+      "gps_id": null
+    },
+    {
+      "id": 103,
+      "vehicle_id": "lGpIl2fJQAk",
+      "customer_id": "e23fd072-7384-4fe1-a495-810d72555722",
+      "status": "COMPLETED",
+      "start_date": "2026-08-24T10:00:00Z",
+      "end_date": "2026-08-27T18:00:00Z",
+      "gps_id": "gps-geotab-r809"
+    },
+    {
+      "id": 105,
+      "vehicle_id": "lGpIl2fJQAk",
+      "customer_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
+      "status": "IN_PROGRESS",
+      "start_date": "2026-09-28T14:00:00Z",
+      "end_date": "2026-10-01T18:00:00Z",
+      "gps_id": "gps-geotab-r809"
+    },
+    {
+      "id": 108,
+      "vehicle_id": "lGpIl2fJQAk",
+      "customer_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
+      "status": "CONFIRMED",
+      "start_date": "2026-10-02T10:00:00Z",
+      "end_date": "2026-10-05T18:00:00Z",
+      "gps_id": null
+    }
+  ],
+  "gps": [
+    {
+      "id": 1,
+      "vehicle_id": "lGpIl2fJQAk",
+      "rental_id": 105,
+      "latitude": 4.6097,
+      "longitude": -74.0817,
+      "speed": 0,
+      "heading": null,
+      "ignition": false,
+      "recorded_at": "2026-09-28T14:05:00Z"
+    },
+    {
+      "id": 2,
+      "vehicle_id": "lGpIl2fJQAk",
+      "rental_id": 105,
+      "latitude": 4.6183,
+      "longitude": -74.085,
+      "speed": 24,
+      "heading": 4,
+      "ignition": true,
+      "recorded_at": "2026-09-28T14:11:00Z"
+    },
+    {
+      "id": 3,
+      "vehicle_id": "lGpIl2fJQAk",
+      "rental_id": 105,
+      "latitude": 4.627,
+      "longitude": -74.0885,
+      "speed": 38,
+      "heading": 8,
+      "ignition": true,
+      "recorded_at": "2026-09-28T14:17:00Z"
+    },
+    {
+      "id": 4,
+      "vehicle_id": "lGpIl2fJQAk",
+      "rental_id": 105,
+      "latitude": 4.6356,
+      "longitude": -74.0921,
+      "speed": 41,
+      "heading": 12,
+      "ignition": true,
+      "recorded_at": "2026-09-28T14:23:00Z"
+    },
+    {
+      "id": 5,
+      "vehicle_id": "lGpIl2fJQAk",
+      "rental_id": 105,
+      "latitude": 4.6441,
+      "longitude": -74.0956,
+      "speed": 22,
+      "heading": 14,
+      "ignition": true,
+      "recorded_at": "2026-09-28T14:29:00Z"
+    },
+    {
+      "id": 6,
+      "vehicle_id": "lGpIl2fJQAk",
+      "rental_id": 105,
+      "latitude": 4.6525,
+      "longitude": -74.0992,
+      "speed": 0,
+      "heading": null,
+      "ignition": true,
+      "recorded_at": "2026-09-28T14:35:00Z"
+    },
+    {
+      "id": 7,
+      "vehicle_id": "lGpIl2fJQAk",
+      "rental_id": 105,
+      "latitude": 4.6566,
+      "longitude": -74.111,
+      "speed": 18,
+      "heading": 280,
+      "ignition": true,
+      "recorded_at": "2026-09-28T14:41:00Z"
+    },
+    {
+      "id": 8,
+      "vehicle_id": "lGpIl2fJQAk",
+      "rental_id": 105,
+      "latitude": 4.6602,
+      "longitude": -74.1054,
+      "speed": 27,
+      "heading": 68,
+      "ignition": true,
+      "recorded_at": "2026-09-28T14:47:00Z"
+    }
+  ]
 }

@@ -32,7 +32,7 @@ function AdminPanel({ open, onClose }) {
           {expandedSection === 'vehiculo' && (
             <div className="admin-subsection">
               <Link to="/RegisterVehicle" className="admin-subitem" onClick={onClose}>• {t('adminPanel.ve-agg')}</Link>
-              <Link to="/VehicleInvento1ry" className="admin-subitem" onClick={onClose}>• {t('adminPanel.ve-inventory')}</Link>
+              <Link to="/VehicleInventory" className="admin-subitem" onClick={onClose}>• {t('adminPanel.ve-inventory')}</Link>
             </div>
           )}
         </div>
@@ -48,6 +48,7 @@ function AdminPanel({ open, onClose }) {
           {expandedSection === 'localizacion' && (
             <div className="admin-subsection">
               <Link to="/HomeAdmin" className="admin-subitem" onClick={onClose}>• {t('adminPanel.loc-map')}</Link>
+              <Link to="/VehicleLocation" className="admin-subitem" onClick={onClose}>• {t('adminPanel.loc-fleet')}</Link>
               <Link to="/History" className="admin-subitem" onClick={onClose}>• {t('adminPanel.loc-routes')}</Link>
             </div>
           )}

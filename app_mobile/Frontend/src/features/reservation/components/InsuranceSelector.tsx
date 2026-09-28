@@ -1,80 +1,104 @@
-    import { Text, TouchableOpacity, View } from "react-native";
+import { useTranslation } from "react-i18next";
+import { Text, TouchableOpacity, View } from "react-native";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
-    import AppCard from "../../../shared/components/AppCard/AppCard";
+import AppCard from "../../../shared/components/AppCard/AppCard";
 
-    import { useReservation } from "../context/ReservationContext";
+import { useReservation } from "../context/ReservationContext";
 
-    import { createStyles } from "./InsuranceSelector.styles";
+import { createStyles } from "./InsuranceSelector.styles";
 
-    import { themes } from "../../../theme/themes";
-    import { useTheme } from "../../../theme/useTheme";
-    import { InsuranceType } from "../../../types";
+import { themes } from "../../../theme/themes";
+import { useTheme } from "../../../theme/useTheme";
+import { InsuranceType } from "../../../types";
 
-    type Props = {
-    readonly options: InsuranceType[];
-    };
+type Props = {
+  readonly options: InsuranceType[];
+};
 
-    export default function InsuranceSelector({
-    options,
-    }: Props) {
-    const { reservation, updateInsurance } = useReservation();
+/** Separador de miles es-CO, el mismo que usa el web en el precio del plan. */
+function formatMoney(value: number): string {
+  return value.toLocaleString("es-CO");
+}
 
-    const selectedInsurance =
-        reservation?.insuranceTypeId ?? null;
+export default function InsuranceSelector({ options }: Props) {
+  const { t } = useTranslation();
 
-    const { themeName } = useTheme();
-    const colors = themes[themeName as keyof typeof themes];
-    const styles = createStyles(colors);
+  const { reservation, updateInsurance } = useReservation();
 
-    return (
-        <AppCard>
+  const selectedInsurance = reservation?.insuranceTypeId ?? null;
 
-        <Text style={styles.title}>
-            Seguro
-        </Text>
+  const { themeName } = useTheme();
+  const colors = themes[themeName as keyof typeof themes];
+  const styles = createStyles(colors);
 
-        {options.map(option => {
+  return (
+    <AppCard>
+      <View style={styles.header}>
+        <View style={styles.headerIcon}>
+          <FontAwesome
+            name="shield"
+            size={17}
+            color={colors.button}
+          />
+        </View>
 
-            const selected =
-            selectedInsurance === option.id;
+        <View style={styles.headerText}>
+          <Text style={styles.title}>{t("insurance.title")}</Text>
 
-            return (
+          <Text style={styles.subtitle}>
+            {t("insurance.subtitle")}
+          </Text>
+        </View>
+      </View>
 
+      <View style={styles.options}>
+        {options.map((option) => {
+          const selected = selectedInsurance === option.id;
+
+          return (
             <TouchableOpacity
-                key={option.id}
-                style={[
-                styles.option,
-                selected && styles.selected
-                ]}
-                onPress={() => updateInsurance(option.id)}
+              key={option.id}
+              style={[styles.option, selected && styles.optionSelected]}
+              onPress={() => updateInsurance(option.id)}
             >
-
-                <View style={{ flex: 1 }}>
-
-                <Text style={styles.optionTitle}>
-                    {option.name}
-                </Text>
+              <View style={styles.optionInfo}>
+                <Text style={styles.name}>{option.name}</Text>
 
                 <Text style={styles.description}>
-                    {option.description}
+                  {option.description}
                 </Text>
 
-                <Text style={styles.description}>
-                    {option.price}
-                </Text>
-
+                <View style={styles.tag}>
+                  <Text style={styles.tagText}>
+                    {t(`insurance.tag.${option.tag}`)}
+                  </Text>
                 </View>
+              </View>
 
-                <Text style={styles.radio}>
-                {selected ? "●" : "○"}
+              <View style={styles.price}>
+                <Text style={styles.priceText}>
+                  ${formatMoney(option.price)}
                 </Text>
+              </View>
 
+              {/* El web mete un icono de check dentro del radio, no un
+                  punto relleno. */}
+              <View
+                style={[styles.radio, selected && styles.radioSelected]}
+              >
+                {selected ? (
+                  <FontAwesome
+                    name="check"
+                    size={10}
+                    color={colors.buttonText}
+                  />
+                ) : null}
+              </View>
             </TouchableOpacity>
-
-            );
-
+          );
         })}
-
-        </AppCard>
-    );
-    }
+      </View>
+    </AppCard>
+  );
+}

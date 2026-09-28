@@ -1,89 +1,189 @@
 import { StyleSheet } from "react-native";
 
-export const createStyles = (colors: any) =>
-  StyleSheet.create({
+import { createTextStyles } from "../../../theme/constants/typography";
+import { createCardShadow } from "../../../theme/constants/shadows";
+
+/**
+ * Selector de cuenta bancaria.
+ *
+ * Segun `BankAccountSelector.css` del web: tarjeta con borde de 2px y
+ * sombra, radio marcado con el acento, numero de cuenta en tipografia
+ * monoespaciada y el titular en una caja `--input`.
+ */
+export const createStyles = (colors: any) => {
+
+  const text = createTextStyles(colors);
+
+  return StyleSheet.create({
+    header: {
+      marginBottom: 20,
+      paddingBottom: 16,
+      borderBottomWidth: 1,
+      borderBottomColor: colors.border,
+    },
+
+    titleRow: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 10,
+    },
+
+    dot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: colors.button,
+    },
+
     title: {
-      fontSize: 20,
+      ...text.title,
+      fontSize: 18,
       fontWeight: "700",
-      color: colors.text,
-      marginBottom: 4,
+      color: colors.textHeading,
     },
 
     subtitle: {
-      fontSize: 14,
-      color: colors.secondaryText,
-      marginBottom: 18,
+      ...text.caption,
+      marginTop: 6,
+      color: colors.text,
+      opacity: 0.75,
     },
 
     accountsContainer: {
-      gap: 12,
+      gap: 16,
     },
 
     accountCard: {
       flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-      padding: 16,
-      borderWidth: 1,
-      borderColor: colors.border,
-      borderRadius: 14,
-      backgroundColor: colors.background,
+      alignItems: "flex-start",
+      gap: 12,
+      padding: 20,
+      borderRadius: 16,
+      borderWidth: 2,
+      borderColor: colors.cardBorder,
+      backgroundColor: colors.cardBg,
+      ...createCardShadow(colors),
     },
 
+    // El web marca la seleccion con `border-color: var(--accent)` y un halo
+    // `box-shadow: 0 0 0 1px var(--accent)`.
     selectedAccount: {
-      borderColor: colors.primary,
-      borderWidth: 2,
+      borderColor: colors.button,
     },
 
     accountInfo: {
       flex: 1,
-      paddingRight: 12,
+    },
+
+    accountTop: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 12,
+      marginBottom: 16,
+    },
+
+    // `.bank-account-logo`: cuadrado con tinte de acento.
+    logo: {
+      width: 42,
+      height: 42,
+      borderRadius: 10,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: colors.accentBg,
+    },
+
+    logoText: {
+      ...text.label,
+      color: colors.primaryDark,
+    },
+
+    radioWrapper: {
+      flex: 1,
     },
 
     bankName: {
+      ...text.bodyMedium,
       fontSize: 16,
-      fontWeight: "700",
-      color: colors.text,
-      marginBottom: 4,
+      color: colors.textHeading,
     },
 
     accountType: {
-      fontSize: 13,
-      color: colors.secondaryText,
-    },
-
-    accountNumber: {
-      marginTop: 6,
-      fontSize: 15,
-      fontWeight: "600",
-      color: colors.text,
-      letterSpacing: 0.5,
-    },
-
-    holder: {
-      marginTop: 2,
+      ...text.caption,
       fontSize: 12,
-      color: colors.secondaryText,
+    },
+
+    // `.bank-account-holder`: caja con fondo `--input`.
+    holder: {
+      ...text.caption,
+      fontSize: 13,
+      marginBottom: 16,
+      padding: 12,
+      borderRadius: 8,
+      backgroundColor: colors.input,
+      color: colors.text,
+      lineHeight: 18,
+    },
+
+    // `.bank-account-number-box`.
+    numberBox: {
+      marginBottom: 4,
+    },
+
+    // `.bank-account-number-label`: 0.68rem/700 con letter-spacing.
+    numberLabel: {
+      ...text.overline,
+      fontSize: 10,
+    },
+
+    // `.bank-account-number-value`: monoespaciada, para leer el digito a digito.
+    accountNumber: {
+      ...text.mono,
+      marginTop: 4,
+      color: colors.textHeading,
+    },
+
+    // `.bank-account-copy-btn`: boton para copiar el numero. En movil es mas
+    // util que el QR, porque el usuario pega directo en la app del banco.
+    copyButton: {
+      flexDirection: "row",
+      alignItems: "center",
+      gap: 6,
+      alignSelf: "flex-start",
+      marginTop: 8,
+      paddingHorizontal: 12,
+      paddingVertical: 7,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: colors.border,
+      backgroundColor: colors.backgroundCard,
+    },
+
+    copyButtonText: {
+      ...text.label,
+      fontSize: 12,
+      color: colors.textHeading,
     },
 
     radio: {
-      width: 24,
-      height: 24,
-      borderRadius: 12,
+      width: 20,
+      height: 20,
+      borderRadius: 10,
       borderWidth: 2,
-      borderColor: colors.border,
+      borderColor: colors.cardBorder,
       alignItems: "center",
       justifyContent: "center",
+      marginTop: 4,
     },
 
     radioSelected: {
-      borderColor: colors.primary,
+      borderColor: colors.button,
     },
 
     radioDot: {
-      width: 12,
-      height: 12,
-      borderRadius: 6,
-      backgroundColor: colors.primary,
+      width: 10,
+      height: 10,
+      borderRadius: 5,
+      backgroundColor: colors.button,
     },
   });
+};

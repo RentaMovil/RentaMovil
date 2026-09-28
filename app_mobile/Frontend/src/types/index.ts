@@ -9,6 +9,10 @@
  *  - `vehicle.ts`, `user.ts`, `maintenance.ts`  -> entidad en la API mock
  *  - `branch.ts`, `insuranceType.ts`, `bankAccount.ts`,
  *    `reservation.ts`, `payment.ts`            -> entidad sin API, mock local
+ *
+ * Excepcion documentada: `notification.ts` NO es espejo del web. Sigue la
+ * forma que sirve la API mock, que es la fuente de verdad. Ver el propio
+ * archivo para el detalle.
  */
 
 export * from "./common";
@@ -20,3 +24,4 @@ export * from "./reservation";
 export * from "./payment";
 export * from "./maintenance";
 export * from "./user";
+export * from "./notification";

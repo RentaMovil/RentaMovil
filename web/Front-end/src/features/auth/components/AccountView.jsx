@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaGlobe, FaMoon, FaSignOutAlt, FaTimes } from "react-icons/fa";
+import { FaGlobe, FaMoon, FaPen, FaSignOutAlt, FaTimes } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -19,9 +19,38 @@ import portuguese from "../../../assets/img/portugal.png";
 export default function AccountView({ theme, setTheme, admin = false }) {
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
-    const { user, isLoading, error, refreshProfile, logout } = useAuth();
+    const { user, isLoading, error, refreshProfile, updateProfile, logout } = useAuth();
     const [showThemeModal, setShowThemeModal] = useState(false);
     const [showLangModal, setShowLangModal] = useState(false);
+
+    // Modo edicion del perfil. El boton de la lapiz lo alterna; mientras esta
+    // activo los campos pasan de solo lectura a editables y aparece Guardar.
+    const [isEditing, setIsEditing] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const [saved, setSaved] = useState(false);
+
+    const toggleEdit = () => {
+        setIsEditing((v) => !v);
+        setSaved(false);
+    };
+
+    const handleSave = async (changes) => {
+        // Sin cambios no se llama a la API: se cierra el modo edicion
+        // directamente. El backend responde 400 si se le manda el cuerpo
+        // vacio, y eso al usuario le pareceria un fallo.
+        const hayCambios = Object.keys(changes ?? {}).length > 0;
+
+        setIsSaving(true);
+        try {
+            if (hayCambios) {
+                await updateProfile(changes);
+            }
+            setIsEditing(false);
+            setSaved(hayCambios);
+        } finally {
+            setIsSaving(false);
+        }
+    };
 
     const NavbarComponent = admin ? NavbarAdmin : Navbar;
     const FooterComponent = admin ? FooterAdmin : Footer;
@@ -83,13 +112,60 @@ export default function AccountView({ theme, setTheme, admin = false }) {
             <div className="containerC">
                 <div className="cardC">
                     <div className="header-page">
-                        <ButtonBack
-                            onClick={() => navigate(-1)}
-                            variant="overlay"
-                        />
-                        <p className="status2">
-                            {t("account.profileStatus")}
-                        </p>
+                        <div className="header-left">
+                            {/* `normal` y no `overlay`: la variante overlay es
+                                `position: absolute`, y dentro de `.header-left`
+                                se salia del flujo y se montaba encima del
+                                estado de perfil. */}
+                            <ButtonBack
+                                onClick={() => navigate(-1)}
+                                variant="normal"
+                            />
+
+                            <p className="status2">
+                                {t("account.profileStatus")}
+                            </p>
+                        </div>
+
+                        <div className="actions">
+                            <button
+                                className={`icon-btnC ${isEditing ? "icon-btnC--on" : ""}`}
+                                type="button"
+                                onClick={toggleEdit}
+                                aria-label={isEditing ? t("account.cancelar") : t("account.editar")}
+                                title={isEditing ? t("account.cancelar") : t("account.editar")}
+                            >
+                                {isEditing ? <FaTimes /> : <FaPen />}
+                            </button>
+
+                            <button
+                                className="icon-btnC"
+                                type="button"
+                                onClick={() => setShowThemeModal(true)}
+                                aria-label={t("account.seleccionaTema")}
+                                title={t("account.seleccionaTema")}
+                            >
+                                <FaMoon />
+                            </button>
+                            <button
+                                className="icon-btnC"
+                                type="button"
+                                onClick={() => setShowLangModal(true)}
+                                aria-label={t("account.seleccionaIdioma")}
+                                title={t("account.seleccionaIdioma")}
+                            >
+                                <FaGlobe />
+                            </button>
+                            <button
+                                className="icon-btnC"
+                                type="button"
+                                onClick={handleLogout}
+                                aria-label={t("account.logout")}
+                                title={t("account.logout")}
+                            >
+                                <FaSignOutAlt />
+                            </button>
+                        </div>
                     </div>
 
                     {error && (
@@ -98,34 +174,19 @@ export default function AccountView({ theme, setTheme, admin = false }) {
                         </p>
                     )}
 
-                    <div className="actions">
-                        <button
-                            className="icon-btnC"
-                            type="button"
-                            onClick={() => setShowThemeModal(true)}
-                        >
-                            <FaMoon />
-                        </button>
-                        <button
-                            className="icon-btnC"
-                            type="button"
-                            onClick={() => setShowLangModal(true)}
-                        >
-                            <FaGlobe />
-                        </button>
-                        <button
-                            className="icon-btnC"
-                            type="button"
-                            onClick={handleLogout}
-                            aria-label={t("account.logout")}
-                            title={t("account.logout")}
-                        >
-                            <FaSignOutAlt />
-                        </button>
-                    </div>
+                    {saved && !isEditing && (
+                        <p className="account-saved" role="status">
+                            {t("account.perfilActualizado")}
+                        </p>
+                    )}
 
                     <div className="formC">
-                        <ProfileIdentity user={user} />
+                        <ProfileIdentity
+                            user={user}
+                            isEditing={isEditing}
+                            onSave={handleSave}
+                            isSaving={isSaving}
+                        />
                     </div>
                 </div>
             </div>
@@ -139,6 +200,15 @@ export default function AccountView({ theme, setTheme, admin = false }) {
                         className="modal-content"
                         onClick={(event) => event.stopPropagation()}
                     >
+                        <button
+                            className="btn-times btn-times--corner"
+                            type="button"
+                            onClick={() => setShowThemeModal(false)}
+                            aria-label={t("account.cancelar")}
+                        >
+                            <FaTimes />
+                        </button>
+
                         <p className="modal-title">
                             {t("account.seleccionaTema")}
                         </p>
@@ -146,23 +216,23 @@ export default function AccountView({ theme, setTheme, admin = false }) {
                             {[
                                 {
                                     id: "skylight",
-                                    label: "Modo azul claro",
-                                    desc: "Fondo blanco, texto oscuro",
+                                    label: "Modo claro",
+                                    desc: "Fondo blanco, barra azul marino",
                                 },
                                 {
                                     id: "light",
-                                    label: "Modo Verde claro",
-                                    desc: "Fondo blanco, acentos amarillos",
+                                    label: "Modo claro neutro",
+                                    desc: "Fondo blanco, acentos ámbar",
                                 },
                                 {
                                     id: "dark",
-                                    label: "Azul Oscuro",
-                                    desc: "Fondo azul noche, acentos navy",
+                                    label: "Modo oscuro neutro",
+                                    desc: "Fondo gris muy oscuro, acento dorado",
                                 },
                                 {
                                     id: "darkPurple",
-                                    label: "Verde Oscuro",
-                                    desc: "Fondo verde oscuro, acentos claros",
+                                    label: "Modo oscuro azul",
+                                    desc: "Fondo azul noche, acento dorado",
                                 },
                             ].map(({ id, label, desc }) => (
                                 <button
@@ -175,29 +245,20 @@ export default function AccountView({ theme, setTheme, admin = false }) {
                                 >
                                     <div
                                         className={`theme-preview preview-${id}`}
-                                    ></div>
+                                        aria-hidden="true"
+                                    >
+                                        <div className="theme-preview-bar" />
+                                        <div className="theme-preview-body">
+                                            <div className="theme-preview-surface" />
+                                            <div className="theme-preview-accent" />
+                                        </div>
+                                    </div>
                                     <div className="theme-card-info">
                                         <p className="theme-name">{label}</p>
                                         <p className="theme-desc">{desc}</p>
                                     </div>
                                 </button>
                             ))}
-                        </div>
-                        <div className="modal-actions">
-                            <button
-                                className="close-btn"
-                                type="button"
-                                onClick={() => setShowThemeModal(false)}
-                            >
-                                {t("account.cancelar")}
-                            </button>
-                            <button
-                                className="btn-times"
-                                type="button"
-                                onClick={() => setShowThemeModal(false)}
-                            >
-                                <FaTimes />
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -212,6 +273,15 @@ export default function AccountView({ theme, setTheme, admin = false }) {
                         className="modal-content"
                         onClick={(event) => event.stopPropagation()}
                     >
+                        <button
+                            className="btn-times btn-times--corner"
+                            type="button"
+                            onClick={() => setShowThemeModal(false)}
+                            aria-label={t("account.cancelar")}
+                        >
+                            <FaTimes />
+                        </button>
+
                         <p className="modal-title">
                             {t("account.seleccionaIdioma")}
                         </p>
@@ -263,22 +333,6 @@ export default function AccountView({ theme, setTheme, admin = false }) {
                                     </div>
                                 </button>
                             ))}
-                        </div>
-                        <div className="modal-actions">
-                            <button
-                                className="close-btn"
-                                type="button"
-                                onClick={() => setShowLangModal(false)}
-                            >
-                                {t("account.cancelar")}
-                            </button>
-                            <button
-                                className="btn-times"
-                                type="button"
-                                onClick={() => setShowLangModal(false)}
-                            >
-                                <FaTimes />
-                            </button>
                         </div>
                     </div>
                 </div>

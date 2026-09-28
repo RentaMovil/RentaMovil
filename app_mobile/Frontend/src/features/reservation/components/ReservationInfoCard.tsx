@@ -1,89 +1,65 @@
-    import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
-    import AppCard from "../../../shared/components/AppCard/AppCard";
+import AppCard from "../../../shared/components/AppCard/AppCard";
 
-    import { useReservation } from "../context/ReservationContext";
+import { useReservation } from "../context/ReservationContext";
 
-    import { createStyles } from "./ReservationInfoCard.styles";
+import { createStyles } from "./ReservationInfoCard.styles";
 
-    import { themes } from "../../../theme/themes";
-    import { useTheme } from "../../../theme/useTheme";
+import { themes } from "../../../theme/themes";
+import { useTheme } from "../../../theme/useTheme";
 
+type Props = {
+  readonly title: string;
+  readonly subtitle: string;
+  readonly onChangePickup: () => void;
+  readonly onChangeReturnBranch: () => void;
+};
 
-    type Props = {
-    readonly title: string;
-    readonly subtitle: string;
-    readonly onChangePickup: () => void;
-    readonly onChangeReturnBranch: () => void;
-    };
+export default function ReservationInfoCard({
+  title,
+  subtitle,
+  onChangePickup,
+  onChangeReturnBranch,
+}: Props) {
+  const { reservation } = useReservation();
 
-    export default function ReservationInfoCard({
-    title,
-    subtitle,
-    onChangePickup,
-    onChangeReturnBranch,
-    }: Props) {
+  const { themeName } = useTheme();
+  const colors = themes[themeName];
 
-    const { reservation } = useReservation();
+  const styles = createStyles(colors);
 
-    const { themeName } = useTheme();
-    const colors = themes[themeName];
+  return (
+    <AppCard>
+      <View style={styles.header}>
+        <View style={styles.titleRow}>
+          <View style={styles.dot} />
 
-    const styles = createStyles(colors);
-
-    return (
-
-        <AppCard>
-
-        <Text style={styles.title}>
-            {title}
-        </Text>
-
-        <Text style={styles.subtitle}>
-            {subtitle}
-        </Text>
-
-        <View style={styles.section}>
-
-            <Text style={styles.label}>
-            Recogida
-            </Text>
-
-            <Text style={styles.value}>
-            {reservation?.pickupBranch?.name}
-            </Text>
-
-            <TouchableOpacity
-            onPress={onChangePickup}
-            >
-            <Text style={styles.link}>
-                Cambiar
-            </Text>
-            </TouchableOpacity>
-
+          <Text style={styles.title}>{title}</Text>
         </View>
 
-        <View style={styles.section}>
+        <Text style={styles.subtitle}>{subtitle}</Text>
+      </View>
 
-            <Text style={styles.label}>
-            Devolución
-            </Text>
+      <View style={styles.section}>
+        <Text style={styles.label}>RECOGIDA</Text>
 
-            <Text style={styles.value}>
-            {reservation?.returnBranch?.name}
-            </Text>
+        <Text style={styles.value}>{reservation?.pickupBranch?.name}</Text>
 
-            <TouchableOpacity
-            onPress={onChangeReturnBranch}
-            >
-            <Text style={styles.link}>
-                Cambiar
-            </Text>
-            </TouchableOpacity>
+        <TouchableOpacity onPress={onChangePickup}>
+          <Text style={styles.link}>Cambiar</Text>
+        </TouchableOpacity>
+      </View>
 
-        </View>
+      <View style={styles.section}>
+        <Text style={styles.label}>DEVOLUCIÓN</Text>
 
-        </AppCard>
+        <Text style={styles.value}>{reservation?.returnBranch?.name}</Text>
 
-    );
-    }
+        <TouchableOpacity onPress={onChangeReturnBranch}>
+          <Text style={styles.link}>Cambiar</Text>
+        </TouchableOpacity>
+      </View>
+    </AppCard>
+  );
+}

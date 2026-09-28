@@ -2,43 +2,52 @@ import { StyleSheet } from "react-native";
 
 import { Radius } from "../../../theme/constants/radius";
 import { Spacing } from "../../../theme/constants/spacing";
-import { Typography } from "../../../theme/constants/typography";
+import { createTextStyles } from "../../../theme/constants/typography";
 
-export const createStyles = (colors: any) =>
-  StyleSheet.create({
+/**
+ * Resumen del vehiculo en la reserva.
+ *
+ * El fondo de los badges usaba `colors.cardSecondary`, clave que tampoco
+ * existe en `ThemeColors`, asi que salia `undefined`. Ahora usa `input`, que
+ * si existe y cumple el mismo papel de superficie sutil.
+ */
+export const createStyles = (colors: any) => {
+
+  const text = createTextStyles(colors);
+
+  return StyleSheet.create({
     image: {
       width: "100%",
       height: 200,
-      borderRadius: Radius.lg,
+      borderRadius: Radius.card,
       resizeMode: "cover",
       marginBottom: Spacing.lg,
     },
 
     content: {
-      gap: Spacing.sm,
+      gap: Spacing.xs,
     },
 
+    // El nombre del vehiculo es el titulo de la pantalla: familia Poppins.
     name: {
-      color: colors.text,
-      fontSize: 24,
-      fontWeight: "700",
+      ...text.h2,
+      color: colors.textHeading,
     },
 
     model: {
-      color: colors.text,
-      fontSize: Typography.body,
-      marginBottom: Spacing.md,
+      ...text.body,
+      color: colors.secondaryText,
     },
 
     infoContainer: {
       flexDirection: "row",
       flexWrap: "wrap",
       gap: Spacing.sm,
-      marginVertical: Spacing.md,
+      marginTop: Spacing.md,
     },
 
     badge: {
-      backgroundColor: colors.cardSecondary,
+      backgroundColor: colors.input,
       borderRadius: Radius.pill,
       paddingHorizontal: 14,
       paddingVertical: 8,
@@ -47,15 +56,18 @@ export const createStyles = (colors: any) =>
     },
 
     badgeText: {
+      ...text.label,
       color: colors.text,
-      fontSize: 14,
-      fontWeight: "600",
+    },
+
+    badgeIcon: {
+      marginRight: 6,
     },
 
     price: {
+      ...text.h1,
       marginTop: Spacing.lg,
       color: colors.primary,
-      fontSize: 30,
-      fontWeight: "700",
     },
   });
+};

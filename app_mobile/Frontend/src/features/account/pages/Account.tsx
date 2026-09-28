@@ -1,5 +1,6 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 import * as ImagePicker from "expo-image-picker";
 
 import {
@@ -208,13 +209,25 @@ export default function Account() {
 
             >
 
-                <Text
-                    style={styles.settingsTitle}
+                <View
+                    style={styles.settingsLabel}
                 >
 
-                    ⚙️ Configuración
+                    <FontAwesome
+                        name="cog"
+                        size={16}
+                        color={colors.primary}
+                    />
 
-                </Text>
+                    <Text
+                        style={styles.settingsTitle}
+                    >
+
+                        Configuración
+
+                    </Text>
+
+                </View>
 
 
                 <Text

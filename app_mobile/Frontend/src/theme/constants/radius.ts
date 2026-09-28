@@ -6,6 +6,10 @@ export const Radius = {
 
     lg: 16,
 
+    /** Radio de tarjeta, segun `.pay-card` del web. */
+
+    card: 20,
+
     xl: 24,
 
     pill: 999,

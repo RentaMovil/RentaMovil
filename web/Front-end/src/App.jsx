@@ -39,6 +39,7 @@ import InsuranceTypes from './features/admin/insuranceTypes/pages/InsuranceTypes
 import Branches from './features/admin/branches/pages/Branches.jsx';
 import ReservationsList from './features/admin/reservations/pages/ReservationsList.jsx';
 import ReservationDetail from './features/admin/reservations/pages/ReservationDetail.jsx';
+import VehicleLocation from './features/admin/vehicleLocation/pages/VehicleLocation.jsx';
 
 
 import History from './features/admin/historyMaintenance/pages/History.jsx';
@@ -62,7 +63,7 @@ import BankAccounts from './features/admin/bankAccounts/pages/BankAccounts.jsx';
 
 function App() {
   const [theme, setTheme] = useState(
-    () => localStorage.getItem("theme") || "light"
+    () => localStorage.getItem("theme") || "skylight"
   );
 
   useEffect(() => {
@@ -270,6 +271,14 @@ function App() {
           element={
             <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
               <ReservationDetail />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/VehicleLocation"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <VehicleLocation />
             </RequireRole>
           }
         />

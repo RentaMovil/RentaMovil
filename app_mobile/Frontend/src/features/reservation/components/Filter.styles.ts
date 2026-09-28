@@ -1,78 +1,50 @@
-import {
-    StyleSheet,
-} from "react-native";
+import { StyleSheet } from "react-native";
 
-export function createStyles(
-    colors: any
-) {
+import { createTextStyles } from "../../../theme/constants/typography";
 
-    return StyleSheet.create({
+/**
+ * Filtros de estado de las reservas.
+ *
+ * El web da a `.letra-filtro` `font-weight: 500`; aqui el chip activo usa
+ * Inter 600 sobre el primario y el inactivo Inter 500.
+ */
+export const createStyles = (colors: any) => {
 
-        container: {
+  const text = createTextStyles(colors);
 
-            flexDirection: "row",
-            flexWrap: "wrap",
+  return StyleSheet.create({
+    container: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      paddingHorizontal: 20,
+      paddingVertical: 16,
+      gap: 9,
+    },
 
-            paddingHorizontal: 20,
+    button: {
+      paddingHorizontal: 14,
+      paddingVertical: 9,
+      borderRadius: 999,
+      borderWidth: 1,
+      borderColor: colors.border,
+      backgroundColor: colors.card,
+    },
 
-            paddingVertical: 16,
+    activeButton: {
+      backgroundColor: colors.primary,
+      borderColor: colors.primary,
+    },
 
-            gap: 9,
+    text: {
+      ...text.caption,
+      fontSize: 14,
+      fontWeight: "500",
+      color: colors.text,
+    },
 
-        },
-
-        button: {
-
-            paddingHorizontal: 14,
-
-            paddingVertical: 9,
-
-            borderRadius: 999,
-
-            borderWidth:
-                1,
-
-            borderColor:
-                colors.border,
-
-            backgroundColor:
-                colors.card,
-
-        },
-
-        activeButton: {
-
-            backgroundColor:
-                colors.primary,
-
-            borderColor:
-                colors.primary,
-
-        },
-
-        text: {
-
-            color:
-                colors.text,
-
-            fontSize:
-                14,
-
-            fontWeight:
-                "500",
-
-        },
-
-        activeText: {
-
-            color:
-                colors.buttonText,
-
-            fontWeight:
-                "700",
-
-        },
-
-    });
-
-}
+    activeText: {
+      color: colors.buttonText,
+      fontWeight: "600",
+    },
+  });
+};

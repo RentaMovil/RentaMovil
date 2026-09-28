@@ -11,6 +11,7 @@ import FilterModal, {
   Filters,
 } from "../../../shared/components/Filter/FilterModal";
 import FilterCalendar, { SearchData } from "../components/Filter";
+import ProcessSteps from "../components/ProcessSteps";
 
 import { vehicleService } from "../../vehicles/services/vehicleService";
 import VehicleCard from "../components/VehicleCard";
@@ -169,6 +170,13 @@ export default function HomePage() {
         ListHeaderComponent={
           <View>
             <FilterCalendar onSearch={handleSearch} />
+
+            {/*
+              Los 4 pasos, como en el web (`Home.jsx` los pinta con
+              `!hasSearchedCars`). Antes de buscar explican el proceso; en
+              cuanto hay resultados estorban, asi que se retiran.
+            */}
+            {!hasSearched && <ProcessSteps />}
 
             {hasSearched && (
             <TouchableOpacity

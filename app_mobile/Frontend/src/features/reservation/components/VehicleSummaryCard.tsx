@@ -1,8 +1,11 @@
 import { Image, Text, View } from "react-native";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 import AppCard from "../../../shared/components/AppCard/AppCard";
 
 import { Vehicle } from "../../../types/vehicle";
+
+import { VEHICLE_IMAGE } from "../../../config/assets";
 
 import { createStyles } from "./VehicleSummaryCard.styles";
 
@@ -26,11 +29,29 @@ import { useTranslation } from "react-i18next";
 
     const styles = createStyles(colors);
 
+    // Antes eran emoji (🚗 ⛽ 💺 📅). FontAwesome da el mismo lenguaje visual
+    // que el resto de la app y, a diferencia del emoji, no cambia de aspecto
+    // entre plataformas Android e iOS.
+    const specs = [
+        { key: "type", icon: "car", label: vehicle.vehicleType },
+        { key: "fuel", icon: "tint", label: vehicle.fuelType },
+        {
+            key: "capacity",
+            icon: "users",
+            label: `${vehicle.capacity} ${t("cartVehicule.capacity")}`,
+        },
+        {
+            key: "year",
+            icon: "calendar",
+            label: `${vehicle.year} ${t("cartVehicule.year")}`,
+        },
+    ] as const;
+
     return (
 <AppCard>
 
     <Image
-        source={{ uri: vehicle.image }}
+        source={VEHICLE_IMAGE}
         style={styles.image}
     />
 
@@ -45,31 +66,18 @@ import { useTranslation } from "react-i18next";
         </Text>
 
         <View style={styles.infoContainer}>
+            {specs.map((spec) => (
+                <View key={spec.key} style={styles.badge}>
+                    <FontAwesome
+                        name={spec.icon}
+                        size={12}
+                        color={colors.primary}
+                        style={styles.badgeIcon}
+                    />
 
-            <View style={styles.badge}>
-                <Text style={styles.badgeText}>
-                    🚗 {vehicle.vehicleType}
-                </Text>
-            </View>
-
-            <View style={styles.badge}>
-                <Text style={styles.badgeText}>
-                    ⛽ {vehicle.fuelType}
-                </Text>
-            </View>
-
-            <View style={styles.badge}>
-                <Text style={styles.badgeText}>
-                    💺 {vehicle.capacity} {t("cartVehicule.capacity")}
-                </Text>
-            </View>
-
-            <View style={styles.badge}>
-                <Text style={styles.badgeText}>
-                    📅 {vehicle.year} {t("cartVehicule.year")}
-                </Text>
-            </View>
-
+                    <Text style={styles.badgeText}>{spec.label}</Text>
+                </View>
+            ))}
         </View>
 
         <Text style={styles.price}>

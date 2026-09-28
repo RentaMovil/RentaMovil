@@ -1,4 +1,42 @@
 {
+  "process": {
+    "title": "4 passos para a sua próxima viagem",
+    "subtitle": "Um processo simples e claro, pensado para o levar mais longe.",
+    "steps": {
+      "search": {
+        "title": "Procure e escolha",
+        "description": "Filtre por localização, datas e tipo de veículo para encontrar o carro ideal para a sua viagem."
+      },
+      "reserve": {
+        "title": "Reserve",
+        "description": "Escolha a sua cobertura, reveja os detalhes e confirme a sua reserva através de um pagamento seguro."
+      },
+      "pickup": {
+        "title": "Levante e divirta-se",
+        "description": "Vá à filial selecionada, mostre a sua fatura juntamente com a carta de condução e receba as chaves sem filas nem demoras."
+      },
+      "return": {
+        "title": "Divirta-se e devolva",
+        "description": "No final da viagem, devolva o veículo na filial correspondente e aproveite a sua experiência."
+      }
+    }
+  },
+  "insurance": {
+    "title": "Seguro",
+    "subtitle": "Selecione a cobertura que deseja para sua reserva.",
+    "tag": {
+      "base": "Básico",
+      "popular": "Popular",
+      "premium": "Premium"
+    }
+  },
+  "menu": {
+    "title": "Menu",
+    "home": "Início",
+    "reservations": "Minhas reservas",
+    "account": "Minha conta",
+    "logout": "Sair"
+  },
   "navbar": {
     "linkInit": "Início",
     "linkNotifications": "Notificações",
@@ -17,6 +55,7 @@
   "filterCalendar": {
     "branch": "Filial",
     "deliveryLocationPlaceholder": "Selecione uma filial",
+    "noBranchResults": "Nenhuma filial corresponde à busca",
     "branch1": "Bogotá - Centro",
     "branch2": "Bogotá - Norte",
     "branch3": "Medellín - El Poblado",
@@ -43,7 +82,10 @@
     "location": "📍 Aeroporto, Bogotá",
     "cancellation": "Cancelamento grátis",
     "continue": "Continuar",
-    "type": "Mini similar"
+    "rent": "Alugar",
+    "perDay": "por dia",
+    "type": "Mini similar",
+    "bags": "Malas"
   },
   "filtersHome": {
     "brand": "Marca",
@@ -153,7 +195,9 @@
     "placeholderCity": "Cidade de residência",
     "adrress": "Endereço",
     "placeholderAddress": "Endereço de entrega",
-    "confirm": "Confirmar e pagar"
+    "confirm": "Confirmar e pagar",
+    "copyNumber": "Copiar número",
+    "copied": "Copiado!"
   },
   "buttonBack": {
     "label": "Voltar"
@@ -351,28 +395,47 @@
     "button": "Histórico de manutenções"
   },
   "notifications": {
-  "unread": "Não lidas",
-  "all": "Todas",
-  "confReservations": "Reservas confirmadas",
-  "pays": "Pagamentos",
-  "cancel": "Canceladas",
-  "recordatory": "Lembretes",
-  "recibed": "Recebidas",
-  "detail": "Detalhes da notificação",
-  "message": "Mensagem",
-  "date": "Data",
-  "state": "Status",
-  "vehicle": "Veículo",
-  "close": "Fechar"
-},
-"historyReservation": {
-  "myReservations": "Minhas reservas",
-  "date": "Data: ",
-  "days": "Dias: ",
-  "total": "Total: ",
-  "cancel": "Cancelar reserva",
-  "sure": "Tem certeza de que deseja cancelar a reserva de",
-  "yes": "Sim, cancelar",
-  "no": "Não"
-}
+    "unread": "Não lidas",
+    "all": "Todas",
+    "confReservations": "Reservas confirmadas",
+    "pays": "Pagamentos",
+    "cancel": "Canceladas",
+    "recordatory": "Lembretes",
+    "recibed": "Recebidas",
+    "detail": "Detalhes da notificação",
+    "message": "Mensagem",
+    "date": "Data",
+    "state": "Status",
+    "vehicle": "Veículo",
+    "close": "Fechar",
+    "loading": "Carregando notificações...",
+    "empty": "Nenhuma notificação para este filtro.",
+    "statusActive": "Ativa",
+    "statusPayment": "Pagamento confirmado",
+    "statusCancelled": "Cancelada",
+    "statusPending": "Pendente",
+    "statusUnknown": "Sem status"
+  },
+  "historyReservation": {
+    "myReservations": "Minhas reservas",
+    "date": "Data: ",
+    "days": "Dias: ",
+    "total": "Total: ",
+    "cancel": "Cancelar reserva",
+    "sure": "Tem certeza de que deseja cancelar a reserva de",
+    "yes": "Sim, cancelar",
+    "no": "Não",
+    "confirm": "Confirmar"
+  },
+  "tabs": {
+    "home": "Início",
+    "menu": "Menu",
+    "reservations": "Reservas"
+  },
+  "themes": {
+    "light": "Verde claro",
+    "dark": "Escuro",
+    "darkPurple": "Noite",
+    "skylight": "Azul claro"
+  }
 }

@@ -14,6 +14,7 @@ import { authService } from "../features/auth/services/authService";
 import {
     clearSession,
     getStoredRefreshToken,
+    saveSession,
 } from "../features/auth/services/sessionStorage";
 import { tokenStore } from "../shared/api/tokenStore";
 
@@ -114,6 +115,28 @@ export function AuthProvider({ children }) {
         }
     }, []);
 
+    /**
+     * Guarda los cambios del perfil y sincroniza el estado global con lo que
+     * devolvio el servidor, para que el resto de la app vea el nombre nuevo
+     * sin tener que recargar.
+     */
+    const updateProfile = useCallback(async (changes) => {
+        setError(null);
+
+        try {
+            const updated = await authService.updateProfile(changes);
+            setUser(updated);
+            saveSession({ user: updated });
+            return updated;
+        } catch (profileError) {
+            setError(
+                profileError?.message ??
+                    "No fue posible guardar el perfil."
+            );
+            throw profileError;
+        }
+    }, []);
+
     const hasRole = useCallback(
         (...roles) => roles.includes(user?.role),
         [user?.role]
@@ -130,6 +153,7 @@ export function AuthProvider({ children }) {
             logout,
             restoreSession,
             refreshProfile,
+            updateProfile,
             hasRole,
             clearError: () => setError(null),
         }),
@@ -142,6 +166,7 @@ export function AuthProvider({ children }) {
             logout,
             restoreSession,
             refreshProfile,
+            updateProfile,
             hasRole,
         ]
     );
