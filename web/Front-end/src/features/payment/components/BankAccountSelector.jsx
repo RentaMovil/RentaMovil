@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { usePayment } from "../context/PaymentContext";
 import { getActiveBankAccounts } from "../data/mocks/bankAccounts";
 import "./BankAccountSelector.css";
@@ -13,13 +14,18 @@ import "./BankAccountSelector.css";
 export default function BankAccountSelector() {
     const { payment, updatePayment } = usePayment();
     const [copiedId, setCopiedId] = useState(null);
+    const [isExpanded, setIsExpanded] = useState(() => !payment?.bankAccountId);
 
     const activeAccounts = getActiveBankAccounts();
+    const selectedAccount = activeAccounts.find(
+        (account) => account.bankAccountId === payment?.bankAccountId
+    );
 
     const handleSelect = (account) => {
         updatePayment({
             bankAccountId: account.bankAccountId,
         });
+        setIsExpanded(false);
     };
 
     const handleCopy = (e, accountNumber, accountId) => {
@@ -30,7 +36,32 @@ export default function BankAccountSelector() {
     };
 
     return (
-        <div className="bank-account-grid">
+        <div className="bank-account-selector">
+            <button
+                type="button"
+                className="bank-account-toggle"
+                aria-expanded={isExpanded}
+                onClick={() => setIsExpanded((expanded) => !expanded)}
+            >
+                <span className="bank-account-toggle-copy">
+                    <strong>
+                        {selectedAccount && !isExpanded
+                            ? `Cuenta seleccionada: ${selectedAccount.bankName}`
+                            : isExpanded
+                              ? "Ocultar cuentas bancarias"
+                              : "Seleccionar cuenta bancaria"}
+                    </strong>
+                    <small>
+                        {isExpanded
+                            ? "Elige la cuenta a la que realizarás la transferencia."
+                            : "Pulsa para ver o cambiar las cuentas disponibles."}
+                    </small>
+                </span>
+                {isExpanded ? <FiChevronUp aria-hidden="true" /> : <FiChevronDown aria-hidden="true" />}
+            </button>
+
+            {isExpanded && (
+                <div className="bank-account-grid">
             {activeAccounts.map((account) => {
                 const isSelected =
                     payment?.bankAccountId === account.bankAccountId;
@@ -179,6 +210,8 @@ export default function BankAccountSelector() {
                     </div>
                 );
             })}
+                </div>
+            )}
         </div>
     );
 }

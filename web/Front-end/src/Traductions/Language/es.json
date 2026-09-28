@@ -74,6 +74,26 @@
     "submit": "Alquilar"
   },
 
+  "terms": {
+    "acceptLabel": "He leído y acepto los términos y condiciones",
+    "view": "Ver documento completo",
+    "required": "La aceptación es obligatoria para continuar al pago.",
+    "documentLabel": "Reserva de vehículo",
+    "title": "Términos y condiciones",
+    "version": "Versión",
+    "effectiveDate": "Vigente desde",
+    "summary": "Resumen de la reserva",
+    "vehicle": "Vehículo",
+    "pickup": "Recogida",
+    "return": "Devolución",
+    "total": "Total estimado",
+    "introduction": "Antes de continuar, revisa las condiciones que aplicará a esta reserva. La versión vigente se asociará a tu aceptación.",
+    "close": "Cerrar",
+    "cancel": "Cancelar",
+    "accept": "Aceptar y continuar",
+    "acceptError": "Debes aceptar los términos y condiciones antes de continuar al pago."
+  },
+
   "login": {
     "createAccount": "Crear cuenta",
     "iniciarSesion": "Iniciar sesión"

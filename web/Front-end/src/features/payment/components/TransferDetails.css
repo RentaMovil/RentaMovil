@@ -23,14 +23,14 @@
 }
 
 .transfer-details-amount-label {
-    font-family: var(--mono);
+    font-family: var(--Popins);
     font-size: 13px;
     font-weight: 600;
     color: var(--placeholder);
 }
 
 .transfer-details-amount strong {
-    font-family: var(--mono);
+    font-family: var(--Popins);
     font-size: 22px;
     font-weight: 700;
     color: var(--text-h);

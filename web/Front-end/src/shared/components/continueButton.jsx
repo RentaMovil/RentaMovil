@@ -20,7 +20,7 @@
         onClick={onPress}
         aria-disabled={disabled}
         style={{
-            backgroundColor: disabled ? "var(--card)" : "var(--button)",
+            backgroundColor: disabled ? "var(--accent)" : "var(--button)",
             color: disabled ? "var(--text-h)" : "var(--text-button)",
             padding: "14px 24px",
             borderRadius: "8px",

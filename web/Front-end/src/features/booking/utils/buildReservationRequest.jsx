@@ -1,3 +1,7 @@
+import {
+    isValidTermsAcceptance,
+} from "../data/rentalTerms";
+
 export function buildReservationRequest(
     reservation,
     vehicleSubtotal,
@@ -9,7 +13,8 @@ export function buildReservationRequest(
         !reservation?.pickupBranch?.id ||
         !reservation?.returnBranch?.id ||
         !reservation?.pickupDate ||
-        !reservation?.returnDate
+        !reservation?.returnDate ||
+        !isValidTermsAcceptance(reservation?.termsAcceptance)
     ) {
         throw new Error("La reserva está incompleta");
     }
@@ -22,6 +27,10 @@ export function buildReservationRequest(
 
         startDate: new Date(reservation.pickupDate).toISOString(),
         endDate: new Date(reservation.returnDate).toISOString(),
+
+        termsAcceptance: {
+            ...reservation.termsAcceptance,
+        },
 
         vehicleSubtotal,
         insuranceSubtotal,

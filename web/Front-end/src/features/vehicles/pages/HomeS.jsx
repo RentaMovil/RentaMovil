@@ -223,6 +223,7 @@ const handleClearAllFilters = () => {
         {!isMobile && (
           <aside className="sidebar-container">
             <h3 className="filters-title">
+              <span className="catalog-sidebar-dot" aria-hidden="true" />
               Filtros
             </h3>
 

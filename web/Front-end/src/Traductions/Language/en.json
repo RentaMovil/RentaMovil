@@ -72,6 +72,25 @@
     "phone": "Phone",
     "submit": "Rent"
   },
+  "terms": {
+    "acceptLabel": "I have read and accept the terms and conditions",
+    "view": "View full document",
+    "required": "Acceptance is required before continuing to payment.",
+    "documentLabel": "Vehicle reservation",
+    "title": "Terms and conditions",
+    "version": "Version",
+    "effectiveDate": "Effective from",
+    "summary": "Reservation summary",
+    "vehicle": "Vehicle",
+    "pickup": "Pickup",
+    "return": "Return",
+    "total": "Estimated total",
+    "introduction": "Before continuing, review the conditions that apply to this reservation. The current version will be linked to your acceptance.",
+    "close": "Close",
+    "cancel": "Cancel",
+    "accept": "Accept and continue",
+    "acceptError": "You must accept the terms and conditions before continuing to payment."
+  },
   "login": {
     "createAccount": "Create account",
     "iniciarSesion": "Log in"

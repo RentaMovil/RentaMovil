@@ -72,6 +72,25 @@
     "phone": "Téléphone",
     "submit": "Louer"
   },
+  "terms": {
+    "acceptLabel": "J'ai lu et j'accepte les conditions générales",
+    "view": "Voir le document complet",
+    "required": "L'acceptation est obligatoire avant de continuer vers le paiement.",
+    "documentLabel": "Réservation de véhicule",
+    "title": "Conditions générales",
+    "version": "Version",
+    "effectiveDate": "En vigueur depuis",
+    "summary": "Résumé de la réservation",
+    "vehicle": "Véhicule",
+    "pickup": "Prise en charge",
+    "return": "Restitution",
+    "total": "Total estimé",
+    "introduction": "Avant de continuer, consultez les conditions qui s'appliquent à cette réservation. La version en vigueur sera associée à votre acceptation.",
+    "close": "Fermer",
+    "cancel": "Annuler",
+    "accept": "Accepter et continuer",
+    "acceptError": "Vous devez accepter les conditions générales avant de continuer vers le paiement."
+  },
   "login": {
     "createAccount": "Créer un compte",
     "iniciarSesion": "Se connecter"

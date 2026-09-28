@@ -72,6 +72,25 @@
     "phone": "Telefone",
     "submit": "Alugar"
   },
+  "terms": {
+    "acceptLabel": "Li e aceito os termos e condições",
+    "view": "Ver documento completo",
+    "required": "A aceitação é obrigatória antes de continuar para o pagamento.",
+    "documentLabel": "Reserva de veículo",
+    "title": "Termos e condições",
+    "version": "Versão",
+    "effectiveDate": "Vigente desde",
+    "summary": "Resumo da reserva",
+    "vehicle": "Veículo",
+    "pickup": "Retirada",
+    "return": "Devolução",
+    "total": "Total estimado",
+    "introduction": "Antes de continuar, revise as condições que se aplicam a esta reserva. A versão vigente será associada à sua aceitação.",
+    "close": "Fechar",
+    "cancel": "Cancelar",
+    "accept": "Aceitar e continuar",
+    "acceptError": "Você deve aceitar os termos e condições antes de continuar para o pagamento."
+  },
   "login": {
     "createAccount": "Criar conta",
     "iniciarSesion": "Entrar"

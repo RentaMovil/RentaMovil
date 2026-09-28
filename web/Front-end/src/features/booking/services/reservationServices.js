@@ -1,4 +1,5 @@
 import { reservationsMock } from "../data/mocks/reservationsMocks.js";
+import { isValidTermsAcceptance } from "../data/rentalTerms";
 
 export const getReservations = async () => {
     return Promise.resolve(reservationsMock);
@@ -61,6 +62,14 @@ export const updateReturnBranch = async (reservationId, returnBranchId) => {
 };
 
 export const createReservation = async (reservationRequest) => {
+    // Esta validación simula la regla del servidor. El backend real debe
+    // rechazar la creación de la reserva si falta o no coincide la aceptación.
+    if (!isValidTermsAcceptance(reservationRequest?.termsAcceptance)) {
+        throw new Error(
+            "La reserva requiere la aceptación válida de los términos y condiciones."
+        );
+    }
+
     console.log(
         "Simulando guardado en el servidor...",
         reservationRequest
