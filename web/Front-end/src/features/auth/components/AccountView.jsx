@@ -1,0 +1,344 @@
+import { useState } from "react";
+import { FaGlobe, FaMoon, FaPen, FaSignOutAlt, FaTimes } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+
+import Navbar from "../../../shared/components/layout/Navbar";
+import NavbarAdmin from "../../../shared/components/layout/NavBarAdmin";
+import Footer from "../../../shared/components/layout/Footer";
+import FooterAdmin from "../../../shared/components/layout/FooterAdmin";
+import ButtonBack from "../../../shared/components/buttonBack";
+import { useAuth } from "../../../contexts/AuthContext";
+import ProfileIdentity from "./ProfileIdentity";
+
+import espanish from "../../../assets/img/espana.png";
+import english from "../../../assets/img/eeuu.png";
+import french from "../../../assets/img/francia2.png";
+import portuguese from "../../../assets/img/portugal.png";
+
+export default function AccountView({ theme, setTheme, admin = false }) {
+    const navigate = useNavigate();
+    const { t, i18n } = useTranslation();
+    const { user, isLoading, error, refreshProfile, updateProfile, logout } = useAuth();
+    const [showThemeModal, setShowThemeModal] = useState(false);
+    const [showLangModal, setShowLangModal] = useState(false);
+
+    // Modo edicion del perfil. El boton de la lapiz lo alterna; mientras esta
+    // activo los campos pasan de solo lectura a editables y aparece Guardar.
+    const [isEditing, setIsEditing] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const [saved, setSaved] = useState(false);
+
+    const toggleEdit = () => {
+        setIsEditing((v) => !v);
+        setSaved(false);
+    };
+
+    const handleSave = async (changes) => {
+        // Sin cambios no se llama a la API: se cierra el modo edicion
+        // directamente. El backend responde 400 si se le manda el cuerpo
+        // vacio, y eso al usuario le pareceria un fallo.
+        const hayCambios = Object.keys(changes ?? {}).length > 0;
+
+        setIsSaving(true);
+        try {
+            if (hayCambios) {
+                await updateProfile(changes);
+            }
+            setIsEditing(false);
+            setSaved(hayCambios);
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const NavbarComponent = admin ? NavbarAdmin : Navbar;
+    const FooterComponent = admin ? FooterAdmin : Footer;
+
+    const handleLangChange = (lang) => {
+        i18n.changeLanguage(lang);
+        localStorage.setItem("lang", lang);
+        setShowLangModal(false);
+    };
+
+    const handleRetry = async () => {
+        try {
+            await refreshProfile();
+        } catch {
+            // El error queda expuesto en el estado de AuthContext.
+        }
+    };
+
+    const handleLogout = async () => {
+        await logout();
+        navigate("/");
+    };
+
+    if (isLoading) {
+        return <p className="route-loading">Cargando perfil...</p>;
+    }
+
+    if (!user) {
+        return (
+            <>
+                <NavbarComponent />
+                <div className="containerC">
+                    <div className="cardC">
+                        <p className="account-error" role="alert">
+                            {error || "No hay una sesión disponible."}
+                        </p>
+                        <div className="actions account-actions-fallback">
+                            <button
+                                className="close-btn"
+                                type="button"
+                                onClick={handleRetry}
+                            >
+                                {t("account.retry")}
+                            </button>
+                            <Link className="linkC" to="/">
+                                {t("account.signIn")}
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+                <FooterComponent />
+            </>
+        );
+    }
+
+    return (
+        <>
+            <NavbarComponent />
+            <div className="containerC">
+                <div className="cardC">
+                    <div className="header-page">
+                        <div className="header-left">
+                            {/* `normal` y no `overlay`: la variante overlay es
+                                `position: absolute`, y dentro de `.header-left`
+                                se salia del flujo y se montaba encima del
+                                estado de perfil. */}
+                            <ButtonBack
+                                onClick={() => navigate(-1)}
+                                variant="normal"
+                            />
+
+                            <p className="status2">
+                                {t("account.profileStatus")}
+                            </p>
+                        </div>
+
+                        <div className="actions">
+                            <button
+                                className={`icon-btnC ${isEditing ? "icon-btnC--on" : ""}`}
+                                type="button"
+                                onClick={toggleEdit}
+                                aria-label={isEditing ? t("account.cancelar") : t("account.editar")}
+                                title={isEditing ? t("account.cancelar") : t("account.editar")}
+                            >
+                                {isEditing ? <FaTimes /> : <FaPen />}
+                            </button>
+
+                            <button
+                                className="icon-btnC"
+                                type="button"
+                                onClick={() => setShowThemeModal(true)}
+                                aria-label={t("account.seleccionaTema")}
+                                title={t("account.seleccionaTema")}
+                            >
+                                <FaMoon />
+                            </button>
+                            <button
+                                className="icon-btnC"
+                                type="button"
+                                onClick={() => setShowLangModal(true)}
+                                aria-label={t("account.seleccionaIdioma")}
+                                title={t("account.seleccionaIdioma")}
+                            >
+                                <FaGlobe />
+                            </button>
+                            <button
+                                className="icon-btnC"
+                                type="button"
+                                onClick={handleLogout}
+                                aria-label={t("account.logout")}
+                                title={t("account.logout")}
+                            >
+                                <FaSignOutAlt />
+                            </button>
+                        </div>
+                    </div>
+
+                    {error && (
+                        <p className="account-error" role="alert">
+                            {error}
+                        </p>
+                    )}
+
+                    {saved && !isEditing && (
+                        <p className="account-saved" role="status">
+                            {t("account.perfilActualizado")}
+                        </p>
+                    )}
+
+                    <div className="formC">
+                        <ProfileIdentity
+                            user={user}
+                            isEditing={isEditing}
+                            onSave={handleSave}
+                            isSaving={isSaving}
+                        />
+                    </div>
+                </div>
+            </div>
+
+            {showThemeModal && (
+                <div
+                    className="modal-overlay"
+                    onClick={() => setShowThemeModal(false)}
+                >
+                    <div
+                        className="modal-content"
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <button
+                            className="btn-times btn-times--corner"
+                            type="button"
+                            onClick={() => setShowThemeModal(false)}
+                            aria-label={t("account.cancelar")}
+                        >
+                            <FaTimes />
+                        </button>
+
+                        <p className="modal-title">
+                            {t("account.seleccionaTema")}
+                        </p>
+                        <div className="theme-grid">
+                            {[
+                                {
+                                    id: "skylight",
+                                    label: "Modo claro",
+                                    desc: "Fondo blanco, barra azul marino",
+                                },
+                                {
+                                    id: "light",
+                                    label: "Modo claro neutro",
+                                    desc: "Fondo blanco, acentos ámbar",
+                                },
+                                {
+                                    id: "dark",
+                                    label: "Modo oscuro neutro",
+                                    desc: "Fondo gris muy oscuro, acento dorado",
+                                },
+                                {
+                                    id: "darkPurple",
+                                    label: "Modo oscuro azul",
+                                    desc: "Fondo azul noche, acento dorado",
+                                },
+                            ].map(({ id, label, desc }) => (
+                                <button
+                                    key={id}
+                                    type="button"
+                                    className={`theme-card ${
+                                        theme === id ? "active2" : ""
+                                    }`}
+                                    onClick={() => setTheme(id)}
+                                >
+                                    <div
+                                        className={`theme-preview preview-${id}`}
+                                        aria-hidden="true"
+                                    >
+                                        <div className="theme-preview-bar" />
+                                        <div className="theme-preview-body">
+                                            <div className="theme-preview-surface" />
+                                            <div className="theme-preview-accent" />
+                                        </div>
+                                    </div>
+                                    <div className="theme-card-info">
+                                        <p className="theme-name">{label}</p>
+                                        <p className="theme-desc">{desc}</p>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showLangModal && (
+                <div
+                    className="modal-overlay"
+                    onClick={() => setShowLangModal(false)}
+                >
+                    <div
+                        className="modal-content"
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <button
+                            className="btn-times btn-times--corner"
+                            type="button"
+                            onClick={() => setShowThemeModal(false)}
+                            aria-label={t("account.cancelar")}
+                        >
+                            <FaTimes />
+                        </button>
+
+                        <p className="modal-title">
+                            {t("account.seleccionaIdioma")}
+                        </p>
+                        <div className="theme-grid">
+                            {[
+                                {
+                                    id: "es",
+                                    label: "Español",
+                                    flag: espanish,
+                                    desc: "Spanish",
+                                },
+                                {
+                                    id: "en",
+                                    label: "English",
+                                    flag: english,
+                                    desc: "Inglés",
+                                },
+                                {
+                                    id: "fr",
+                                    label: "Français",
+                                    flag: french,
+                                    desc: "Francés",
+                                },
+                                {
+                                    id: "pt",
+                                    label: "Português",
+                                    flag: portuguese,
+                                    desc: "Portugués",
+                                },
+                            ].map(({ id, label, flag, desc }) => (
+                                <button
+                                    key={id}
+                                    type="button"
+                                    className={`theme-card ${
+                                        i18n.language === id ? "active" : ""
+                                    }`}
+                                    onClick={() => handleLangChange(id)}
+                                >
+                                    <div className="lang-preview">
+                                        <img
+                                            className="lang-flag"
+                                            src={flag}
+                                            alt={label}
+                                        />
+                                    </div>
+                                    <div className="theme-card-info">
+                                        <p className="theme-name">{label}</p>
+                                        <p className="theme-desc">{desc}</p>
+                                    </div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <FooterComponent />
+        </>
+    );
+}

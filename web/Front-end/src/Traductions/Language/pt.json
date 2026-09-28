@@ -151,10 +151,20 @@
     "modificarPassword": "Alterar senha",
     "modoEdicion": "Modo de edição ativado",
     "perfilActualizado": "Perfil atualizado",
+    "profileStatus": "Perfil sincronizado",
+    "profileImage": "Foto de perfil",
     "cambiarFoto": "Alterar foto",
     "seleccionaTema": "Selecione um tema",
     "seleccionaIdioma": "Selecione um idioma",
-    "cancelar": "Cancelar"
+    "cancelar": "Cancelar",
+    "retry": "Tentar novamente",
+    "signIn": "Entrar",
+    "logout": "Sair",
+    "apellido": "Sobrenome",
+    "usuario": "Usuário",
+    "editar": "Editar perfil",
+    "guardar": "Guardar alterações",
+    "guardando": "Salvando..."
   },
   "payment": {
     "payTitle": "Confirmar pagamento",
@@ -200,7 +210,8 @@
     "ins-types": "Tipos de seguro",
     "superadmin": "Super Administração",
     "sa-users": "Usuários e funções",
-    "sa-bank": "Contas bancárias"
+    "sa-bank": "Contas bancárias",
+    "loc-fleet": "Localização da frota"
   },
   "changePassword": {
     "caracters": "Pelo menos 8 caracteres",
@@ -239,21 +250,21 @@
     "priceRequired": "O preço é obrigatório",
     "minLenghtPrice": "O preço deve ser maior ou igual a 0",
     "maxLenghtPrice": "O preço não deve ultrapassar 100000000",
-    "mileage":"Kilometragem",
-    "mileageRequired":"A kilometragem é obrigatória",
-    "minLenghtMileage":"A kilometragem deve ser maior ou igual a 0",
-    "maxLenghtMileage":"A kilometragem não deve superar 1000000",
-    "invalidMileage":"A kilometragem só pode conter números.",
-    "age":"Idade",
-    "ageRequired":"A idade é obrigatória",
-    "minLenghtAge":"A idade deve ser maior ou igual a",
-    "maxLenghtAge":"A idade não deve superar a",
-    "invalidAge":"A idade só pode conter números.",
-    "capacity":"Capacidade",
-    "capacityRequired":"A capacidade é obrigatória",
-    "minLenghtCapacity":"A capacidade deve ser maior ou igual a 1",
-    "maxLenghtCapacity":"A capacidade não deve superar 100",
-    "invalidCapacity":"A capacidade só pode conter números.",
+    "mileage": "Kilometragem",
+    "mileageRequired": "A kilometragem é obrigatória",
+    "minLenghtMileage": "A kilometragem deve ser maior ou igual a 0",
+    "maxLenghtMileage": "A kilometragem não deve superar 1000000",
+    "invalidMileage": "A kilometragem só pode conter números.",
+    "age": "Idade",
+    "ageRequired": "A idade é obrigatória",
+    "minLenghtAge": "A idade deve ser maior ou igual a",
+    "maxLenghtAge": "A idade não deve superar a",
+    "invalidAge": "A idade só pode conter números.",
+    "capacity": "Capacidade",
+    "capacityRequired": "A capacidade é obrigatória",
+    "minLenghtCapacity": "A capacidade deve ser maior ou igual a 1",
+    "maxLenghtCapacity": "A capacidade não deve superar 100",
+    "invalidCapacity": "A capacidade só pode conter números.",
     "Type": "Tipo de veículo",
     "requiredType": "Você deve selecionar um tipo de veículo",
     "disabledType": "Selecione um tipo...",
@@ -374,21 +385,6 @@
     "minLenghtMaintenance": "Mínimo de 3 caracteres.",
     "maxLenght": "Máximo de 60 caracteres",
     "invalidMaintenance": "Somente letras, números, hífens e vírgulas são permitidos.",
-    "option1": "Troca de óleo",
-    "option2": "Troca de filtros",
-    "option3": "Revisão de freios",
-    "option4": "Troca de pneus",
-    "option5": "Alinhamento e balanceamento",
-    "option6": "Revisão geral",
-    "option7": "Reparo do motor",
-    "option8": "Reparo dos freios",
-    "option9": "Reparo elétrico",
-    "option10": "Reparo da suspensão",
-    "option11": "Reparo da transmissão",
-    "option12": "Lavagem",
-    "option13": "Pintura",
-    "option14": "Funilaria",
-    "observations": "Observações",
     "placeholderObservations": "Observações",
     "minLenghtObservations": "Mínimo de 5 caracteres",
     "maxLenghtObservations": "Máximo de 200 caracteres",
@@ -411,7 +407,8 @@
       "option11": "Reparação da transmissão",
       "option12": "Lavagem",
       "option13": "Pintura",
-      "option14": "Funilaria"
+      "option14": "Funilaria",
+      "observations": "Observações"
     }
   },
   "notifications": {
@@ -542,8 +539,8 @@
     "placeholder": "Buscar por placa, marca ou modelo...",
     "all": "Todos"
   },
-    "FilterVehicle":{
-    "placeholder":"Buscar por placa, marca ou modelo..."
+  "FilterVehicle": {
+    "placeholder": "Buscar por placa, marca ou modelo..."
   },
   "CartVehiculeStatus": {
     "veicle": "Veículo",
@@ -556,20 +553,20 @@
     "noFound": "Nenhum veículo encontrado.",
     "newMaintenance": "Registrar uma nova manutenção",
     "plate": "Placa",
-      "age": "Ano",
-      "mileage": "Quilometragem",
-      "distanceUnit": "km",
-      "fuelType": "Tipo de combustível",
-      "fuelOptions": {
-        "gasoline": "Gasolina",
-        "diesel": "Diesel",
-        "hybrid": "Híbrido",
-        "electric": "Elétrico",
-        "naturalGas": "Gás natural",
-        "propaneGas": "Gás propano"
-      },
-      "price": "Preço",
-      "perDay": "dia",
+    "age": "Ano",
+    "mileage": "Quilometragem",
+    "distanceUnit": "km",
+    "fuelType": "Tipo de combustível",
+    "fuelOptions": {
+      "gasoline": "Gasolina",
+      "diesel": "Diesel",
+      "hybrid": "Híbrido",
+      "electric": "Elétrico",
+      "naturalGas": "Gás natural",
+      "propaneGas": "Gás propano"
+    },
+    "price": "Preço",
+    "perDay": "dia",
     "platePlaceholder": "Exemplo de placa: ABC123",
     "requiredPlate": "A placa é obrigatória",
     "formatInvalidPlate": "Formato de placa inválido",
@@ -907,7 +904,6 @@
     "showingRange": "Mostrando {{from}} a {{to}} de {{total}} resultados",
     "previous": "Anterior",
     "next": "Próxima",
-
     "notFound": "A reserva solicitada não foi encontrada.",
     "backToList": "Voltar às reservas",
     "detailTitle": "Detalhe da Reserva #{{id}}",
@@ -988,10 +984,10 @@
       "mileageIn": "Quilometragem de entrada",
       "fuelLevel": "Nível de combustível",
       "fuel": {
-        "full": "Cheio (8/8)",
-        "34": "3/4 (6/8)",
         "12": "1/2 (4/8)",
-        "14": "1/4 (2/8)"
+        "14": "1/4 (2/8)",
+        "34": "3/4 (6/8)",
+        "full": "Cheio (8/8)"
       },
       "gpsDevice": "Dispositivo GPS telemático",
       "gpsOption1": "Geotab R-809 (pré-instalado e ativo)",
@@ -1008,5 +1004,74 @@
       "title": "Comprovante de transferência bancária",
       "subtitle": "Referência: {{reference}}"
     }
+  },
+  "process": {
+    "title": "4 passos para a sua próxima viagem",
+    "subtitle": "Um processo simples e claro, pensado para o levar mais longe.",
+    "steps": {
+      "search": {
+        "title": "Procure e escolha",
+        "description": "Filtre por localização, datas e tipo de veículo para encontrar o carro ideal para a sua viagem."
+      },
+      "reserve": {
+        "title": "Reserve",
+        "description": "Escolha a sua cobertura, reveja os detalhes e confirme a sua reserva através de um pagamento seguro."
+      },
+      "pickup": {
+        "title": "Levante e divirta-se",
+        "description": "Vá à filial selecionada, mostre a sua fatura juntamente com a carta de condução e receba as chaves sem filas nem demoras."
+      },
+      "return": {
+        "title": "Divirta-se e devolva",
+        "description": "No final da viagem, devolva o veículo na filial correspondente e aproveite a sua experiência."
+      }
+    }
+  },
+  "requirements": {
+    "title": "Requisitos para alugar um veículo",
+    "license": "Carta de condução",
+    "licenseDescription": "Apresente uma carta válida e em vigor para o tipo de veículo reservado.",
+    "insurance": "Seguro selecionado",
+    "insuranceDescription": "Escolha a cobertura que melhor se adapte às necessidades da sua viagem.",
+    "id": "Documento de identidade",
+    "idDescription": "Leve o seu documento original para concluir a entrega do veículo."
+  },
+  "title": {
+    "rentamovil": "Viaje com a RentaMovil"
+  },
+  "description": {
+    "info-branches": "As nossas filiais estão localizadas nas principais cidades do país e oferecem serviço das 8:00 às 18:00."
+  },
+  "vehicleLocation": {
+    "title": "Localização da frota",
+    "subtitle": "Mapa com a posicao enviada pelo GPS dos veiculos alugados.",
+    "refresh": "Atualizar",
+    "errorTitle": "Não foi possível carregar a localização",
+    "kpiTracked": "Rastreados",
+    "kpiMoving": "Em movimento",
+    "kpiStopped": "Parados",
+    "kpiLastUpdate": "Último sinal",
+    "loading": "Carregando a frota...",
+    "emptyTitle": "Nenhum veículo alugado",
+    "emptyHint": "A localização só está disponível para veículos com uma reserva em andamento e GPS ativo.",
+    "listTitle": "Veículos",
+    "moving": "Em movimento",
+    "stopped": "Parado",
+    "rental": "Reserva",
+    "customer": "Cliente",
+    "readoutTitle": "Última posição registrada",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "speed": "Velocidade",
+    "kmh": "km/h",
+    "heading": "Rumo",
+    "ignition": "Ignição",
+    "ignitionOn": "Ligada",
+    "ignitionOff": "Desligada",
+    "recordedAt": "Registrado",
+    "selectVehicle": "Selecione um veículo",
+    "autoRefresh": "Atualiza a cada {{seconds}} s",
+    "deviceOffline": "{{model}} nao esta conectado: posicao do ultimo relatorio.",
+    "device": "Dispositivo: {{model}} · {{provider}}"
   }
 }

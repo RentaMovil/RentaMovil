@@ -1,7 +1,9 @@
 /* FOOTER PRINCIPAL */
 footer {
   margin-top: auto;
-  background: var(--navbar);
+  /* El footer tiene su propia variable: en el tema `light`, --navbar es
+     igual a --bg y el footer se perdia sobre la pagina. */
+  background: var(--footer-bg, var(--navbar));
   color: var(--textFooter);
   padding: 50px 20px 20px;
 }

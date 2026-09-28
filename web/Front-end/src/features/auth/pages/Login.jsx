@@ -4,22 +4,18 @@ import NavbarTwo from "../../../shared/components/layout/NavbarTwo.jsx";
 import FooterTwo from "../../../shared/components/layout/FooterTwo.jsx";
 import LoginForm from "../components/LoginForm.jsx";
 import RegisterForm from "../components/RegisterForm.jsx";
-import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { authService } from "../services/authService";
-import { saveSession } from "../services/sessionStorage";
+import { useAuth } from "../../../contexts/AuthContext";
 
 import "./Login.css";
 
 function Login() {
     const [isLoginMode, setIsLoginMode] = useState(true);
-    const { t } = useTranslation();
     const navigate = useNavigate();
+    const { login, register } = useAuth();
 
     const handleLogin = async (credentials) => {
-        const session = await authService.login(credentials);
-
-        saveSession(session);
+        const session = await login(credentials);
 
         navigate(
             session.user.role === "ADMIN"
@@ -29,8 +25,7 @@ function Login() {
     };
 
     const handleRegister = async (formData) => {
-        const session = await authService.register(formData);
-        saveSession(session);
+        const session = await register(formData);
         navigate(session.user.role === "ADMIN" ? "/HomeAdmin" : "/home");
     };
 

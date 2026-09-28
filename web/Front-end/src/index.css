@@ -1,4 +1,10 @@
-@import url('https://googleapis.com');
+/* Inter para cuerpo y Poppins para titulos, segun las variables --sans y
+   --heading de mas abajo. La URL estaba mal: era `https://googleapis.com`,
+   que responde 404 con HTML y por tanto el navegador rechazaba el @import,
+   dejando la web entera con la fuente del sistema. La direccion correcta es
+   la de `fonts.googleapis.com`, la misma que usa
+   `Documentacion/RentaMovil-Sistema-de-Diseno.html`. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700&display=swap');
 
 :root {
   --sans: 'Inter', system-ui, -apple-system, sans-serif;
@@ -27,6 +33,7 @@
   --bg: #F8FAFC;
   --card-bg: #FFFFFF;
   --navbar: #0A192F;
+  --footer-bg: #0A192F;
   --primary: #1E3A8A;
   --primary-dark: #0F172A;
   --success: #16A34A;
@@ -113,6 +120,7 @@
   --bg: #FAFAFA;
   --card-bg: #FFFFFF;
   --navbar: #FAFAFA;
+  --footer-bg: #F1F5F9;
   --primary: #00B67A;
   --primary-dark: #009463;
   
@@ -202,6 +210,7 @@
   --bg: #121212;
   --card-bg: #1C1C1C;
   --navbar: #1C1C1C;
+  --footer-bg: #1C1C1C;
   --primary: #C59B27;
   --primary-dark: #AA820A;
   --success: #22C55E;
@@ -288,6 +297,7 @@
   --bg: #030712;
   --card-bg: #070F22;
   --navbar: #070F22;
+  --footer-bg: #070F22;
   --primary: #C59B27;
   --primary-dark: #AA820A;
   --success: #137310;

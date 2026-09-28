@@ -20,6 +20,7 @@ import HistorialReservation from './features/booking/pages/HistorialReservation.
 
 // Payment
 import Payment from './features/payment/pages/Payment.jsx';
+import { RequireAuth, RequireRole } from './shared/components/ProtectedRoute.jsx';
 
 // Notification
 import Notification from './features/notification/pages/Notification.jsx';
@@ -38,6 +39,7 @@ import InsuranceTypes from './features/admin/insuranceTypes/pages/InsuranceTypes
 import Branches from './features/admin/branches/pages/Branches.jsx';
 import ReservationsList from './features/admin/reservations/pages/ReservationsList.jsx';
 import ReservationDetail from './features/admin/reservations/pages/ReservationDetail.jsx';
+import VehicleLocation from './features/admin/vehicleLocation/pages/VehicleLocation.jsx';
 
 
 import History from './features/admin/historyMaintenance/pages/History.jsx';
@@ -51,8 +53,6 @@ import CodeVerification from "./features/auth/pages/CodeVerification.jsx";
 import ChangePasswordLogin from './features/auth/pages/ChangePasswordLogin.jsx';
 
 //----------
-import { httpClient } from './shared/api/httpClient';
-import { tokenStore } from './shared/api/tokenStore.js';
 
 // Super Admin
 import UserManagement from './features/admin/users/pages/UserManagement.jsx';
@@ -62,73 +62,226 @@ import BankAccounts from './features/admin/bankAccounts/pages/BankAccounts.jsx';
 
 
 function App() {
-  const [isRestoring, setIsRestoring] = useState(true);
   const [theme, setTheme] = useState(
-    () => localStorage.getItem("theme") || "light"
+    () => localStorage.getItem("theme") || "skylight"
   );
 
   useEffect(() => {
     document.documentElement.className = theme;
     localStorage.setItem("theme", theme);
   }, [theme]);
-  
-  useEffect(() => {
-        async function restoreSession() {
-            const refreshToken = localStorage.getItem('rentamovil_refresh_token');
-                document.documentElement.className = theme;
-    localStorage.setItem("theme", theme);
-            if (!refreshToken) { setIsRestoring(false); return; }
-
-            try {
-                const data = await httpClient.post('/auth/refresh', { refreshToken });
-                tokenStore.setAccessToken(data.accessToken);
-            } catch {
-                localStorage.removeItem('rentamovil_refresh_token');
-            } finally {
-                setIsRestoring(false);
-            }
-        }
-        restoreSession();
-    }, [theme]);
-
-    if (isRestoring) return <p>Cargando sesión...</p>;
-
-
   return (
     <BrowserRouter>
 
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<RegisterForm />} />
-        <Route path="/account" element={<Account theme={theme} setTheme={setTheme} />} />
-        <Route path="/account/admin" element={<AccountAdmin theme={theme} setTheme={setTheme} />} />
-        <Route path="/ChangePassword" element={<ChangePassword />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/homeS" element={<HomeS />} />
-        <Route path="/reservation" element={<Reservation />} />
-        <Route path="/HistorialReservation" element={<HistorialReservation />} />
-        <Route path="/payment" element={<Payment />} />
-        <Route path="/Notification" element={<Notification />} />
-        <Route path="/NotificationAdmin" element={<NotificationAdmin />} />
-        <Route path="/notificationAdmin" element={<NotificationAdmin />} />
-        <Route path="/RegisterVehicle" element={<RegisterVehicle />} />
-        <Route path="/Maintenance" element={<Maintenance />} />
-        <Route path="/HomeAdmin" element={<HomeAdmin />} />
-        <Route path="/homeAdmin" element={<HomeAdmin />} />
-        <Route path="/home-admin" element={<HomeAdmin />} />
-        <Route path="/History" element={<History />} />
-        <Route path="/VehicleInventory" element={<VehicleInventory />} />
         <Route path="/Register" element={<RegisterForm />} />
         <Route path="/EmailVerification" element={<EmailVerification />} />
         <Route path="/CodeVerification" element={<CodeVerification />} />
         <Route path="/ChangePasswordLogin" element={<ChangePasswordLogin />} />
-        <Route path="/admin/users" element={<UserManagement />} />
-        <Route path="/admin/bank-accounts" element={<BankAccounts />} />
-        <Route path="/insurance-types" element={<InsuranceTypes />} />
-        <Route path="/branches" element={<Branches />} />
-        <Route path="/reservations" element={<ReservationsList />} />
-        <Route path="/reservations/:id" element={<ReservationDetail />} />
 
+        <Route
+          path="/account"
+          element={
+            <RequireAuth>
+              <Account theme={theme} setTheme={setTheme} />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/account/admin"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <AccountAdmin theme={theme} setTheme={setTheme} />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/ChangePassword"
+          element={
+            <RequireAuth>
+              <ChangePassword />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            <RequireAuth>
+              <Home />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/homeS"
+          element={
+            <RequireAuth>
+              <HomeS />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/reservation"
+          element={
+            <RequireAuth>
+              <Reservation />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/HistorialReservation"
+          element={
+            <RequireAuth>
+              <HistorialReservation />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/payment"
+          element={
+            <RequireAuth>
+              <Payment />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/Notification"
+          element={
+            <RequireAuth>
+              <Notification />
+            </RequireAuth>
+          }
+        />
+
+        <Route
+          path="/NotificationAdmin"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <NotificationAdmin />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/notificationAdmin"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <NotificationAdmin />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/RegisterVehicle"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <RegisterVehicle />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/Maintenance"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <Maintenance />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/HomeAdmin"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <HomeAdmin />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/homeAdmin"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <HomeAdmin />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/home-admin"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <HomeAdmin />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/History"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <History />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/VehicleInventory"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <VehicleInventory />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <UserManagement />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/admin/bank-accounts"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <BankAccounts />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/insurance-types"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <InsuranceTypes />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/branches"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <Branches />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/reservations"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <ReservationsList />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/reservations/:id"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <ReservationDetail />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/VehicleLocation"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <VehicleLocation />
+            </RequireRole>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

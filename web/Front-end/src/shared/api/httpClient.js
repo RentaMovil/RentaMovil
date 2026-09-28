@@ -1,7 +1,7 @@
 import { tokenStore } from './tokenStore.js';
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-let refreshPromise = null; 
+let refreshPromise = null;
 async function rawRequest(endpoint, { method = 'GET', body, headers = {} } = {}) {
     const token = tokenStore.getAccessToken();
     return fetch(`${BASE_URL}${endpoint}`, {

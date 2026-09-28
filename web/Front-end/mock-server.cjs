@@ -198,6 +198,228 @@ server.patch('/auth/me/password', requireAuth, (req, res) => {
     res.json({ message: 'Contraseña actualizada' });
 });
 
-server.use(router); // /vehicles, /maintenances siguen igual
+// PATCH /notifications/:notification_id/read
+//
+// La lista `GET /notifications` la sirve json-server solo, a partir de la
+// coleccion `notifications` de db.json. El "marcar como leida" si necesita una
+// ruta propia: json-server solo expone PUT/PATCH sobre el recurso entero, y
+// el cliente (web y app) espera `PATCH /notifications/:id/read`.
+//
+// A diferencia del resto de rutas, NO va con requireAuth: el web tambien
+// consume este endpoint y su httpClient solo adjunta el Bearer cuando hay
+// sesion en memoria.
+server.patch('/notifications/:notification_id/read', (req, res) => {
+    const id = Number(req.params.notification_id);
+
+    if (!Number.isInteger(id)) {
+        return res.status(400).json({ message: 'Identificador inválido' });
+    }
+
+    const notification = db.get('notifications').find({ notification_id: id }).value();
+
+    if (!notification) {
+        return res.status(404).json({ message: 'Notificación no encontrada' });
+    }
+
+    db.get('notifications')
+        .find({ notification_id: id })
+        .assign({ is_read: true, read_at: new Date().toISOString() })
+        .write();
+
+    res.json(db.get('notifications').find({ notification_id: id }).value());
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Servicio de telemetria GPS (EP-006 / HU-GPS-001)
+//
+// La API no tenia contrato de GPS, asi que se define aqui. Los endpoints
+// cuelgan de `/gps` y no se delegan a json-server, porque hay que cruzar tres
+// colecciones (gps + vehicles + rentals) para devolver "la ultima posicion
+// conocida de cada vehiculo alquilado".
+//
+// PENDIENTE — INV-002: la regla de negocio pide que solo ADMIN/SUPER_ADMIN
+// puedan leer la ubicacion y que un CLIENT reciba 403. Ahora estas rutas solo
+// exigen sesion (`requireAuth`). Para cerrarlo basta con encadenar
+// `requireRole("ADMIN", "SUPER_ADMIN")` en las tres de abajo.
+//
+// Estas rutas usan `Array.prototype` y no cadenas de lodash a proposito:
+// dentro de una cadena, `.reverse()` devuelve un array plano en vez de un
+// wrapper, y encadenar `.find().value()` detras rompe la consulta.
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Lee una coleccion del db como array plano. */
+function readCollection(name) {
+    return db.get(name).value() || [];
+}
+
+/** Ordena una lista de posiciones de mas reciente a mas antigua. */
+function byNewestFirst(a, b) {
+    return String(b.recorded_at).localeCompare(String(a.recorded_at));
+}
+
+/**
+ * Ultima posicion conocida por vehiculo, junto con el vehiculo y la rental que
+ * la produjo. Solo se incluyen vehiculos con una rental IN_PROGRESS: uno sin
+ * alquiler activo no se puede supervisar.
+ */
+function listTrackedVehicles() {
+    const vehicles = readCollection('vehicles');
+    const users = readCollection('users');
+    const positions = readCollection('gps');
+    const devices = readCollection('gpsDevices');
+    const activeRentals = readCollection('rentals').filter((r) => r.status === 'IN_PROGRESS');
+
+    return activeRentals
+        .map((rental) => {
+            const vehicle = vehicles.find((v) => v.id === rental.vehicle_id);
+            if (!vehicle) return null;
+
+            const position = positions
+                .filter((p) => p.vehicle_id === rental.vehicle_id)
+                .sort(byNewestFirst)[0];
+            if (!position) return null;
+
+            // El nombre del cliente sale de `users`, no de la rental: si se
+            // guardara en la rental podria desincronizarse del usuario real.
+            const customer = users.find((u) => u.id === rental.customer_id);
+
+            // Estado del tracker. La interfaz lo usa para avisar cuando la
+            // posicion que ve es del ultimo reporte y no una senal en vivo.
+            const device = devices.find((d) => d.id === rental.gps_id);
+            const deviceSummary = device
+                ? {
+                    id: device.id,
+                    model: device.model,
+                    provider: device.provider,
+                    status: device.status,
+                    connected: device.connected,
+                    last_seen_at: device.last_seen_at,
+                }
+                : null;
+
+            return {
+                vehicle_id: vehicle.id,
+                plate: vehicle.plate,
+                brand: vehicle.brand,
+                model: vehicle.model,
+                vehicle_type: vehicle.vehicleType,
+                status: vehicle.status,
+                device: deviceSummary,
+                rental: {
+                    id: rental.id,
+                    status: rental.status,
+                    customer_id: rental.customer_id,
+                    customer_name: customer
+                        ? `${customer.first_name} ${customer.last_name}`
+                        : null,
+                    start_date: rental.start_date,
+                    end_date: rental.end_date,
+                    gps_id: rental.gps_id,
+                },
+                position: {
+                    latitude: position.latitude,
+                    longitude: position.longitude,
+                    speed: position.speed,
+                    heading: position.heading,
+                    ignition: position.ignition,
+                    recorded_at: position.recorded_at,
+                },
+            };
+        })
+        .filter(Boolean);
+}
+
+// GET /gps/vehicles
+server.get('/gps/vehicles', requireAuth, (req, res) => {
+    res.json(listTrackedVehicles());
+});
+
+// GET /gps/vehicles/:vehicle_id
+server.get('/gps/vehicles/:vehicle_id', requireAuth, (req, res) => {
+    const { vehicle_id } = req.params;
+
+    const tracked = listTrackedVehicles().find((v) => v.vehicle_id === vehicle_id);
+    if (!tracked) {
+        return res.status(404).json({ message: 'El vehiculo no tiene una rental en curso ni posicion registrada' });
+    }
+
+    res.json(tracked);
+});
+
+// GET /gps/vehicles/:vehicle_id/track
+//
+// Historial de posiciones, para dibujar la ruta recorrida.
+server.get('/gps/vehicles/:vehicle_id/track', requireAuth, (req, res) => {
+    const { vehicle_id } = req.params;
+
+    const track = readCollection('gps')
+        .filter((p) => p.vehicle_id === vehicle_id)
+        .sort(byNewestFirst);
+
+    if (!track.length) {
+        return res.status(404).json({ message: 'El vehiculo no tiene posiciones registradas' });
+    }
+
+    res.json(track);
+});
+
+// PATCH /auth/me
+//
+// Guarda los cambios del perfil del usuario autenticado.
+//
+// Solo se aceptan los campos de una lista blanca. `email`, `role`, `status`
+// y `password_hash` se ignoran aunque vengan en el cuerpo: el rol no puede
+// cambiarse a si mismo desde el perfil, el correo es otra operacion (con
+// verificacion) y la contrasena tiene su propia ruta en
+// `PATCH /auth/me/password`.
+server.patch('/auth/me', requireAuth, (req, res) => {
+    const user = db.get('users').find({ id: req.auth.sub }).value();
+    if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+
+    const cuerpo = req.body || {};
+    const permitidos = {
+        first_name: 'first_name',
+        last_name: 'last_name',
+        phone: 'phone',
+        username: 'username',
+    };
+
+    const cambios = {};
+    const ignorados = [];
+
+    for (const [clave, valor] of Object.entries(cuerpo)) {
+        if (!(clave in permitidos)) {
+            ignorados.push(clave);
+            continue;
+        }
+        // Solo texto, y no vacio: evita guardar un perfil en blanco.
+        if (typeof valor !== 'string') {
+            ignorados.push(clave);
+            continue;
+        }
+        const limpio = valor.trim();
+        if (!limpio) {
+            ignorados.push(clave);
+            continue;
+        }
+        cambios[permitidos[clave]] = limpio;
+    }
+
+    if (!Object.keys(cambios).length) {
+        return res.status(400).json({
+            message: 'No hay cambios validos para guardar',
+            ignored: ignorados,
+        });
+    }
+
+    db.get('users').find({ id: user.id }).assign(cambios).write();
+
+    res.json({
+        ...toPublicUser(db.get('users').find({ id: user.id }).value()),
+        ignored_fields: ignorados,
+    });
+});
+
+server.use(router); // /vehicles, /maintenances, /notifications siguen igual
 
 server.listen(3001, () => console.log('Mock API con JWT en http://localhost:3001'));

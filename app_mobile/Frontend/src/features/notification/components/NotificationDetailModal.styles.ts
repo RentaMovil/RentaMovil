@@ -1,0 +1,12 @@
+import { StyleSheet } from "react-native";
+
+export const createStyles = (colors: any) => StyleSheet.create({
+    overlay: { flex: 1, backgroundColor: "rgba(0,0,0,0.55)", justifyContent: "center", padding: 22 },
+    container: { borderRadius: 18, padding: 22, backgroundColor: colors.backgroundCard, borderWidth: 1, borderColor: colors.border },
+    title: { fontSize: 19, fontWeight: "800", color: colors.text, marginBottom: 18 },
+    row: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: 16, paddingVertical: 12, borderTopWidth: 1, borderTopColor: colors.border },
+    label: { fontSize: 13, fontWeight: "700", color: colors.secondaryText },
+    value: { flex: 1, fontSize: 14, fontWeight: "600", color: colors.text, textAlign: "right" },
+    closeButton: { marginTop: 20, paddingVertical: 14, borderRadius: 12, alignItems: "center", backgroundColor: colors.primary },
+    closeText: { fontSize: 15, fontWeight: "700", color: colors.buttonText },
+});
