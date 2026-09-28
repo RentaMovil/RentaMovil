@@ -41,7 +41,7 @@ function Home() {
 
     window.addEventListener("resize", handleResize);
 
-    return () => 
+    return () =>
       window.removeEventListener(
         "resize",
         handleResize

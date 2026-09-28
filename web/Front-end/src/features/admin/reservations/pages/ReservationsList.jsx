@@ -97,11 +97,7 @@ export default function ReservationsList() {
       <NavBarAdmin />
 
       <div className="rs-wrapper">
-        <nav className="rs-breadcrumb">
-          <span>{t("reservations.breadcrumbAdmin")}</span>
-          <FiChevronRight />
-          <span className="current">{t("reservations.title")}</span>
-        </nav>
+        
 
         <div className="rs-header">
           <div>
