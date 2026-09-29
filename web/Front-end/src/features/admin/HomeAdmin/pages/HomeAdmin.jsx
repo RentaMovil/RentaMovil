@@ -1,89 +1,217 @@
-import "./HomeAdmin.css";
+import '../../../vehicles/pages/Home.css';
 import NavbarAdmin from "../../../../shared/components/layout/NavBarAdmin.jsx";
 import FooterAdmin from "../../../../shared/components/layout/FooterAdmin.jsx";
-import CartVehicule from "../../../vehicles/components/CartVehicule.jsx";
+import CartVehicule from "../../../vehicles/components/CartVehicule";
 import FiltrerBrand from "../../../vehicles/components/FiltrerBrand";
 import FiltrerPrice from "../../../vehicles/components/FiltrerPrice";
-import FiltrerType from "../../../vehicles/components/FiltrerType";
-import FiltrerModel from '../../../vehicles/components/FiltrerModel.jsx';
+import FiltrerType from "../../../vehicles/components/FilterType";
+import FiltreCategory from "../../../vehicles/components/FiltrerCategory.jsx";
+import FiltrerModel from "../../../vehicles/components/FiltrerModel.jsx";
 import Banner from "../../../../shared/components/layout/Banner.jsx";
 import img1 from "../../../../assets/img/img1.png";
 import img2 from "../../../../assets/img/img2.jpg";
 import img3 from "../../../../assets/img/img3.webp";
-import FilterCalendar from '../../../vehicles/components/FilterCalendar.jsx';
-import { useState, useEffect } from 'react';
-import { getCars } from '../../../vehicles/Services/carsService.js';
-import { FaSearch, FaSearchengin, FaSearchPlus } from 'react-icons/fa';
+import FilterCalendar from "../../../vehicles/components/FilterCalendar.jsx";
+import { useState, useEffect, useRef } from "react";
+import { getCars } from "../../../vehicles/Services/carsService.js";
+import { useIsMobile } from "../../../../shared/hooks/useIsMobile.js";
+import { FaSearch, FaTimes } from "react-icons/fa";
+import { filterAvailableVehicles } from "../../../vehicles/utils/filterAvilableCars.js";
+import { filterVehicles } from "../../../vehicles/utils/vehiclesFilters.js";
 
-function Home() {
-  const [cars, setCars]               = useState([]);
+function HomeAdmin() {
+  const [cars, setCars] = useState([]);
   const [carsFiltered, setCarsFiltered] = useState([]);
-  const [brandFilter, setBrandFilter]   = useState("");
-  const [priceFilter, setPriceFilter]   = useState(null);
-  const [typeFilter,  setTypeFilter]    = useState("");
-  const [modelFilter, setModelFilter]   = useState(null);
+  const [brandFilter, setBrandFilter] = useState("");
+  const [priceFilter, setPriceFilter] = useState(null);
+  const [typeFilter, setTypeFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [modelFilter, setModelFilter] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [showFiltersModal, setShowFiltersModal] = useState(false);
+  const filterCalendarRef = useRef(null);
 
+  const isMobile = useIsMobile();
+
+  const [searchData, setSearchData] = useState({
+    branch: null,
+    startDate: "",
+    endDate: ""
+  });
+
+  // El catalogo se ve entero desde el primer momento. La busqueda por sucursal
+  // y fechas acota la lista, pero no es una puerta que haya que cruzar para
+  // verla, asi que tambien se cargan los vehiculos sin haber buscado nada.
   useEffect(() => {
-    getCars().then(data => {
-      setCars(data);
-      setCarsFiltered(data);
-    });
+    const loadCars = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await getCars();
+        setCars(data);
+        setCarsFiltered(data);
+      } catch (err) {
+        console.error("Error cargando vehiculos:", err);
+        setError("No fue posible cargar los vehiculos.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadCars();
   }, []);
 
-  const isAvailable = (car, start, end) =>
-    !car.reservas.some(r => start <= r.end && end >= r.start);
+  const handleSearch = async ({ branch, startDate, endDate }) => {
+    try {
+      setLoading(true);
+      setError(null);
 
-  const handleSearch = ({ branch, startDate, endDate }) => {
-    const disponibles = cars.filter(car =>
-      car.branch.toLowerCase().includes(branch.toLowerCase()) &&
-      isAvailable(car, startDate, endDate)
-    );
-    setCarsFiltered(disponibles);
+      setSearchData({ branch, startDate, endDate });
+
+      setCarsFiltered(filterAvailableVehicles(cars, branch, startDate, endDate));
+    } catch (err) {
+      console.error("Error buscando vehiculos:", err);
+      setError("No fue posible realizar la busqueda.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const visibleCars = carsFiltered
-    .filter(car => brandFilter ? car.brand === brandFilter : true)
-    .filter(car => typeFilter  ? car.type  === typeFilter  : true)
-    .filter(car => modelFilter ? (car.model >= modelFilter.min && car.model <= modelFilter.max) : true)
-    .filter(car => priceFilter ? (car.price >= priceFilter.min && car.price <= priceFilter.max) : true);
+  const handleClearFilters = () => {
+    setBrandFilter("");
+    setPriceFilter(null);
+    setModelFilter(null);
+    setTypeFilter("");
+    setCategoryFilter("");
+  };
+
+  const visibleCars = filterVehicles(carsFiltered, {
+    brand: brandFilter,
+    type: typeFilter,
+    category: categoryFilter,
+    model: modelFilter,
+    price: priceFilter
+  });
+
+  const filtros = (
+    <>
+      <FiltrerBrand cars={carsFiltered} onFilter={setBrandFilter} />
+      <FiltrerPrice cars={carsFiltered} onFilter={setPriceFilter} />
+      <FiltrerModel cars={carsFiltered} onFilter={setModelFilter} />
+      <FiltrerType cars={carsFiltered} onFilter={setTypeFilter} />
+      <FiltreCategory cars={carsFiltered} onFilter={setCategoryFilter} />
+    </>
+  );
 
   return (
     <>
-      <NavbarAdmin/>
+      <NavbarAdmin />
+
       <div className="banner-wrapper">
         <div className="banner-container">
           <Banner imgs={[img1, img2, img3]} />
-          <FilterCalendar onSearch={handleSearch}/>
+          <FilterCalendar
+            ref={filterCalendarRef}
+            onSearch={handleSearch}
+            value={searchData}
+          />
         </div>
       </div>
-      <section className="home-container">
-        <div className="main-column">
+
+      <section className="catalog-layout-container">
+        {!isMobile && (
+          <aside className="catalog-sidebar">
+            <div className="sidebar-sticky-content">
+              <h3 className="filters-title">
+                <span className="catalog-sidebar-dot" aria-hidden="true" />
+                Flota Disponible
+              </h3>
+              <p className="filters-subtitle">Encuentra el vehiculo perfecto para tu viaje.</p>
+
+              {filtros}
+
+              <button className="btn-clear-filters" onClick={handleClearFilters}>
+                Limpiar filtros
+              </button>
+            </div>
+          </aside>
+        )}
+
+        <div className="catalog-main-content">
+          {isMobile && (
+            <div className="filters-mobile-header">
+              <button
+                className="filters-toggle-btn"
+                onClick={() => setShowFiltersModal(true)}
+              >
+                Filtrar Flota
+              </button>
+            </div>
+          )}
+
           <div className="card-vehicule-container">
-            {visibleCars.length === 0 ? (
-              <p className='notFound'>No hay vehículos disponibles in the middle loloo<FaSearch/></p>
-            ) : (
-              visibleCars.map(car => (
-                <CartVehicule
-                  key={car.id}
-                  name={car.name}
-                  price={car.price}
-                  img={car.img}
-                  branch={car.branch}
-                />
-              ))
+            {loading && <p className="search-message">Buscando vehiculos...</p>}
+            {!loading && error && <p className="notFound">{error}</p>}
+
+            {!loading && !error && visibleCars.length === 0 && (
+              <p className="notFound">
+                No hay vehiculos disponibles con esos filtros <FaSearch />
+              </p>
             )}
+
+            {!loading &&
+              !error &&
+              visibleCars.length > 0 &&
+              visibleCars.map((car) => (
+                <CartVehicule key={car.vehicle_id} vehicle={car} rentalSearch={searchData} />
+              ))}
           </div>
         </div>
-        <aside className="sidebar-container">
-          <FiltrerBrand cars={cars} onFilter={setBrandFilter} />
-          <FiltrerPrice cars={cars} onFilter={setPriceFilter} />
-          <FiltrerModel cars={cars} onFilter={setModelFilter} />
-          <FiltrerType  cars={cars} onFilter={setTypeFilter}  />
-        </aside>
+
+        {isMobile && showFiltersModal && (
+          <>
+            <div className="filters-modal-backdrop" onClick={() => setShowFiltersModal(false)} />
+
+            <div className="filters-modal">
+              <div className="filters-modal-header">
+                <h3 className="filters-title">Flota Disponible</h3>
+                <button
+                  className="btn-close-modal"
+                  onClick={() => setShowFiltersModal(false)}
+                  aria-label="Cerrar"
+                >
+                  <FaTimes />
+                </button>
+              </div>
+
+              <div className="filters-modal-content">{filtros}</div>
+
+              <div className="filters-modal-footer">
+                <button
+                  className="btn-clear-filters"
+                  onClick={() => {
+                    handleClearFilters();
+                    setShowFiltersModal(false);
+                  }}
+                >
+                  Limpiar filtros
+                </button>
+                <button
+                  type="button"
+                  className="btn-apply-filters"
+                  onClick={() => setShowFiltersModal(false)}
+                >
+                  Aplicar
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </section>
-      <FooterAdmin/>
+
+      <FooterAdmin />
     </>
   );
 }
 
-export default Home;
+export default HomeAdmin;

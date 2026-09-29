@@ -33,7 +33,7 @@ import RegisterVehicle from './features/admin/registerVehicle/pages/RegisterVehi
 import Maintenance from './features/admin/registerMaintenance/pages/Maintenance.jsx';
 
 // Admin - HomeAdmin
-import HomeAdmin from './features/admin/HomeAdmin/Pages/HomeAdmin.jsx';
+import HomeAdmin from './features/admin/HomeAdmin/pages/HomeAdmin.jsx';
 
 import InsuranceTypes from './features/admin/insuranceTypes/pages/InsuranceTypes.jsx';
 import Branches from './features/admin/branches/pages/Branches.jsx';
