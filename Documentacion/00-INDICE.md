@@ -67,7 +67,7 @@ La regla del proyecto: **el web manda en diseño y datos; el móvil replica.**
 | # | Qué | Por qué |
 |---|---|---|
 | 1 | **Escenario 2 del GPS (403)** | Decidido no hacerlo: falta `requireRole` en el backend. El frontend ya bloquea la vista. |
-| 2 | **Historial de rutas** | El enlace del menú apunta a `/History`, que es el historial de **mantenimientos**. Bug preexistente. |
+| 2 | ~~**Historial de rutas**~~ | **Resuelto.** El enlace apuntaba a `/History` (historial de mantenimientos). Ahora apunta a `/RouteHistory`, su propia página. La sección Ubicación quedó solo con *Ubicación de la flota* y *Historial de rutas*. |
 | 3 | **`.gitattributes`** | No existe y `core.autocrlf = true`: en Linux se cambian los finales de línea de archivos enteros. |
 | 4 | **Warning de React** | `Each child in a list should have a unique "key" prop` en el componente `Home`. |
 | 5 | **Migrar mocks a la API** | 9 módulos siguen leyendo datos quemados. Ver el detalle en `TRABAJO-WEB.md`. |

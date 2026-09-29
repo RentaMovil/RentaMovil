@@ -48,12 +48,6 @@ export default function VehicleLocation() {
             <NavBarAdmin />
 
             <div className="vl-wrapper">
-                <nav className="vl-breadcrumb">
-                    <span>{t("adminPanel.title")}</span>
-                    <span className="vl-sep">/</span>
-                    <span className="current">{t("adminPanel.location")}</span>
-                </nav>
-
                 <header className="vl-header">
                     <div>
                         <h1 className="vl-title">{t("vehicleLocation.title")}</h1>

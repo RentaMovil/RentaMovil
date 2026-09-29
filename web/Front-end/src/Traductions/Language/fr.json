@@ -1073,5 +1073,28 @@
     "autoRefresh": "Actualise toutes les {{seconds}} s",
     "deviceOffline": "{{model}} n'est pas connecte : position du dernier rapport.",
     "device": "Appareil : {{model}} · {{provider}}"
+  },
+  "routeHistory": {
+    "title": "Historique des trajets",
+    "subtitle": "Réservations dont le véhicule a déjà été remis et que l'administrateur doit suivre aujourd'hui.",
+    "refresh": "Actualiser",
+    "autoRefresh": "Actualise toutes les {{seconds}} s",
+    "errorTitle": "Impossible de charger les informations de trajet",
+    "loading": "Chargement des réservations actives...",
+    "pending_one": "Aujourd'hui, 1 réservation active doit être suivie",
+    "pending_other": "Aujourd'hui, {{count}} réservations actives doivent être suivies",
+    "pendingHint": "Ouvrez la localisation de la flotte pour voir la position en direct de chacune.",
+    "pendingWarn_one": "De plus, {{count}} n'a pas signalé de position depuis plus de 2 heures.",
+    "pendingWarn_other": "De plus, {{count}} n'ont pas signalé de position depuis plus de 2 heures.",
+    "openFleet": "Voir sur la carte",
+    "emptyTitle": "Aucune réservation active à suivre",
+    "emptyHint": "Aucune location n'est en cours, il n'y a donc aucun trajet à suivre aujourd'hui.",
+    "listTitle": "Réservations actives",
+    "rental": "Réservation",
+    "customer": "Client",
+    "live": "Signale",
+    "noSignal": "Sans signal",
+    "noReport": "Aucun rapport GPS",
+    "updatedAt": "Mis à jour {{time}} · {{date}}"
   }
 }

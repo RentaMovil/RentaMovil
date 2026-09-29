@@ -47,9 +47,8 @@ function AdminPanel({ open, onClose }) {
           </div>
           {expandedSection === 'localizacion' && (
             <div className="admin-subsection">
-              <Link to="/HomeAdmin" className="admin-subitem" onClick={onClose}>• {t('adminPanel.loc-map')}</Link>
               <Link to="/VehicleLocation" className="admin-subitem" onClick={onClose}>• {t('adminPanel.loc-fleet')}</Link>
-              <Link to="/History" className="admin-subitem" onClick={onClose}>• {t('adminPanel.loc-routes')}</Link>
+              <Link to="/RouteHistory" className="admin-subitem" onClick={onClose}>• {t('adminPanel.loc-routes')}</Link>
             </div>
           )}
         </div>

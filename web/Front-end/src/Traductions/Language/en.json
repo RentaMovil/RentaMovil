@@ -1073,5 +1073,28 @@
     "autoRefresh": "Refreshes every {{seconds}} s",
     "deviceOffline": "{{model}} is not connected: this is the last reported position.",
     "device": "Device: {{model}} · {{provider}}"
+  },
+  "routeHistory": {
+    "title": "Route history",
+    "subtitle": "Reservations with the vehicle already picked up that the administrator should track today.",
+    "refresh": "Refresh",
+    "autoRefresh": "Refreshes every {{seconds}} s",
+    "errorTitle": "Could not load the route information",
+    "loading": "Loading active reservations...",
+    "pending_one": "Today there is 1 active reservation to track",
+    "pending_other": "Today there are {{count}} active reservations to track",
+    "pendingHint": "Open the fleet location to see the live position of each one.",
+    "pendingWarn_one": "Also, {{count}} has not reported a position for over 2 hours.",
+    "pendingWarn_other": "Also, {{count}} have not reported a position for over 2 hours.",
+    "openFleet": "View on the map",
+    "emptyTitle": "No active reservations to track",
+    "emptyHint": "There are no rentals in progress, so there are no routes to follow today.",
+    "listTitle": "Active reservations",
+    "rental": "Reservation",
+    "customer": "Customer",
+    "live": "Reporting",
+    "noSignal": "No signal",
+    "noReport": "No GPS report",
+    "updatedAt": "Updated {{time}} · {{date}}"
   }
 }
