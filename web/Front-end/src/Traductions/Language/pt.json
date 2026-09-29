@@ -1074,6 +1074,26 @@
     "deviceOffline": "{{model}} nao esta conectado: posicao do ultimo relatorio.",
     "device": "Dispositivo: {{model}} · {{provider}}"
   },
+  "changeEmail": {
+    "title": "Modificar E-mail",
+    "open": "Modificar E-mail",
+    "securityNotice": "Aviso de segurança (INV-001): o novo e-mail deve ser único no sistema. Será solicitada a sua senha atual para confirmar a sua identidade antes de aplicar a alteração.",
+    "currentEmail": "E-mail atual",
+    "newEmail": "Novo e-mail",
+    "newEmailPlaceholder": "exemplo@rentamovil.com",
+    "currentPassword": "Senha atual",
+    "currentPasswordPlaceholder": "Digite sua senha",
+    "passwordHint": "Validação obrigatória por protocolo de segurança.",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar alteração",
+    "saving": "Salvando...",
+    "success": "E-mail atualizado",
+    "error": "Não foi possível atualizar o e-mail. Revise os dados e tente novamente.",
+    "required": "Digite o novo e-mail.",
+    "invalidEmail": "O formato do e-mail não é válido.",
+    "sameEmail": "O novo e-mail deve ser diferente do atual.",
+    "passwordRequired": "Digite sua senha atual."
+  },
   "routeHistory": {
     "title": "Histórico de rotas",
     "subtitle": "Reservas com o veículo já entregue que o administrador deve acompanhar hoje.",

@@ -137,6 +137,22 @@ export function AuthProvider({ children }) {
         }
     }, []);
 
+    /**
+     * Cambia el correo del usuario autenticado y sincroniza el estado global
+     * con lo que devolvio el servidor.
+     *
+     * A diferencia de `updateProfile`, no escribe en el error global: el
+     * formulario pide un unico mensaje generico para cualquier fallo, y el
+     * texto concreto del backend no debe aparecer en otra parte de la
+     * pantalla. Quien llama decide que mostrar.
+     */
+    const changeEmail = useCallback(async (newEmail, currentPassword) => {
+        const updated = await authService.changeEmail(newEmail, currentPassword);
+        setUser(updated);
+        saveSession({ user: updated });
+        return updated;
+    }, []);
+
     const hasRole = useCallback(
         (...roles) => roles.includes(user?.role),
         [user?.role]
@@ -154,6 +170,7 @@ export function AuthProvider({ children }) {
             restoreSession,
             refreshProfile,
             updateProfile,
+            changeEmail,
             hasRole,
             clearError: () => setError(null),
         }),
@@ -167,6 +184,7 @@ export function AuthProvider({ children }) {
             restoreSession,
             refreshProfile,
             updateProfile,
+            changeEmail,
             hasRole,
         ]
     );

@@ -1074,6 +1074,26 @@
     "deviceOffline": "{{model}} is not connected: this is the last reported position.",
     "device": "Device: {{model}} · {{provider}}"
   },
+  "changeEmail": {
+    "title": "Change Email Address",
+    "open": "Change Email",
+    "securityNotice": "Security notice (INV-001): the new email must be unique in the system. You will be asked for your current password to confirm your identity before the change is applied.",
+    "currentEmail": "Current email",
+    "newEmail": "New email address",
+    "newEmailPlaceholder": "example@rentamovil.com",
+    "currentPassword": "Current password",
+    "currentPasswordPlaceholder": "Enter your password",
+    "passwordHint": "Required validation by security protocol.",
+    "cancel": "Cancel",
+    "confirm": "Confirm change",
+    "saving": "Saving...",
+    "success": "Email updated",
+    "error": "The email could not be updated. Check the details and try again.",
+    "required": "Enter the new email.",
+    "invalidEmail": "The email format is not valid.",
+    "sameEmail": "The new email must be different from the current one.",
+    "passwordRequired": "Enter your current password."
+  },
   "routeHistory": {
     "title": "Route history",
     "subtitle": "Reservations with the vehicle already picked up that the administrator should track today.",

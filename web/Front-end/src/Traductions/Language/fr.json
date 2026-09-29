@@ -1074,6 +1074,26 @@
     "deviceOffline": "{{model}} n'est pas connecte : position du dernier rapport.",
     "device": "Appareil : {{model}} · {{provider}}"
   },
+  "changeEmail": {
+    "title": "Modifier l'adresse e-mail",
+    "open": "Modifier l'e-mail",
+    "securityNotice": "Avis de sécurité (INV-001) : la nouvelle adresse doit être unique dans le système. Votre mot de passe actuel vous sera demandé pour confirmer votre identité avant l'application du changement.",
+    "currentEmail": "E-mail actuel",
+    "newEmail": "Nouvelle adresse e-mail",
+    "newEmailPlaceholder": "exemple@rentamovil.com",
+    "currentPassword": "Mot de passe actuel",
+    "currentPasswordPlaceholder": "Saisissez votre mot de passe",
+    "passwordHint": "Validation obligatoire par protocole de sécurité.",
+    "cancel": "Annuler",
+    "confirm": "Confirmer le changement",
+    "saving": "Enregistrement...",
+    "success": "E-mail mis à jour",
+    "error": "Impossible de mettre à jour l'e-mail. Vérifiez les informations et réessayez.",
+    "required": "Saisissez la nouvelle adresse e-mail.",
+    "invalidEmail": "Le format de l'e-mail n'est pas valide.",
+    "sameEmail": "La nouvelle adresse doit être différente de l'actuelle.",
+    "passwordRequired": "Saisissez votre mot de passe actuel."
+  },
   "routeHistory": {
     "title": "Historique des trajets",
     "subtitle": "Réservations dont le véhicule a déjà été remis et que l'administrateur doit suivre aujourd'hui.",

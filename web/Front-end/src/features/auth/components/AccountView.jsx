@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaGlobe, FaMoon, FaPen, FaSignOutAlt, FaTimes } from "react-icons/fa";
+import { FaGlobe, FaMoon, FaPen, FaSignOutAlt, FaTimes, FaInfoCircle } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -19,9 +19,19 @@ import portuguese from "../../../assets/img/portugal.png";
 export default function AccountView({ theme, setTheme, admin = false }) {
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
-    const { user, isLoading, error, refreshProfile, updateProfile, logout } = useAuth();
+    const { user, isLoading, error, refreshProfile, updateProfile, changeEmail, logout } = useAuth();
     const [showThemeModal, setShowThemeModal] = useState(false);
     const [showLangModal, setShowLangModal] = useState(false);
+
+    // Cambio de correo (HU-IAM-004). Vive en su propio modal, no en el modo
+    // edicion del perfil: la confirmacion es la contrasena actual, no un
+    // guardado mas.
+    const [showEmailModal, setShowEmailModal] = useState(false);
+    const [newEmail, setNewEmail] = useState("");
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [isChangingEmail, setIsChangingEmail] = useState(false);
+    const [emailChanged, setEmailChanged] = useState(false);
 
     // Modo edicion del perfil. El boton de la lapiz lo alterna; mientras esta
     // activo los campos pasan de solo lectura a editables y aparece Guardar.
@@ -54,6 +64,62 @@ export default function AccountView({ theme, setTheme, admin = false }) {
 
     const NavbarComponent = admin ? NavbarAdmin : Navbar;
     const FooterComponent = admin ? FooterAdmin : Footer;
+
+    const openEmailModal = () => {
+        setNewEmail("");
+        setCurrentPassword("");
+        setEmailError("");
+        setShowEmailModal(true);
+    };
+
+    const closeEmailModal = () => {
+        // Mientras va la peticion el modal se queda abierto: cerrarlo a mitad
+        // dejaria al usuario sin saber si el cambio se aplico.
+        if (isChangingEmail) return;
+        setShowEmailModal(false);
+    };
+
+    const handleChangeEmail = async (event) => {
+        event.preventDefault();
+        setEmailError("");
+
+        const correo = newEmail.trim();
+
+        // Comprobaciones minimas antes de ir al servidor. No sustituyen las
+        // del backend: solo evitan un viaje de red con algo que ya se sabe.
+        if (!correo) {
+            setEmailError(t("changeEmail.required"));
+            return;
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
+            setEmailError(t("changeEmail.invalidEmail"));
+            return;
+        }
+        if (correo.toLowerCase() === (user?.email ?? "").toLowerCase()) {
+            setEmailError(t("changeEmail.sameEmail"));
+            return;
+        }
+        if (!currentPassword) {
+            setEmailError(t("changeEmail.passwordRequired"));
+            return;
+        }
+
+        setIsChangingEmail(true);
+        try {
+            await changeEmail(correo, currentPassword);
+            setShowEmailModal(false);
+            setNewEmail("");
+            setCurrentPassword("");
+            setEmailChanged(true);
+        } catch {
+            // Un solo mensaje para cualquier fallo — contrasena incorrecta,
+            // correo ya registrado (INV-001) o backend caido. El usuario no
+            // puede actuar distinto segun la causa, asi que no se distingue.
+            setEmailError(t("changeEmail.error"));
+        } finally {
+            setIsChangingEmail(false);
+        }
+    };
 
     const handleLangChange = (lang) => {
         i18n.changeLanguage(lang);
@@ -180,12 +246,19 @@ export default function AccountView({ theme, setTheme, admin = false }) {
                         </p>
                     )}
 
+                    {emailChanged && (
+                        <p className="account-saved" role="status">
+                            {t("changeEmail.success")}
+                        </p>
+                    )}
+
                     <div className="formC">
                         <ProfileIdentity
                             user={user}
                             isEditing={isEditing}
                             onSave={handleSave}
                             isSaving={isSaving}
+                            onChangeEmail={openEmailModal}
                         />
                     </div>
                 </div>
@@ -260,6 +333,125 @@ export default function AccountView({ theme, setTheme, admin = false }) {
                                 </button>
                             ))}
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {showEmailModal && (
+                <div
+                    className="modal-overlay"
+                    onClick={closeEmailModal}
+                >
+                    <div
+                        className="modal-content"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-labelledby="change-email-title"
+                        onClick={(event) => event.stopPropagation()}
+                    >
+                        <button
+                            className="btn-times btn-times--corner"
+                            type="button"
+                            onClick={closeEmailModal}
+                            aria-label={t("account.cancelar")}
+                        >
+                            <FaTimes />
+                        </button>
+
+                        <p className="modal-title" id="change-email-title">
+                            {t("changeEmail.title")}
+                        </p>
+
+                        <div className="ce-banner">
+                            <FaInfoCircle />
+                            <span>{t("changeEmail.securityNotice")}</span>
+                        </div>
+
+                        <form onSubmit={handleChangeEmail} noValidate>
+                            <div className="form-groupC">
+                                <label
+                                    className="form-labelC"
+                                    htmlFor="ce-current-email"
+                                >
+                                    {t("changeEmail.currentEmail")}
+                                </label>
+                                <input
+                                    id="ce-current-email"
+                                    className="inputC"
+                                    type="text"
+                                    value={user?.email || ""}
+                                    disabled
+                                />
+                            </div>
+
+                            <div className="form-groupC">
+                                <label
+                                    className="form-labelC"
+                                    htmlFor="ce-new-email"
+                                >
+                                    {t("changeEmail.newEmail")}
+                                </label>
+                                <input
+                                    id="ce-new-email"
+                                    className="inputC"
+                                    type="email"
+                                    autoComplete="email"
+                                    placeholder={t("changeEmail.newEmailPlaceholder")}
+                                    value={newEmail}
+                                    onChange={(e) => setNewEmail(e.target.value)}
+                                    disabled={isChangingEmail}
+                                />
+                            </div>
+
+                            <div className="form-groupC">
+                                <label
+                                    className="form-labelC"
+                                    htmlFor="ce-current-password"
+                                >
+                                    {t("changeEmail.currentPassword")}
+                                </label>
+                                <input
+                                    id="ce-current-password"
+                                    className="inputC"
+                                    type="password"
+                                    autoComplete="current-password"
+                                    placeholder={t("changeEmail.currentPasswordPlaceholder")}
+                                    value={currentPassword}
+                                    onChange={(e) => setCurrentPassword(e.target.value)}
+                                    disabled={isChangingEmail}
+                                />
+                                <span className="ce-hint">
+                                    {t("changeEmail.passwordHint")}
+                                </span>
+                            </div>
+
+                            {emailError && (
+                                <p className="account-error" role="alert">
+                                    {emailError}
+                                </p>
+                            )}
+
+                            <div className="ce-actions">
+                                <button
+                                    className="ce-btn-ghost"
+                                    type="button"
+                                    onClick={closeEmailModal}
+                                    disabled={isChangingEmail}
+                                >
+                                    {t("changeEmail.cancel")}
+                                </button>
+
+                                <button
+                                    className="btn-saveProfile"
+                                    type="submit"
+                                    disabled={isChangingEmail}
+                                >
+                                    {isChangingEmail
+                                        ? t("changeEmail.saving")
+                                        : t("changeEmail.confirm")}
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             )}

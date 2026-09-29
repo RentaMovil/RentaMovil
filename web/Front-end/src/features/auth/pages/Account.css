@@ -25,15 +25,6 @@
     transition: background 0.3s ease, border-color 0.3s ease;
     }
 
-    /* Header Page: Regresar */
-
-    /* El header es UNA fila: volver + estado a la izquierda, acciones a la
-       derecha, todo con el mismo eje vertical.
-
-       Antes `.header-page` era `position: static` pero declaraba `top` y `left`, que
-       no hacen nada sin `position`, y `.actions` era `position: absolute`
-       con `top: 20px`. Medido: el boton de volver caia en y=139 y las
-       acciones en y=104, o sea 35px desalineadas. */
     .header-page {
         display: flex;
         align-items: center;
@@ -557,6 +548,79 @@
         position: static;
         justify-content: center;
         margin-top: 18px;
+    }
+
+    /* ── Cambio de correo (HU-IAM-004) ──
+       Colores por variable de tema, no los hex del mockup: asi el modal
+       sigue al resto de la pantalla en los cuatro modos. */
+
+    .ce-open {
+        align-self: flex-start;
+        margin-top: 10px;
+        padding: 0;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .ce-banner {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 22px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid color-mix(in srgb, var(--button) 35%, transparent);
+        background: color-mix(in srgb, var(--button) 10%, transparent);
+        color: var(--text-h);
+        font-family: var(--sans);
+        font-size: 13px;
+        line-height: 1.45;
+    }
+
+    .ce-banner svg {
+        flex: none;
+        margin-top: 2px;
+        color: var(--button);
+    }
+
+    .ce-hint {
+        display: block;
+        margin-top: 8px;
+        font-family: var(--sans);
+        font-size: 12px;
+        color: var(--placeholder);
+    }
+
+    .ce-actions {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 12px;
+        margin-top: 24px;
+    }
+
+    .ce-btn-ghost {
+        background: transparent;
+        color: var(--text-h);
+        border: 1px solid var(--bordercard);
+        padding: 13px 24px;
+        border-radius: 12px;
+        font-family: var(--sans);
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    .ce-btn-ghost:hover:not(:disabled) {
+        background: var(--hover);
+    }
+
+    .ce-btn-ghost:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
     }
 
     .form-image-preview {

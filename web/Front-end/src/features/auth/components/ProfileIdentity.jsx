@@ -15,7 +15,13 @@ const CAMPOS = [
     { key: "phone", etiqueta: "account.telefono", tipo: "tel" },
 ];
 
-export default function ProfileIdentity({ user, isEditing = false, onSave, isSaving = false }) {
+export default function ProfileIdentity({
+    user,
+    isEditing = false,
+    onSave,
+    isSaving = false,
+    onChangeEmail,
+}) {
     const { t } = useTranslation();
 
     // El borrador vive aqui, no en el padre, porque es el componente que tiene
@@ -101,6 +107,31 @@ export default function ProfileIdentity({ user, isEditing = false, onSave, isSav
                     value={user.email || EMPTY}
                     readOnly
                 />
+
+                {/* El correo no entra en el modo edicion del perfil: cambiarlo
+                    es otra operacion (HU-IAM-004) que exige reintroducir la
+                    contrasena actual, asi que se abre en su propio modal. */}
+                <button type="button" className="linkC ce-open" onClick={onChangeEmail}>
+                    {t("changeEmail.open")}
+                </button>
+            </div>
+
+            <div className="form-groupC">
+                <label className="form-labelC" htmlFor="profile-password">
+                    {t("account.password")}:
+                </label>
+                <input
+                    id="profile-password"
+                    className="inputC"
+                    type="password"
+                    value="••••••"
+                    readOnly
+                />
+                <div className="accountLink">
+                    <Link to="/ChangePassword" className="linkC">
+                        {t("account.modificarPassword")}
+                    </Link>
+                </div>
             </div>
 
             {/* Boton de guardar. Solo en modo edicion. */}
@@ -116,13 +147,6 @@ export default function ProfileIdentity({ user, isEditing = false, onSave, isSav
                     </button>
                 </div>
             )}
-            <div className="form-groupC form-groupC--full">
-                <div className="accountLink">
-                    <Link to="/ChangePassword" className="linkC">
-                        {t("account.modificarPassword")}
-                    </Link>
-                </div>
-            </div>
         </>
     );
 }

@@ -70,7 +70,7 @@
       "password_hash": "$2b$12$LKHgIaWsZpRmy7s6q8SytuqnAbSwJK5u8VZiYgTaSerJGpwE3rENy",
       "role": "ADMIN",
       "status": "ACTIVE",
-      "last_login": "2026-09-29T21:55:42.806Z"
+      "last_login": "2026-09-29T23:43:26.824Z"
     },
     {
       "id": "fa64c466-8d85-4ec8-917b-8c9bf1c46979",
@@ -321,222 +321,16 @@
       "ip_address": "::1",
       "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
       "revoked": false
-    }
-  ],
-  "verificationCodes": [],
-  "notifications": [
-    {
-      "notification_id": 1,
-      "person_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
-      "type": "reserva_confirmada",
-      "message": "Tu reserva fue confirmada.",
-      "sent_date": "2026-08-28T10:00:00Z",
-      "is_read": true,
-      "reservation_id": 105,
-      "vehicle_id": "lGpIl2fJQAk",
-      "read_at": "2026-09-27T02:59:29.561Z"
     },
     {
-      "notification_id": 2,
-      "person_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
-      "type": "pago_confirmado",
-      "message": "Tu pago fue procesado correctamente.",
-      "sent_date": "2026-08-28T11:00:00Z",
-      "is_read": false,
-      "payment_id": 210,
-      "vehicle_id": "lGpIl2fJQAk"
-    },
-    {
-      "notification_id": 3,
-      "person_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
-      "type": "recordatorio",
-      "message": "Recuerda que tu alquiler comienza mañana.",
-      "sent_date": "2026-08-29T08:00:00Z",
-      "is_read": true,
-      "reservation_id": 108,
-      "vehicle_id": "lGpIl2fJQAk",
-      "read_at": "2026-09-27T03:05:01.549Z"
-    },
-    {
-      "notification_id": 4,
-      "person_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
-      "type": "reserva_cancelada",
-      "message": "Tu reserva fue cancelada.",
-      "sent_date": "2026-08-26T12:00:00Z",
-      "is_read": true,
-      "reservation_id": 102,
-      "vehicle_id": "lGpIl2fJQAk"
-    },
-    {
-      "notification_id": 5,
-      "person_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
-      "type": "reserva_confirmada",
-      "message": "Tu reserva está lista para ser recogida.",
-      "sent_date": "2026-08-25T15:30:00Z",
-      "is_read": true,
-      "reservation_id": 101,
-      "vehicle_id": "lGpIl2fJQAk"
-    },
-    {
-      "notification_id": 6,
-      "person_id": "91b8db78-090a-4021-90de-73b3b19fe967",
-      "type": "reserva_confirmada",
-      "message": "Tu reserva está lista para ser recogida.",
-      "sent_date": "2026-08-25T15:30:00Z",
-      "is_read": true,
-      "reservation_id": 101,
-      "vehicle_id": "lGpIl2fJQAk",
-      "read_at": "2026-09-27T03:07:55.850Z"
-    }
-  ],
-  "gpsDevices": [
-    {
-      "id": "gps-geotab-r809",
-      "model": "Geotab R-809",
-      "provider": "Geotab",
-      "serial": null,
-      "sim": null,
-      "status": "PENDING_CONNECTION",
-      "connected": false,
-      "last_seen_at": null,
-      "assigned_vehicle_id": "lGpIl2fJQAk"
-    }
-  ],
-  "rentals": [
-    {
-      "id": 101,
-      "vehicle_id": "lGpIl2fJQAk",
-      "customer_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
-      "status": "COMPLETED",
-      "start_date": "2026-09-12T10:00:00Z",
-      "end_date": "2026-09-16T18:00:00Z",
-      "gps_id": "gps-geotab-r809"
-    },
-    {
-      "id": 102,
-      "vehicle_id": "lGpIl2fJQAk",
-      "customer_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
-      "status": "CANCELLED",
-      "start_date": "2026-09-19T10:00:00Z",
-      "end_date": "2026-09-21T18:00:00Z",
-      "gps_id": null
-    },
-    {
-      "id": 103,
-      "vehicle_id": "lGpIl2fJQAk",
-      "customer_id": "e23fd072-7384-4fe1-a495-810d72555722",
-      "status": "COMPLETED",
-      "start_date": "2026-08-24T10:00:00Z",
-      "end_date": "2026-08-27T18:00:00Z",
-      "gps_id": "gps-geotab-r809"
-    },
-    {
-      "id": 105,
-      "vehicle_id": "lGpIl2fJQAk",
-      "customer_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
-      "status": "IN_PROGRESS",
-      "start_date": "2026-09-28T14:00:00Z",
-      "end_date": "2026-10-01T18:00:00Z",
-      "gps_id": "gps-geotab-r809"
-    },
-    {
-      "id": 108,
-      "vehicle_id": "lGpIl2fJQAk",
-      "customer_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
-      "status": "CONFIRMED",
-      "start_date": "2026-10-02T10:00:00Z",
-      "end_date": "2026-10-05T18:00:00Z",
-      "gps_id": null
-    }
-  ],
-  "gps": [
-    {
-      "id": 1,
-      "vehicle_id": "lGpIl2fJQAk",
-      "rental_id": 105,
-      "latitude": 4.6097,
-      "longitude": -74.0817,
-      "speed": 0,
-      "heading": null,
-      "ignition": false,
-      "recorded_at": "2026-09-28T14:05:00Z"
-    },
-    {
-      "id": 2,
-      "vehicle_id": "lGpIl2fJQAk",
-      "rental_id": 105,
-      "latitude": 4.6183,
-      "longitude": -74.085,
-      "speed": 24,
-      "heading": 4,
-      "ignition": true,
-      "recorded_at": "2026-09-28T14:11:00Z"
-    },
-    {
-      "id": 3,
-      "vehicle_id": "lGpIl2fJQAk",
-      "rental_id": 105,
-      "latitude": 4.627,
-      "longitude": -74.0885,
-      "speed": 38,
-      "heading": 8,
-      "ignition": true,
-      "recorded_at": "2026-09-28T14:17:00Z"
-    },
-    {
-      "id": 4,
-      "vehicle_id": "lGpIl2fJQAk",
-      "rental_id": 105,
-      "latitude": 4.6356,
-      "longitude": -74.0921,
-      "speed": 41,
-      "heading": 12,
-      "ignition": true,
-      "recorded_at": "2026-09-28T14:23:00Z"
-    },
-    {
-      "id": 5,
-      "vehicle_id": "lGpIl2fJQAk",
-      "rental_id": 105,
-      "latitude": 4.6441,
-      "longitude": -74.0956,
-      "speed": 22,
-      "heading": 14,
-      "ignition": true,
-      "recorded_at": "2026-09-28T14:29:00Z"
-    },
-    {
-      "id": 6,
-      "vehicle_id": "lGpIl2fJQAk",
-      "rental_id": 105,
-      "latitude": 4.6525,
-      "longitude": -74.0992,
-      "speed": 0,
-      "heading": null,
-      "ignition": true,
-      "recorded_at": "2026-09-28T14:35:00Z"
-    },
-    {
-      "id": 7,
-      "vehicle_id": "lGpIl2fJQAk",
-      "rental_id": 105,
-      "latitude": 4.6566,
-      "longitude": -74.111,
-      "speed": 18,
-      "heading": 280,
-      "ignition": true,
-      "recorded_at": "2026-09-28T14:41:00Z"
-    },
-    {
-      "id": 8,
-      "vehicle_id": "lGpIl2fJQAk",
-      "rental_id": 105,
-      "latitude": 4.6602,
-      "longitude": -74.1054,
-      "speed": 27,
-      "heading": 68,
-      "ignition": true,
-      "recorded_at": "2026-09-28T14:47:00Z"
+      "id": "692ec809-a964-4823-bd72-4b993369b89c",
+      "user_id": "91b8db78-090a-4021-90de-73b3b19fe967",
+      "refresh_token": "71c5d9e6-23f4-4c4c-a347-41e3b41d4301",
+      "created_at": "2026-09-29T23:43:26.838Z",
+      "expires_at": "2026-10-06T23:43:26.838Z",
+      "ip_address": "::1",
+      "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36",
+      "revoked": false
     }
   ],
   "verificationCodes": [],

@@ -113,4 +113,12 @@ export const authService = {
             `${RESOURCE}/me/password`,
             { currentPassword, newPassword }
         ),
+    async changeEmail(newEmail, currentPassword) {
+        const response = await httpClient.patch(`${RESOURCE}/me/email`, {
+            newEmail,
+            currentPassword,
+        });
+
+        return toAuthUserViewModel(response);
+    },
 };
