@@ -1,0 +1,340 @@
+/* Historial de rutas — mismo lenguaje visual que la ubicacion de la flota. */
+
+.rh-page {
+  background: var(--bg);
+  min-height: 100vh;
+}
+.rh-wrapper {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 28px 24px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ── Header ── */
+.rh-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+@media (min-width: 1100px) {
+  .rh-header {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+}
+.rh-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-h);
+  margin: 0 0 8px;
+}
+.rh-subtitle {
+  font-size: 14px;
+  color: var(--placeholder);
+  margin: 0;
+  max-width: 620px;
+}
+
+/* ── Herramientas de cabecera ── */
+.rh-header-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-self: flex-start;
+}
+.rh-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--placeholder);
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+}
+.rh-live svg {
+  width: 13px;
+  height: 13px;
+  color: var(--success);
+}
+.rh-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text-h);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.rh-btn-outline:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+.rh-btn-outline:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.rh-spin {
+  animation: rh-spin 0.9s linear infinite;
+}
+@keyframes rh-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Estados ── */
+.rh-loading {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 40px;
+  text-align: center;
+  color: var(--placeholder);
+}
+.rh-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--card-bg);
+  border: 1px solid #fca5a5;
+  border-left: 4px solid #ef4444;
+  border-radius: 12px;
+  padding: 16px 18px;
+  color: var(--text-h);
+}
+.rh-error strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+.rh-error p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-h);
+}
+.rh-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 56px 24px;
+  background: var(--card-bg);
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+  color: var(--placeholder);
+  text-align: center;
+}
+.rh-empty svg {
+  width: 30px;
+  height: 30px;
+  opacity: 0.6;
+}
+.rh-empty p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+.rh-empty span {
+  font-size: 13px;
+  max-width: 460px;
+}
+
+/* ── Aviso: cuantas reservas hay para rastrear ── */
+.rh-notice {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  border-radius: 14px;
+  border: 1px solid #86efac;
+  border-left: 4px solid #22c55e;
+  background: var(--card-bg);
+}
+.rh-notice--warn {
+  border-color: #fcd34d;
+  border-left-color: #f59e0b;
+}
+.rh-notice > svg {
+  width: 24px;
+  height: 24px;
+  flex: none;
+  color: #16a34a;
+}
+.rh-notice--warn > svg {
+  color: #d97706;
+}
+.rh-notice-body {
+  flex: 1;
+  min-width: 0;
+}
+.rh-notice-body strong {
+  display: block;
+  font-size: 16px;
+  color: var(--text-h);
+}
+.rh-notice-body p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--placeholder);
+}
+.rh-notice-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: var(--text-h);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+.rh-notice-cta:hover {
+  background: var(--accent-hover);
+}
+.rh-notice-cta svg {
+  width: 14px;
+  height: 14px;
+}
+@media (max-width: 720px) {
+  .rh-notice {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .rh-notice-cta {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ── Lista de reservas activas ── */
+.rh-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.rh-list-title {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--placeholder);
+}
+.rh-list-count {
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--text-h);
+  font-size: 12px;
+  letter-spacing: 0;
+}
+.rh-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rh-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.rh-plate {
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-h);
+  letter-spacing: 0.04em;
+}
+.rh-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.rh-status--on {
+  background: rgba(34, 197, 94, 0.14);
+  color: #16a34a;
+}
+.rh-status--off {
+  background: rgba(239, 68, 68, 0.14);
+  color: #dc2626;
+}
+.rh-card-vehicle {
+  margin: 0;
+  font-size: 14px;
+  color: var(--placeholder);
+}
+.rh-card-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 0;
+}
+.rh-card-meta dt {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--placeholder);
+}
+.rh-card-meta dd {
+  margin: 3px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-h);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.rh-card-time {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--placeholder);
+}
+.rh-card-time svg {
+  width: 13px;
+  height: 13px;
+  flex: none;
+}
+
+.rh-foot {
+  margin: 0;
+  text-align: right;
+  font-size: 12px;
+  color: var(--placeholder);
+}

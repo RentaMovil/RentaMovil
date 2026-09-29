@@ -40,6 +40,7 @@ import Branches from './features/admin/branches/pages/Branches.jsx';
 import ReservationsList from './features/admin/reservations/pages/ReservationsList.jsx';
 import ReservationDetail from './features/admin/reservations/pages/ReservationDetail.jsx';
 import VehicleLocation from './features/admin/vehicleLocation/pages/VehicleLocation.jsx';
+import RouteHistory from './features/admin/routeHistory/pages/RouteHistory.jsx';
 
 
 import History from './features/admin/historyMaintenance/pages/History.jsx';
@@ -279,6 +280,14 @@ function App() {
           element={
             <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
               <VehicleLocation />
+            </RequireRole>
+          }
+        />
+        <Route
+          path="/RouteHistory"
+          element={
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+              <RouteHistory />
             </RequireRole>
           }
         />

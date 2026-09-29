@@ -1073,5 +1073,28 @@
     "autoRefresh": "Atualiza a cada {{seconds}} s",
     "deviceOffline": "{{model}} nao esta conectado: posicao do ultimo relatorio.",
     "device": "Dispositivo: {{model}} · {{provider}}"
+  },
+  "routeHistory": {
+    "title": "Histórico de rotas",
+    "subtitle": "Reservas com o veículo já entregue que o administrador deve acompanhar hoje.",
+    "refresh": "Atualizar",
+    "autoRefresh": "Atualiza a cada {{seconds}} s",
+    "errorTitle": "Não foi possível carregar a informação de rotas",
+    "loading": "Carregando reservas ativas...",
+    "pending_one": "Hoje há 1 reserva ativa para acompanhar",
+    "pending_other": "Hoje há {{count}} reservas ativas para acompanhar",
+    "pendingHint": "Abra a localização da frota para ver a posição ao vivo de cada uma.",
+    "pendingWarn_one": "Além disso, {{count}} está há mais de 2 horas sem reportar posição.",
+    "pendingWarn_other": "Além disso, {{count}} estão há mais de 2 horas sem reportar posição.",
+    "openFleet": "Ver no mapa",
+    "emptyTitle": "Não há reservas ativas para acompanhar",
+    "emptyHint": "Não existe aluguel em curso, então hoje não há rotas a acompanhar.",
+    "listTitle": "Reservas ativas",
+    "rental": "Reserva",
+    "customer": "Cliente",
+    "live": "Reportando",
+    "noSignal": "Sem sinal",
+    "noReport": "Sem relatório GPS",
+    "updatedAt": "Atualizado {{time}} · {{date}}"
   }
 }
