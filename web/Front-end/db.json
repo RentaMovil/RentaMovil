@@ -548,7 +548,7 @@
     },
     {
       "notification_id": 2,
-      "person_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",1
+      "person_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
       "type": "pago_confirmado",
       "message": "Tu pago fue procesado correctamente.",
       "sent_date": "2026-08-28T11:00:00Z",
