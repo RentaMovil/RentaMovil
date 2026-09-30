@@ -55,7 +55,6 @@
     "min": "Mínimo",
     "max": "Máximo"
   },
-
   "reservation": {
     "ErrorDate": "La fecha de entrega no puede ser anterior a la de recogida",
     "ErrorAge:": "Debes ser mayor de edad",
@@ -73,7 +72,6 @@
     "phone": "Teléfono",
     "submit": "Alquilar"
   },
-
   "terms": {
     "acceptLabel": "He leído y acepto los términos y condiciones",
     "view": "Ver documento completo",
@@ -93,7 +91,6 @@
     "accept": "Aceptar y continuar",
     "acceptError": "Debes aceptar los términos y condiciones antes de continuar al pago."
   },
-
   "login": {
     "createAccount": "Crear cuenta",
     "iniciarSesion": "Iniciar sesión"
@@ -121,19 +118,15 @@
     "email": "Correo electrónico",
     "password": "Contraseña",
     "confirmPassword": "Confirmar contraseña",
-
     "firstNamePlaceholder": "Nombre",
     "lastNamePlaceholder": "Apellido",
     "phonePlaceholder": "3001234567",
     "usernamePlaceholder": "usuario123",
     "emailPlaceholder": "tu@email.com",
     "passwordPlaceholder": "••••••••",
-
     "submit": "Crear cuenta",
     "submitting": "Creando cuenta...",
-
     "haveAccount": "¿Ya tienes cuenta? Inicia sesión",
-
     "errorFields": "Rellena todos los campos",
     "emailInvalid": "Introduce un email válido",
     "phoneInvalid": "Teléfono inválido (10 dígitos)",
@@ -158,10 +151,20 @@
     "modificarPassword": "Modificar Contraseña",
     "modoEdicion": "Modo edición activado",
     "perfilActualizado": "Perfil actualizado",
+    "profileStatus": "Perfil sincronizado",
+    "profileImage": "Foto de perfil",
     "cambiarFoto": "Cambiar foto",
     "seleccionaTema": "Selecciona un tema",
     "seleccionaIdioma": "Selecciona un idioma",
-    "cancelar": "Cancelar"
+    "cancelar": "Cancelar",
+    "retry": "Reintentar",
+    "signIn": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "apellido": "Apellido",
+    "usuario": "Usuario",
+    "editar": "Editar perfil",
+    "guardar": "Guardar cambios",
+    "guardando": "Guardando..."
   },
   "payment": {
     "payTitle": "Confirmar Pago",
@@ -207,7 +210,8 @@
     "ins-types": "Tipos de seguro",
     "superadmin": "Super Administración",
     "sa-users": "Usuarios y roles",
-    "sa-bank": "Cuentas bancarias"
+    "sa-bank": "Cuentas bancarias",
+    "loc-fleet": "Ubicación de la flota"
   },
   "changePassword": {
     "caracters": "Al menos 8 caracteres",
@@ -236,25 +240,25 @@
     "minLenghtBrand": "La marca debe tener al menos 2 caracteres",
     "maxLenghtBrand": "La marca no puede tener más de 30 caracteres",
     "ivalidBrand": "La marca solo puede contener letras, números y guiones.",
-    "price":"Precio",
-    "priceRequired":"El precio es obligatorio",
-    "minLenghtPrice":"El precio debe ser mayor o igual a 0",
-    "maxLenghtPrice":"El precio no debe superar 100000000",
-    "mileage":"Kilometraje",
-    "mileageRequired":"El kilometraje es obligatorio",
-    "minLenghtMileage":"El kilometraje debe ser mayor o igual a 0",
-    "maxLenghtMileage":"El kilometraje no debe superar 1000000",
-    "invalidMileage":"El kilometraje solo puede contener números.",
-    "age":"Año",
-    "ageRequired":"El año es obligatorio",
-    "minLenghtAge":"El año debe ser mayor o igual a",
-    "maxLenghtAge":"El año no debe superar a",
-    "invalidAge":"El año solo puede contener números.",
-    "capacity":"Capacidad",
-    "capacityRequired":"La capacidad es obligatoria",
-    "minLenghtCapacity":"La capacidad debe ser mayor o igual a 1",
-    "maxLenghtCapacity":"La capacidad no debe superar 100",
-    "invalidCapacity":"La capacidad solo puede contener números.",
+    "price": "Precio",
+    "priceRequired": "El precio es obligatorio",
+    "minLenghtPrice": "El precio debe ser mayor o igual a 0",
+    "maxLenghtPrice": "El precio no debe superar 100000000",
+    "mileage": "Kilometraje",
+    "mileageRequired": "El kilometraje es obligatorio",
+    "minLenghtMileage": "El kilometraje debe ser mayor o igual a 0",
+    "maxLenghtMileage": "El kilometraje no debe superar 1000000",
+    "invalidMileage": "El kilometraje solo puede contener números.",
+    "age": "Año",
+    "ageRequired": "El año es obligatorio",
+    "minLenghtAge": "El año debe ser mayor o igual a",
+    "maxLenghtAge": "El año no debe superar a",
+    "invalidAge": "El año solo puede contener números.",
+    "capacity": "Capacidad",
+    "capacityRequired": "La capacidad es obligatoria",
+    "minLenghtCapacity": "La capacidad debe ser mayor o igual a 1",
+    "maxLenghtCapacity": "La capacidad no debe superar 100",
+    "invalidCapacity": "La capacidad solo puede contener números.",
     "model": "Modelo",
     "requiredModel": "El modelo es obligatorio",
     "placeholderModel": "Ejemplo: Volkswagen Gol, Renault Sandero, Toyota Corolla....",
@@ -356,7 +360,6 @@
     "requiredModel": "El modelo es obligatorio",
     "placeholderModel": "Ej: Volkswagen Gol, Crolla, Tesla Model 3... ",
     "minLenghtModel": "El modelo debe tener al menos 2 caracteres",
-    
     "maxLenghtModel": "El modelo no puede tener más de 30 caracteres",
     "invalidModel": "El modelo solo puede contener letras, números y guiones.",
     "date": "Fecha",
@@ -382,7 +385,6 @@
     "minLenghtMaintenance": "Minimo 3 caracteres. ",
     "maxLenght": "Maximo 60 caracteres ",
     "invalidMaintenance": "Solo se permiten letras, números, guiones y comas.",
-
     "placeholderObservations": "Observaciones",
     "minLenghtObservations": "Minimo 5 caracteres",
     "maxLenghtObservations": "Maximo 200 caracteres ",
@@ -392,22 +394,22 @@
     "shedule": "Agendar mantenimiento",
     "button": "Historial de mantenimientos",
     "options": {
-    "option1": "Cambio de aceite",
-    "option2": "Cambio de filtros",
-    "option3": "Revision de frenos",
-    "option4": "Cambio de llantas",
-    "option5": "Alineación y balanceo",
-    "option6": "Revisión general",
-    "option7": "Reparación de motor",
-    "option8": "Reparación de frenos",
-    "option9": "Reparación eléctrica",
-    "option10": "Reparación de suspensión",
-    "option11": "Reparación de transmisión",
-    "option12": "Lavado",
-    "option13": "Pintura",
-    "option14": "Latonería",
-    "observations": "Observaciones"
-     }
+      "option1": "Cambio de aceite",
+      "option2": "Cambio de filtros",
+      "option3": "Revision de frenos",
+      "option4": "Cambio de llantas",
+      "option5": "Alineación y balanceo",
+      "option6": "Revisión general",
+      "option7": "Reparación de motor",
+      "option8": "Reparación de frenos",
+      "option9": "Reparación eléctrica",
+      "option10": "Reparación de suspensión",
+      "option11": "Reparación de transmisión",
+      "option12": "Lavado",
+      "option13": "Pintura",
+      "option14": "Latonería",
+      "observations": "Observaciones"
+    }
   },
   "notifications": {
     "unread": "Sin leer",
@@ -451,12 +453,10 @@
         "title": "Recoge y disfruta",
         "description": "Acércate a la sucursal seleccionada, muestra tu factura con tu licencia de conducción y recibe las llaves sin demoras ni filas innecesarias."
       },
-
       "return": {
         "title": "Disfruta y Devuelve",
         "description": "Al terminar tu viaje, devuelve el vehículo en la sucursal correspondiente y disfruta de tu experiencia."
       }
-
     }
   },
   "requirements": {
@@ -473,7 +473,6 @@
   },
   "description": {
     "info-branches": "Nuestras sucursales están ubicadas en las principales ciudades del país, ofrecen su servicio de 8:00  hasta las 18:00."
-
   },
   "VehicleInventary": {
     "title": "Inventario de Vehículos",
@@ -502,207 +501,216 @@
     "state": "Estado",
     "back": "Regresar",
     "vehicleDetails": "Ficha del vehículo",
-    "close" : "Cerrar",
+    "close": "Cerrar",
     "stateSee": "Ver estado",
     "all_m": "Todos",
-      "all_f": "Todas"
+    "all_f": "Todas"
   },
-  "CheckStatus":{
+  "CheckStatus": {
     "checkStatus": "Consultar estado",
-    "modal":{
-      "title":"Editar vehículo",
-      "close":"Cerrar modal",
+    "modal": {
+      "title": "Editar vehículo",
+      "close": "Cerrar modal",
       "sections": {
         "general": "Información general",
         "technical": "Detalles técnicos",
         "location": "Ubicación y descripción",
         "image": "Imagen del vehículo"
       },
-      "name":"Nombre",
-      "brand":"Marca",
-      "requiredName":"El nombre es obligatorio",
-      "requiredNameMinLength":"El nombre debe tener al menos 3 caracteres",
-      "requiredNameMaxLength":"El nombre no puede exceder los 50 caracteres",
-      "formatInvalid":"El nombre solo puede contener letras, números y guiones.",
-      "plate":"Placa",
-      "age":"Año",
-      "mileage":"Kilometraje",
-      "distanceUnit":"km",
-      "fuelType":"Tipo de combustible",
-      "fuelOptions":{
-        "gasoline":"Gasolina",
-        "diesel":"Diesel",
-        "hybrid":"Híbrido",
-        "electric":"Eléctrico",
-        "naturalGas":"Gas natural",
-        "propaneGas":"Gas propano"
+      "name": "Nombre",
+      "brand": "Marca",
+      "requiredName": "El nombre es obligatorio",
+      "requiredNameMinLength": "El nombre debe tener al menos 3 caracteres",
+      "requiredNameMaxLength": "El nombre no puede exceder los 50 caracteres",
+      "formatInvalid": "El nombre solo puede contener letras, números y guiones.",
+      "plate": "Placa",
+      "age": "Año",
+      "mileage": "Kilometraje",
+      "distanceUnit": "km",
+      "fuelType": "Tipo de combustible",
+      "fuelOptions": {
+        "gasoline": "Gasolina",
+        "diesel": "Diesel",
+        "hybrid": "Híbrido",
+        "electric": "Eléctrico",
+        "naturalGas": "Gas natural",
+        "propaneGas": "Gas propano"
       },
-      "price":"Precio",
-      "perDay":"día",
-      "platePlaceholder":"Placa ejemplo: ABC123",
-      "requiredPlate":"La placa es obligatoria",
-      "requiredPlateMinLength":"La placa debe tener al menos 2 caracteres",
-      "requiredPlateMaxLength":"La placa no puede exceder los 30 caracteres",
-      "formatInvalidPlate":"Formato de placa inválido",
- "model": "Modelo",
-    "modelPlaceholder": "Exemple : Volkswagen Gol, Corolla, Tesla Model 3...",
+      "price": "Precio",
+      "perDay": "día",
+      "platePlaceholder": "Placa ejemplo: ABC123",
+      "requiredPlate": "La placa es obligatoria",
+      "requiredPlateMinLength": "La placa debe tener al menos 2 caracteres",
+      "requiredPlateMaxLength": "La placa no puede exceder los 30 caracteres",
+      "formatInvalidPlate": "Formato de placa inválido",
+      "model": "Modelo",
+      "modelPlaceholder": "Exemple : Volkswagen Gol, Corolla, Tesla Model 3...",
+      "requiredModel": "El modelo es obligatorio",
+      "requiredModelMinLength": "El modelo debe tener al menos 2 caracteres",
+      "requiredModelMaxLength": "El modelo no puede exceder los 30 caracteres",
+      "formatInvalidModel": "El modelo solo puede contener letras, números y guiones.",
+      "state": "Estado",
+      "edit": "Editar vehículo",
+      "stateOptions": {
+        "available": "Disponible",
+        "maintenance": "En mantenimiento",
+        "inUse": "En uso",
+        "reserved": "Reservado"
+      },
+      "ubication": "Ubicación",
+      "requiredUbication": "La ubicación es obligatoria",
+      "requiredUbicationMinLength": "La ubicación debe tener al menos 2 caracteres",
+      "requiredUbicationMaxLength": "La ubicación no puede exceder los 100 caracteres",
+      "formatInvalidUbication": "La ubicación contiene caracteres no permitidos",
+      "description": "Descripción",
+      "requiredDescriptionMinLength": "La descripción debe tener al menos 5 caracteres",
+      "requiredDescriptionMaxLength": "La descripción no puede exceder los 200 caracteres",
+      "cancel": "Cancelar"
+    },
+    "actions": {
+      "save": "Guardar cambios",
+      "saving": "Guardando..."
+    }
+  },
+  "FiltrerStatus": {
+    "placeholder": "Buscar por placa, marca o modelo...",
+    "all": "Todos"
+  },
+  "CartVehiculeStatus": {
+    "veicle": "Vehículo",
+    "Maintenance": "Mantenimiento",
+    "InMaintenance": "En mantenimiento"
+  },
+  "FilterVehicle": {
+    "placeholder": "Buscar por placa, marca o modelo..."
+  },
+  "MaintenanceForm": {
+    "title": "Vehículos para mantenimiento",
+    "search": "Búsqueda por placa, marca o modelo...",
+    "noFound": "No se encontraron vehículos.",
+    "newMaintenance": "Registrar un nuevo mantenimiento",
+    "plate": "Placa",
+    "age": "Año",
+    "mileage": "Kilometraje",
+    "distanceUnit": "km",
+    "fuelType": "Tipo de combustible",
+    "fuelOptions": {
+      "gasoline": "Gasolina",
+      "diesel": "Diesel",
+      "hybrid": "Híbrido",
+      "electric": "Eléctrico",
+      "naturalGas": "Gas natural",
+      "propaneGas": "Gas propano"
+    },
+    "price": "Precio",
+    "perDay": "día",
+    "platePlaceholder": "Placa ejemplo: ABC123",
+    "requiredPlate": "La placa es obligatoria",
+    "formatInvalidPlate": "Formato de placa inválido",
+    "model": "Modelo",
+    "modelPlaceholder": "Ejemplo: Volkswagen Gol, Corolla, Tesla Model 3...",
     "requiredModel": "El modelo es obligatorio",
     "requiredModelMinLength": "El modelo debe tener al menos 2 caracteres",
-    "requiredModelMaxLength": "El modelo no puede exceder los 30 caracteres",
+    "requiredModelMaxLength": "El modelo no puede tener más de 30 caracteres",
     "formatInvalidModel": "El modelo solo puede contener letras, números y guiones.",
-      "state":"Estado",
-      "edit":"Editar vehículo",
-      "stateOptions":{
-        "available":"Disponible",
-        "maintenance":"En mantenimiento",
-        "inUse":"En uso",
-        "reserved":"Reservado"
-      },
-      "ubication":"Ubicación",
-      "requiredUbication":"La ubicación es obligatoria",
-      "requiredUbicationMinLength":"La ubicación debe tener al menos 2 caracteres",
-      "requiredUbicationMaxLength":"La ubicación no puede exceder los 100 caracteres",
-      "formatInvalidUbication":"La ubicación contiene caracteres no permitidos",
-      "description":"Descripción",
-      "requiredDescriptionMinLength":"La descripción debe tener al menos 5 caracteres",
-      "requiredDescriptionMaxLength":"La descripción no puede exceder los 200 caracteres",
-      "cancel":"Cancelar"
-    },
-    "actions":{
-      "save":"Guardar cambios",
-      "saving":"Guardando..."
+    "date": "Fecha",
+    "minDate": "La fecha no puede ser anterior a la de hoy",
+    "maxDate": "La fecha no puede ser posterior a 30 días desde hoy",
+    "datePlaceholder": "Fecha",
+    "requiredDate": "La fecha es obligatoria",
+    "brand": "Marca",
+    "brandPlaceholder": "Ejemplo: Toyota, Chevrolet, Renault....",
+    "requiredBrand": "La marca es obligatoria",
+    "minLenghtBrand": "La marca debe tener al menos 2 caracteres",
+    "maxLenghtBrand": "La marca no puede tener más de 30 caracteres",
+    "ivalidBrand": "La marca solo puede contener letras, números y guiones.",
+    "Type": "Tipo de mantenimiento",
+    "requiredType": "El tipo de mantenimiento es obligatorio",
+    "placeholderType": "Ej: Cambio de aceite, Revisión de frenos...",
+    "minLenghtType": "El tipo de mantenimiento debe tener al menos 3 caracteres",
+    "maxLenghtType": "El tipo de mantenimiento no puede tener más de 60 caracteres",
+    "invalidType": "El tipo de mantenimiento solo puede contener letras, números, guiones y comas.",
+    "observations": "Observaciones",
+    "placeholderObservations": "Observaciones",
+    "minLenghtObservations": "La observación debe tener al menos 5 caracteres",
+    "maxLenghtObservations": "La observación no debe tener más de 200 caracteres",
+    "save": "Agendar mantenimiento",
+    "saving": "Agendando mantenimiento...",
+    "history": "Historial de mantenimientos",
+    "options": {
+      "option1": "Cambio de aceite",
+      "option2": "Cambio de filtros",
+      "option3": "Revision de frenos",
+      "option4": "Cambio de llantas",
+      "option5": "Alineación y balanceo",
+      "option6": "Revisión general",
+      "option7": "Reparación de motor",
+      "option8": "Reparación de frenos",
+      "option9": "Reparación eléctrica",
+      "option10": "Reparación de suspensión",
+      "option11": "Reparación de transmisión",
+      "option12": "Lavado",
+      "option13": "Pintura",
+      "option14": "Latonería"
     }
   },
-  "FiltrerStatus":{
-    "placeholder":"Buscar por placa, marca o modelo...",
-    "all":"Todos"
+  "CartVehiculeMaintenance": {
+    "veicle": "Vehículo",
+    "Maintenance": "Mantenimiento",
+    "inMaintenance": "En mantenimiento",
+    "pending": "Pendiente",
+    "inProgress": "En progreso",
+    "completed": "Completado",
+    "cancel": "Cancelado",
+    "offObservations": "Sin observaciones",
+    "seeMore": "Ver más"
   },
-  "CartVehiculeStatus":{
-    "veicle":"Vehículo",
-    "Maintenance":"Mantenimiento",
-    "InMaintenance":"En mantenimiento"
+  "FiltrerHistory": {
+    "placeholder": "Buscar por placa, marca o modelo...",
+    "all": "Todos",
+    "state": "Estado",
+    "pending": "Pendiente",
+    "inProgress": "En progreso",
+    "completed": "Completado",
+    "cancel": "Cancelado"
   },
-  "FilterVehicle":{
-    "placeholder":"Buscar por placa, marca o modelo..."
+  "History": {
+    "title": "Gestión de mantenimientos",
+    "detail": "Detalle",
+    "model": "Modelo",
+    "modelPlaceHolder": "Ejemplo: Volkswagen Gol, Corolla, Tesla Model 3...",
+    "save": "Guardar cambios",
+    "cancel": "Cancelar",
+    "status": "Estado",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "IsDelete": "Estas seguro de que deseas eliminar este mantenimiento?",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "title2": "Estado de mantenimiento",
+    "title3": "Mantenimientos por mes",
+    "availableVehicles": "Vehículos disponibles",
+    "months": [
+      "Ene",
+      "Feb",
+      "Mar",
+      "Abr",
+      "May",
+      "Jun",
+      "Jul",
+      "Ago",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dic"
+    ]
   },
-  "MaintenanceForm":{
-    "title":"Vehículos para mantenimiento",
-    "search":"Búsqueda por placa, marca o modelo...",
-    "noFound":"No se encontraron vehículos.",
-    "newMaintenance":"Registrar un nuevo mantenimiento",
-    "plate":"Placa",
-    "age":"Año",
-    "mileage":"Kilometraje",
-    "distanceUnit":"km",
-    "fuelType":"Tipo de combustible",
-    "fuelOptions":{
-      "gasoline":"Gasolina",
-      "diesel":"Diesel",
-      "hybrid":"Híbrido",
-      "electric":"Eléctrico",
-      "naturalGas":"Gas natural",
-      "propaneGas":"Gas propano"
-    },
-    "price":"Precio",
-    "perDay":"día",
-    "platePlaceholder":"Placa ejemplo: ABC123",
-    "requiredPlate":"La placa es obligatoria",
-    "formatInvalidPlate":"Formato de placa inválido",
-    "model":"Modelo",
-    "modelPlaceholder":"Ejemplo: Volkswagen Gol, Corolla, Tesla Model 3...",
-    "requiredModel":"El modelo es obligatorio",
-    "requiredModelMinLength":"El modelo debe tener al menos 2 caracteres",
-    "requiredModelMaxLength":"El modelo no puede tener más de 30 caracteres",
-    "formatInvalidModel":"El modelo solo puede contener letras, números y guiones.",
-    "date":"Fecha",
-    "minDate":"La fecha no puede ser anterior a la de hoy",
-    "maxDate":"La fecha no puede ser posterior a 30 días desde hoy",
-    "datePlaceholder":"Fecha",
-    "requiredDate":"La fecha es obligatoria",
-    "brand":"Marca",
-    "brandPlaceholder":"Ejemplo: Toyota, Chevrolet, Renault....",
-    "requiredBrand":"La marca es obligatoria",
-    "minLenghtBrand":"La marca debe tener al menos 2 caracteres",
-    "maxLenghtBrand":"La marca no puede tener más de 30 caracteres",
-    "ivalidBrand":"La marca solo puede contener letras, números y guiones.",
-    "Type":"Tipo de mantenimiento",
-    "requiredType":"El tipo de mantenimiento es obligatorio",
-    "placeholderType":"Ej: Cambio de aceite, Revisión de frenos...",
-    "minLenghtType":"El tipo de mantenimiento debe tener al menos 3 caracteres",
-    "maxLenghtType":"El tipo de mantenimiento no puede tener más de 60 caracteres",
-    "invalidType":"El tipo de mantenimiento solo puede contener letras, números, guiones y comas.",
-    "observations":"Observaciones",
-    "placeholderObservations":"Observaciones",
-    "minLenghtObservations":"La observación debe tener al menos 5 caracteres",
-    "maxLenghtObservations":"La observación no debe tener más de 200 caracteres",
-    "save":"Agendar mantenimiento",
-    "saving":"Agendando mantenimiento...",
-    "history":"Historial de mantenimientos",
-    "options":{
-      "option1":"Cambio de aceite",
-      "option2":"Cambio de filtros",
-      "option3":"Revision de frenos",
-      "option4":"Cambio de llantas",
-      "option5":"Alineación y balanceo",
-      "option6":"Revisión general",
-      "option7":"Reparación de motor",
-      "option8":"Reparación de frenos",
-      "option9":"Reparación eléctrica",
-      "option10":"Reparación de suspensión",
-      "option11":"Reparación de transmisión",
-      "option12":"Lavado",
-      "option13":"Pintura",
-      "option14":"Latonería"
-    }
+  "FleetChartMaintenance": {
+    "pending": "Pendiente",
+    "inProgress": "En progreso",
+    "completed": "Completado",
+    "cancel": "Cancelado"
   },
-
-  "CartVehiculeMaintenance":{
-    "veicle":"Vehículo",
-    "Maintenance":"Mantenimiento",
-    "inMaintenance":"En mantenimiento",
-    "pending":"Pendiente",
-    "inProgress":"En progreso",
-    "completed":"Completado",
-    "cancel":"Cancelado",
-    "offObservations":"Sin observaciones",
-    "seeMore":"Ver más"
-    },
-    "FiltrerHistory":{
-      "placeholder":"Buscar por placa, marca o modelo...",
-      "all":"Todos",
-      "state":"Estado",
-      "pending":"Pendiente",
-      "inProgress":"En progreso",
-      "completed":"Completado",
-      "cancel":"Cancelado"
-    },
-    "History":{
-      "title":"Gestión de mantenimientos",
-      "detail":"Detalle",
-      "model":"Modelo",
-      "modelPlaceHolder":"Ejemplo: Volkswagen Gol, Corolla, Tesla Model 3...",
-      "save":"Guardar cambios",
-      "cancel":"Cancelar",
-      "status":"Estado",
-      "edit":"Editar",
-      "delete":"Eliminar",
-      "IsDelete":"Estas seguro de que deseas eliminar este mantenimiento?",
-      "confirm":"Confirmar",
-      "close":"Cerrar",
-      "title2":"Estado de mantenimiento",
-      "title3":"Mantenimientos por mes",
-      "availableVehicles": "Vehículos disponibles",
-      "months": [
-      "Ene","Feb","Mar","Abr","May","Jun",
-      "Jul","Ago","Sep","Oct","Nov","Dic"
-      ]
-    },
-    "FleetChartMaintenance":{
-    "pending":"Pendiente",
-    "inProgress":"En progreso",
-    "completed":"Completado",
-    "cancel":"Cancelado"
-},
   "userManagement": {
     "title": "Usuarios y roles",
     "subtitle": "Administra las cuentas de acceso, asignación de permisos de flota y privilegios administrativos del sistema.",
@@ -933,7 +941,6 @@
     "showingRange": "Mostrando {{from}} a {{to}} de {{total}} resultados",
     "previous": "Anterior",
     "next": "Siguiente",
-
     "notFound": "No se encontró la reserva solicitada.",
     "backToList": "Volver a reservas",
     "detailTitle": "Detalle de Reserva #{{id}}",
@@ -1014,10 +1021,10 @@
       "mileageIn": "Kilometraje de entrada",
       "fuelLevel": "Nivel de combustible",
       "fuel": {
-        "full": "Lleno (8/8)",
-        "34": "3/4 (6/8)",
         "12": "1/2 (4/8)",
-        "14": "1/4 (2/8)"
+        "14": "1/4 (2/8)",
+        "34": "3/4 (6/8)",
+        "full": "Lleno (8/8)"
       },
       "gpsDevice": "Dispositivo GPS telemático",
       "gpsOption1": "Geotab R-809 (pre-instalado y activo)",
@@ -1034,5 +1041,80 @@
       "title": "Comprobante bancario de transferencia",
       "subtitle": "Referencia: {{reference}}"
     }
+  },
+  "vehicleLocation": {
+    "title": "Ubicación de la flota",
+    "subtitle": "Mapa con la posicion que envia el GPS de los vehiculos en alquiler.",
+    "refresh": "Actualizar",
+    "errorTitle": "No se pudo cargar la ubicación",
+    "kpiTracked": "En seguimiento",
+    "kpiMoving": "En movimiento",
+    "kpiStopped": "Detenidos",
+    "kpiLastUpdate": "Última señal",
+    "loading": "Cargando la flota...",
+    "emptyTitle": "No hay vehículos en alquiler",
+    "emptyHint": "La ubicación solo está disponible para vehículos con una reserva en curso y un GPS activo.",
+    "listTitle": "Vehículos",
+    "moving": "En movimiento",
+    "stopped": "Detenido",
+    "rental": "Reserva",
+    "customer": "Cliente",
+    "readoutTitle": "Última posición registrada",
+    "latitude": "Latitud",
+    "longitude": "Longitud",
+    "speed": "Velocidad",
+    "kmh": "km/h",
+    "heading": "Rumbo",
+    "ignition": "Encendido",
+    "ignitionOn": "Encendido",
+    "ignitionOff": "Apagado",
+    "recordedAt": "Registrado",
+    "selectVehicle": "Selecciona un vehículo",
+    "autoRefresh": "Se actualiza cada {{seconds}} s",
+    "deviceOffline": "{{model}} no esta conectado: la posicion es del ultimo reporte.",
+    "device": "Dispositivo: {{model}} · {{provider}}"
+  },
+  "changeEmail": {
+    "title": "Modificar Correo Electrónico",
+    "open": "Modificar Correo",
+    "securityNotice": "Aviso de seguridad (INV-001): el nuevo correo debe ser único en el sistema. Se requerirá tu contraseña actual para confirmar tu identidad antes de aplicar el cambio.",
+    "currentEmail": "Correo actual",
+    "newEmail": "Nuevo correo electrónico",
+    "newEmailPlaceholder": "ejemplo@rentamovil.com",
+    "currentPassword": "Contraseña actual",
+    "currentPasswordPlaceholder": "Introduce tu contraseña",
+    "passwordHint": "Validación obligatoria por protocolo de seguridad.",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar cambio",
+    "saving": "Guardando...",
+    "success": "Correo actualizado",
+    "error": "No se pudo actualizar el correo. Revisa los datos e inténtalo de nuevo.",
+    "required": "Escribe el nuevo correo.",
+    "invalidEmail": "El correo no tiene un formato válido.",
+    "sameEmail": "El nuevo correo debe ser diferente del actual.",
+    "passwordRequired": "Escribe tu contraseña actual."
+  },
+  "routeHistory": {
+    "title": "Historial de rutas",
+    "subtitle": "Reservas con vehiculo entregado que el administrador debe seguir hoy.",
+    "refresh": "Actualizar",
+    "autoRefresh": "Se actualiza cada {{seconds}} s",
+    "errorTitle": "No se pudo cargar la informacion de rutas",
+    "loading": "Cargando reservas activas...",
+    "pending_one": "Hoy hay 1 reserva activa por rastrear",
+    "pending_other": "Hoy hay {{count}} reservas activas por rastrear",
+    "pendingHint": "Abre la ubicacion de la flota para ver la posicion en vivo de cada una.",
+    "pendingWarn_one": "Ademas, {{count}} lleva mas de 2 horas sin reportar posicion.",
+    "pendingWarn_other": "Ademas, {{count}} llevan mas de 2 horas sin reportar posicion.",
+    "openFleet": "Ver en el mapa",
+    "emptyTitle": "No hay reservas activas por rastrear",
+    "emptyHint": "No hay nenhum alquiler en curso, asi que hoy no hay rutas que seguir.",
+    "listTitle": "Reservas activas",
+    "rental": "Reserva",
+    "customer": "Cliente",
+    "live": "Reportando",
+    "noSignal": "Sin senal",
+    "noReport": "Sin reporte GPS",
+    "updatedAt": "Actualizado {{time}} · {{date}}"
   }
 }

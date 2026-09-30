@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import "./Account.css";
 import login from "../../../assets/login.png";
 import { FaEdit, FaMoon, FaGlobe, FaSave, FaTimes, FaTrash } from "react-icons/fa";

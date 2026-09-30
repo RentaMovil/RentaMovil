@@ -1,34 +1,75 @@
 import { httpClient } from "../../../shared/api/httpClient";
 import { tokenStore } from "../../../shared/api/tokenStore";
 import { toLoginPayload, toRegisterPayload, toAuthUserViewModel } from "./authMapper";
-import { saveSession, getStoredUser, clearSession } from "./sessionStorage";
+import {
+    saveSession,
+    getStoredUser,
+    getStoredRefreshToken,
+    clearSession,
+} from "./sessionStorage";
 
 const RESOURCE = "/auth";
 
 export const authService = {
     async login(credentials) {
-        const response = await httpClient.post(`${RESOURCE}/login`, toLoginPayload(credentials));
+        const response = await httpClient.post(
+            `${RESOURCE}/login`,
+            toLoginPayload(credentials)
+        );
+        const user = toAuthUserViewModel(response);
+
         tokenStore.setAccessToken(response.accessToken);
-        const user = toAuthUserViewModel(response.user);
-        saveSession({ accessToken: response.accessToken, refreshToken: response.refreshToken, user });
+        saveSession({
+            refreshToken: response.refreshToken,
+            user,
+        });
+
         return { user };
     },
 
     async register(formData) {
-        const response = await httpClient.post(`${RESOURCE}/register`, toRegisterPayload(formData));
+        const response = await httpClient.post(
+            `${RESOURCE}/register`,
+            toRegisterPayload(formData)
+        );
+        const user = toAuthUserViewModel(response);
+
         tokenStore.setAccessToken(response.accessToken);
-        const user = toAuthUserViewModel(response.user);
-        saveSession({ accessToken: response.accessToken, refreshToken: response.refreshToken, user });
+        saveSession({
+            refreshToken: response.refreshToken,
+            user,
+        });
+
         return { user };
     },
 
-    async logout() {
-        const refreshToken = localStorage.getItem('rentamovil_refresh_token');
-        try {
-            await httpClient.post(`${RESOURCE}/logout`, { refreshToken });
-        } catch {
-            // si falla, igual limpiamos la sesión local
+    async refreshSession() {
+        const refreshToken = getStoredRefreshToken();
+
+        if (!refreshToken) {
+            throw new Error("No hay refresh token");
         }
+
+        const response = await httpClient.post(
+            `${RESOURCE}/refresh`,
+            { refreshToken }
+        );
+
+        tokenStore.setAccessToken(response.accessToken);
+        return response;
+    },
+
+    async logout() {
+        const refreshToken = getStoredRefreshToken();
+
+        if (refreshToken) {
+            try {
+                await httpClient.post(`${RESOURCE}/logout`, { refreshToken });
+            } catch {
+                // La sesión local se limpia aunque el servidor no responda.
+            }
+        }
+
         tokenStore.clear();
         clearSession();
     },
@@ -38,10 +79,46 @@ export const authService = {
         return toAuthUserViewModel(response);
     },
 
-    getStoredUser, // re-exportado para que el componente sepa si ya hay sesión al recargar
+    /**
+     * Guarda los cambios del perfil y devuelve el usuario ya actualizado.
+     *
+     * El view model usa firstName / lastName en camelCase, pero el endpoint
+     * espera los nombres de la API (first_name / last_name), asi que se
+     * traducen aqui. El backend ignora lo que no este en su lista blanca.
+     */
+    async updateProfile(changes) {
+        const response = await httpClient.patch(`${RESOURCE}/me`, {
+            first_name: changes.firstName,
+            last_name: changes.lastName,
+            phone: changes.phone,
+            username: changes.username,
+        });
 
-    forgotPassword: (email) => httpClient.post(`${RESOURCE}/forgot-password`, { email }),
-    verifyCode: (email, code) => httpClient.post(`${RESOURCE}/verify-code`, { email, code }),
-    resetPassword: (payload) => httpClient.post(`${RESOURCE}/reset-password`, payload),
-    changePassword: (currentPassword, newPassword) => httpClient.patch(`${RESOURCE}/me/password`, { currentPassword, newPassword }),
+        return toAuthUserViewModel(response);
+    },
+
+    getStoredUser,
+
+    forgotPassword: (email) =>
+        httpClient.post(`${RESOURCE}/forgot-password`, { email }),
+
+    verifyCode: (email, code) =>
+        httpClient.post(`${RESOURCE}/verify-code`, { email, code }),
+
+    resetPassword: (payload) =>
+        httpClient.post(`${RESOURCE}/reset-password`, payload),
+
+    changePassword: (currentPassword, newPassword) =>
+        httpClient.patch(
+            `${RESOURCE}/me/password`,
+            { currentPassword, newPassword }
+        ),
+    async changeEmail(newEmail, currentPassword) {
+        const response = await httpClient.patch(`${RESOURCE}/me/email`, {
+            newEmail,
+            currentPassword,
+        });
+
+        return toAuthUserViewModel(response);
+    },
 };

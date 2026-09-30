@@ -151,13 +151,6 @@ export default function ReservationDetail() {
       <div className="rs-wrapper rd-wrapper">
         <div className="rd-top">
           <div>
-            <nav className="rs-breadcrumb">
-              <span>{t("reservations.breadcrumbAdmin")}</span>
-              <FiChevronRight />
-              <Link to="/reservations">{t("reservations.title")}</Link>
-              <FiChevronRight />
-              <span className="current">#{reservation.id}</span>
-            </nav>
             <div className="rd-title-row">
               <h1 className="rd-title">{t("reservations.detailTitle", { id: reservation.id })}</h1>
               <span className={`rs-status-badge ${meta.className}`}>
@@ -471,7 +464,10 @@ export default function ReservationDetail() {
                   )}
 
                   {trackingAvailable && (
-                    <a className="rd-tracking-row" href="#tracking">
+                    // Antes era un <a href="#tracking"> que no llevaba a ningun
+                    // sitio: el ancla `#tracking` no existe en la pagina. Ahora
+                    // lleva al modulo de ubicacion de la flota.
+                    <Link className="rd-tracking-row" to="/VehicleLocation">
                       <span className="rd-tracking-label">
                         <span className="rd-tracking-icon">
                           <FiMapPin />
@@ -483,7 +479,7 @@ export default function ReservationDetail() {
                           <FaSatelliteDish /> {t("reservations.gpsOnline")}
                         </span>
                       )}
-                    </a>
+                    </Link>
                   )}
                 </>
               )}
