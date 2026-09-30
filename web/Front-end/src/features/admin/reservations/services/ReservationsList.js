@@ -6,8 +6,8 @@ import {
 } from "react-icons/fi";
 import NavBarAdmin from "../../../../shared/components/layout/NavBarAdmin";
 import FooterAdmin from "../../../../shared/components/layout/FooterAdmin";
-import { useReservationsAdmin } from "../../../booking/hooks/useReservationAdmin";
-import { STATUS_ORDER, getTotal, getDisplayStatus, statusMeta, formatDate, formatTime, formatMoney } from "../services/reservationHelpers";
+import { useReservationsAdmin } from "../../../booking/hooks/useReservationsAdmin";
+import { STATUS_ORDER, getTotal, getDisplayStatus, statusMeta, formatDate, formatTime, formatMoney } from "./reservationHelpers";
 import "./Reservations.css";
 
 const PAGE_SIZE = 5;

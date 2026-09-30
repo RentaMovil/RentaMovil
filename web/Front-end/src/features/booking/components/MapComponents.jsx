@@ -11,7 +11,8 @@ import L from "leaflet";
 
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
-import "leaflet/dist/leaflet.css"; // <-- ¡ESTO FALTA!
+import "leaflet/dist/leaflet.css";
+
 const defaultMarkerIcon = L.icon({
     iconUrl: markerIcon,
     shadowUrl: markerShadow,
@@ -32,16 +33,15 @@ function MapFocus({ selectedBranch }) {
     useEffect(() => {
         if (
             selectedBranch &&
-            Number.isFinite(Number(selectedBranch.lat)) &&
-            Number.isFinite(Number(selectedBranch.lng))
+            Number.isFinite(Number(selectedBranch.latitude)) &&
+            Number.isFinite(Number(selectedBranch.longitude))
         ) {
-            map.flyTo([Number(selectedBranch.lat), Number(selectedBranch.lng)], 14, { duration: 0.6 });
+            map.flyTo([Number(selectedBranch.latitude), Number(selectedBranch.longitude)], 14, { duration: 0.6 });
         }
     }, [map, selectedBranch]);
     return null;
 }
 
-// Nuevo: captura el clic del Admin y lo reporta hacia arriba
 function ClickToPick({ onPick }) {
     useMapEvents({
         click(e) {
@@ -65,25 +65,27 @@ function MapComponent({
     const isValidCoordinates = (location) => {
         return (
             location &&
-            Number.isFinite(Number(location.lat)) &&
-            Number.isFinite(Number(location.lng))
+            Number.isFinite(Number(location.latitude)) &&
+            Number.isFinite(Number(location.longitude))
         );
     };
 
     let center = null;
 
     if (mode === "view" && isValidCoordinates(branch)) {
-        center = [Number(branch.lat), Number(branch.lng)];
+        center = [Number(branch.latitude), Number(branch.longitude)];
     }
 
     if (mode === "select" && isValidCoordinates(selectedBranch)) {
-        center = [Number(selectedBranch.lat), Number(selectedBranch.lng)];
+        center = [Number(selectedBranch.latitude), Number(selectedBranch.longitude)];
     }
 
     if (mode === "select" && !center && isValidCoordinates(branches[0])) {
-        center = [Number(branches[0].lat), Number(branches[0].lng)];
+        center = [Number(branches[0].latitude), Number(branches[0].longitude)];
     }
 
+    // mode="pick" sigue usando pickedLat/pickedLng — son props de estado local del formulario,
+    // no vienen de la API, así que su nombre no tiene que coincidir con el resto
     if (mode === "pick" && Number.isFinite(Number(pickedLat)) && Number.isFinite(Number(pickedLng))) {
         center = [Number(pickedLat), Number(pickedLng)];
     }
@@ -115,7 +117,7 @@ function MapComponent({
             {mode === "pick" && <ClickToPick onPick={onPick} />}
 
             {mode === "view" && isValidCoordinates(branch) && (
-                <Marker position={[Number(branch.lat), Number(branch.lng)]} icon={defaultMarkerIcon}>
+                <Marker position={[Number(branch.latitude), Number(branch.longitude)]} icon={defaultMarkerIcon}>
                     <Popup><strong>{branch.name}</strong><br />{branch.address}</Popup>
                 </Marker>
             )}
@@ -124,7 +126,7 @@ function MapComponent({
                 branches.filter(isValidCoordinates).map((b) => (
                     <Marker
                         key={b.id}
-                        position={[Number(b.lat), Number(b.lng)]}
+                        position={[Number(b.latitude), Number(b.longitude)]}
                         icon={b.id === selectedBranch?.id ? selectedMarkerIcon : defaultMarkerIcon}
                         zIndexOffset={b.id === selectedBranch?.id ? 1000 : 0}
                         eventHandlers={{ click: () => setSelectedBranch?.(b) }}

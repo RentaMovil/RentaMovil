@@ -4,7 +4,7 @@ import Footer from "../../../../shared/components/layout/Footer";
 import { useNavigate } from "react-router-dom";
 import "./VehicleInventory.css";
 import { useTranslation } from "react-i18next";
-import { useInventory } from "../hooks/useInventory"; // Importación del hook corregido
+import { useInventory } from "../hooks/useInventory";
 import carro from "../../../../assets/carro.png";
 import car from "../../../../assets/logo.png";
 import { TfiLayoutGrid2Alt } from "react-icons/tfi";
@@ -14,10 +14,8 @@ export default function VehicleInventory() {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  // Integración del Hook del Inventario Asíncrono
   const { inventory, isLoading, error } = useInventory();
 
-  // Estados de búsqueda y filtros
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState({
@@ -58,7 +56,6 @@ export default function VehicleInventory() {
     (v) => v !== null,
   );
 
-  // Arrays de opciones dinámicas basados en la información de la API (inventory)
   const ESTADOS = [
     { value: "Todos", label: t("VehicleInventary.all_m") },
     { value: "Disponible", label: t("VehicleInventary.available") },
@@ -82,7 +79,6 @@ export default function VehicleInventory() {
     })),
   ];
 
-  // Filtrado lógico reactivo a los datos guardados en 'inventory'
   const filtered = inventory.filter(
     (v) =>
       (search === "" ||
@@ -100,7 +96,6 @@ export default function VehicleInventory() {
         (v.tipo || v.type) === selectedFilters.tipo),
   );
 
-  // Estadísticas dinámicas calculadas desde la API
   const stats = {
     total: inventory.length,
     disponible: inventory.filter((v) => v.estado === "Disponible").length,
@@ -113,7 +108,6 @@ export default function VehicleInventory() {
       <NavBarAdmin />
 
       <div className="vi-wrapper">
-        {/* Header */}
         <div className="vi-header">
           <div>
             <h1 className="vi-title">{t("VehicleInventary.title")}</h1>
@@ -127,7 +121,6 @@ export default function VehicleInventory() {
           </button>
         </div>
 
-        {/* Renderizado Condicional: Estado de Carga o Error de la API */}
         {isLoading && (
           <div className="vi-loading-container">
             <p>{t("VehicleInventary.loading") || "Cargando vehículos..."}</p>
@@ -140,10 +133,8 @@ export default function VehicleInventory() {
           </div>
         )}
 
-        {/* Contenido Principal (Solo se procesa si no está cargando) */}
         {!isLoading && !error && (
           <>
-            {/* Stats */}
             <div className="vi-stats">
               <div className="vi-stat">
                 <span className="vi-stat-num">{stats.total}</span>
@@ -163,7 +154,6 @@ export default function VehicleInventory() {
               </div>
             </div>
 
-            {/* Controles de Búsqueda, Filtros y Cambio de Vista */}
             <div className="vi-controls">
               <div className="vi-search-wrap">
                 <input
@@ -192,9 +182,62 @@ export default function VehicleInventory() {
                   <TfiMenu size={18} />
                 </button>
               </div>
-
-              {/* El div 'vi-filters' de tu referencia continúa aquí de forma normal utilizando 'filtered' */}
             </div>
+
+            {/* SECCIÓN RESTAURADA: Renderizado de tarjetas (Grid) o Tabla */}
+            {filtered.length === 0 ? (
+              <div className="vi-empty">
+                <p>No se encontraron vehículos que coincidan con los filtros.</p>
+              </div>
+            ) : vista === "grid" ? (
+              <div className="vi-grid">
+                {filtered.map((v) => (
+                  <div key={v.id || v.placa} className="vi-card">
+                    <div className="vi-card-img-wrap">
+                      <img src={v.imagen || carro} alt={v.modelo || "Vehículo"} className="vi-card-img" />
+                      <span className={`vi-badge ${v.estado ? v.estado.toLowerCase().replace(/\s+/g, '-') : 'disponible'}`}>
+                        {v.estado}
+                      </span>
+                    </div>
+                    <div className="vi-card-body">
+                      <h3 className="vi-card-title">{v.marca} {v.modelo}</h3>
+                      <p className="vi-card-plate">Placa: <strong>{v.placa}</strong></p>
+                      <p className="vi-card-info">Sucursal: {v.sucursal || v.branch || "—"}</p>
+                      <p className="vi-card-info">Tipo: {v.tipo || v.type || "—"}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="vi-table-container">
+                <table className="vi-table">
+                  <thead>
+                    <tr>
+                      <th>Placa</th>
+                      <th>Marca / Modelo</th>
+                      <th>Estado</th>
+                      <th>Sucursal</th>
+                      <th>Tipo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filtered.map((v) => (
+                      <tr key={v.id || v.placa}>
+                        <td><strong>{v.placa}</strong></td>
+                        <td>{v.marca} {v.modelo}</td>
+                        <td>
+                          <span className={`vi-badge ${v.estado ? v.estado.toLowerCase().replace(/\s+/g, '-') : 'disponible'}`}>
+                            {v.estado}
+                          </span>
+                        </td>
+                        <td>{v.sucursal || v.branch || "—"}</td>
+                        <td>{v.tipo || v.type || "—"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </>
         )}
       </div>

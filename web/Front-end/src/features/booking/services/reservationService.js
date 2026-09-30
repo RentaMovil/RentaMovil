@@ -10,4 +10,5 @@ export const reservationService = {
     cancel: (id) => httpClient.patch(`${RESOURCE}/${id}`, { status: 'CANCELLED' }),
     updateReturnBranch: (id, returnBranchId) =>
         httpClient.patch(`${RESOURCE}/${id}`, toUpdateReturnBranchPayload(returnBranchId)),
+      updateStatus: (id, status) => httpClient.patch(`${RESOURCE}/${id}`, { status }),
 };

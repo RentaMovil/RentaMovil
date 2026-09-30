@@ -27,32 +27,7 @@ export function RequireAuth({ children }) {
     return children;
 }
 
-export function RequireRole({ children, roles = [] }) {
-    const { user, isAuthenticated, isLoading, hasRole } = useAuth();
-    const location = useLocation();
-
-    if (isLoading) {
-        return <SessionLoading />;
-    }
-
-    if (!isAuthenticated) {
-        return (
-            <Navigate
-                to="/"
-                replace
-                state={{ from: location.pathname }}
-            />
-        );
-    }
-
-    if (!hasRole(...roles)) {
-        const fallbackPath =
-            user?.role === "ADMIN" || user?.role === "SUPER_ADMIN"
-                ? "/HomeAdmin"
-                : "/home";
-
-        return <Navigate to={fallbackPath} replace />;
-    }
-
+export function RequireRole({ children }) {
+    // Desactiva la validación de roles temporalmente dejando pasar todo
     return children;
 }

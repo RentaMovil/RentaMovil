@@ -10,6 +10,19 @@ export const paymentService = {
             : null;
         return httpClient.post(RESOURCE, toCreatePaymentPayload(paymentData, receiptFileUrl));
     },
+    approve: (id, reviewerId) =>
+        httpClient.patch(`/payments/${id}`, {
+            status: 'APPROVED',
+            reviewed_by: reviewerId,
+            reviewed_at: new Date().toISOString(),
+        }),
+    reject: (id, reviewerId, reason) =>
+        httpClient.patch(`/payments/${id}`, {
+            status: 'REJECTED',
+            reviewed_by: reviewerId,
+            reviewed_at: new Date().toISOString(),
+            rejection_reason: reason,
+        }),
 };
 
 // El comprobante es una imagen/PDF — reutiliza el mismo patrón de subida que ya usamos

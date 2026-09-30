@@ -70,3 +70,77 @@ export function toReservationViewModel(reservation, { vehiclesById = {}, branche
         currency: 'COP',
     };
 }
+
+export function toAdminReservationViewModel(reservation, ctx) {
+    const { vehiclesById = {}, branchesById = {}, insuranceById = {}, usersById = {}, paymentsByReservation = {}, rentalsByReservation = {}, bankAccountsById = {}, gpsById = {} } = ctx;
+
+    const vehicle = vehiclesById[reservation.vehicle_id] || {};
+    const customer = usersById[reservation.client_id] || {};
+    const pickupBranch = branchesById[reservation.pickup_branch_id] || {};
+    const dropoffBranch = branchesById[reservation.return_branch_id] || {};
+    const insurancePlan = insuranceById[reservation.insurance_type_id];
+    const payment = paymentsByReservation[reservation.id];
+    const rental = rentalsByReservation[reservation.id];
+    const bankAccount = payment ? bankAccountsById[payment.bank_account_id] : null;
+    const gps = rental ? gpsById[rental.gps_id] : null;
+
+    const durationDays = Math.max(
+        1,
+        Math.round((new Date(reservation.end_date) - new Date(reservation.start_date)) / (1000 * 60 * 60 * 24))
+    );
+
+    return {
+        id: reservation.id,
+        status: reservation.status,
+        rentalSubtotal: reservation.vehicle_subtotal,
+        durationDays,
+        vehicle: {
+            name: [vehicle.brand, vehicle.model].filter(Boolean).join(' '),
+            plate: vehicle.plate,
+            category: vehicle.vehicleType,
+            fuel: vehicle.fuelType,
+            seats: vehicle.capacity,
+            mileage: vehicle.mileage || 0,
+        },
+        customer: {
+            name: [customer.first_name, customer.last_name].filter(Boolean).join(' '),
+            email: customer.email,
+            phone: customer.phone,
+        },
+        pickup: {
+            date: reservation.start_date,
+            branchName: pickupBranch.name,
+            branchAddress: pickupBranch.address,
+        },
+        dropoff: {
+            date: reservation.end_date,
+            branchName: dropoffBranch.name,
+            branchAddress: dropoffBranch.address,
+        },
+        insurance: {
+            name: insurancePlan?.name || 'Sin seguro',
+            amount: reservation.insurance_subtotal,
+        },
+        payment: payment ? {
+            id: payment.id,
+            amount: payment.amount,
+            bank: bankAccount?.bank_name,
+            reference: payment.reference_number,
+            receivedAt: payment.payment_date,
+            receiptImageUrl: payment.receipt_file_url,
+            uploadedBy: customer.username,
+            rejectionReason: payment.rejection_reason,
+            reviewedBy: payment.reviewed_by,
+            reviewedAt: payment.reviewed_at,
+        } : null,
+        rental: rental ? {
+            id: rental.id,
+            status: rental.status,
+            pickupMileage: rental.initial_mileage,
+            pickupAt: rental.actual_start_date,
+            returnMileage: rental.final_mileage,
+            returnAt: rental.actual_end_date,
+            gpsDevice: gps?.serial || null,
+        } : null,
+    };
+}

@@ -29,12 +29,9 @@ export default function VehicleLocation() {
         refetch,
     } = useVehicleLocations();
 
-    const stats = useMemo(() => {
-        const moving = vehicles.filter((v) => (v.position?.speed ?? 0) > 0).length;
-        const conectados = vehicles.filter((v) => v.device?.connected).length;
-
-        return { moving, stopped: vehicles.length - moving, conectados };
-    }, [vehicles]);
+    const stats = useMemo(() => ({
+        conectados: vehicles.filter((v) => v.device?.connected).length,
+    }), [vehicles]);
 
     const pos = selected?.position ?? null;
 
@@ -225,34 +222,7 @@ export default function VehicleLocation() {
                                                         </dd>
                                                     </div>
 
-                                                    <div className="vl-field">
-                                                        <dt>{t("vehicleLocation.speed")}</dt>
-                                                        <dd className="vl-mono">
-                                                            {pos ? `${pos.speed ?? 0} ${t("vehicleLocation.kmh")}` : "—"}
-                                                        </dd>
-                                                    </div>
 
-                                                    <div className="vl-field">
-                                                        <dt>{t("vehicleLocation.heading")}</dt>
-                                                        <dd className="vl-mono">
-                                                            {pos?.heading != null ? `${pos.heading}°` : "—"}
-                                                        </dd>
-                                                    </div>
-
-                                                    <div className="vl-field">
-                                                        <dt>{t("vehicleLocation.ignition")}</dt>
-                                                        <dd>
-                                                            <span
-                                                                className={`vl-badge ${
-                                                                    pos?.ignition ? "vl-badge--on" : "vl-badge--off"
-                                                                }`}
-                                                            >
-                                                                {pos?.ignition
-                                                                    ? t("vehicleLocation.ignitionOn")
-                                                                    : t("vehicleLocation.ignitionOff")}
-                                                            </span>
-                                                        </dd>
-                                                    </div>
 
                                                     <div className="vl-field">
                                                         <dt>
