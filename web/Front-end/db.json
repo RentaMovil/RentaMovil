@@ -79,6 +79,21 @@
       "branchId": "Uykw9pm",
       "image": "https://res.cloudinary.com/dz6ohgjub/image/upload/v1790192380/images_phxdko.jpg",
       "status": "Disponible"
+    },
+    {
+      "id": "QQQ421",
+      "plate": "QQQ421",
+      "brand": "wfwfrw",
+      "model": "wfwfw",
+      "price": 10000,
+      "mileage": 20000,
+      "year": 1999,
+      "capacity": 2,
+      "vehicleType": "Furgón",
+      "fuelType": "Gas propano",
+      "branchId": "EJHGhRa",
+      "image": "https://res.cloudinary.com/dz6ohgjub/image/upload/v1790725208/images_jchtpj.jpg",
+      "status": "Disponible"
     }
   ],
   "maintenances": [
@@ -148,7 +163,7 @@
       "password_hash": "$2b$12$O2a5DNRv44OFJEc37BlZOudXHwOL1Vp4t4W/jlwn5ENL42kRYzyf.",
       "role": "CLIENT",
       "status": "ACTIVE",
-      "last_login": "2026-09-28T01:15:56.075Z",
+      "last_login": "2026-09-29T22:33:14.343Z",
       "photo": null,
       "registeredAt": "2026-09-02"
     }
@@ -190,6 +205,16 @@
       "refresh_token": "2b0718d2-6fb1-430f-8ba1-aa815a84ccd1",
       "created_at": "2026-09-26T22:49:59.956Z",
       "expires_at": "2026-10-03T22:49:59.956Z",
+      "ip_address": "::ffff:127.0.0.1",
+      "user_agent": "Mozilla/5.0 (X11; Linux x86_64; rv:156.0) Gecko/20100101 Firefox/156.0",
+      "revoked": false
+    },
+    {
+      "id": "6d6328e3-9b48-475c-adf8-459105b555b5",
+      "user_id": "1484bae1-0f1d-4075-8a23-de6a7c5cb713",
+      "refresh_token": "ce33b621-210f-425f-8cf9-8885499b1859",
+      "created_at": "2026-09-29T22:33:14.346Z",
+      "expires_at": "2026-10-06T22:33:14.346Z",
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (X11; Linux x86_64; rv:156.0) Gecko/20100101 Firefox/156.0",
       "revoked": false

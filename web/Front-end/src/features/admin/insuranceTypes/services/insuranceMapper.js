@@ -20,6 +20,5 @@ export function toInsuranceViewModel(insurance) {
         name: insurance.name,
         description: insurance.coverage_details,
         price: Number(insurance.daily_cost) || 0,
-        tag: insurance.tag ?? null,
     };
 }

@@ -3,22 +3,23 @@ import { useMemo, useState } from "react";
 import { usePayment } from "../context/PaymentContext";
 import { useReservation } from "../../booking/context/ReservationContext";
 
-import { insurance } from "../../Insurance/data/mocks/insurance";
 
 import { calculateDays } from "../utils/calculateDays";
 import { calculateInvoiceTotal } from "../utils/calculateIvoiceTotal";
 
-import { buildReservationRequest } from "../../booking/utils/buildReservationRequest";
 import { isValidTermsAcceptance } from "../../booking/data/rentalTerms";
-import { createReservation } from "../../booking/services/reservationServices";
-import { createPayment } from "../services/PaymentServices";
 
 import { validatePayment } from "../validators/paymentValidator";
+
+import { useInsurance } from "../../admin/insuranceTypes/hooks/useInsurance";
+import { reservationService } from "../../booking/services/reservationService";
+import { paymentService } from "../services/paymentService";
+import { getStoredUser } from "../../auth/services/sessionStorage";
 
 export function usePaymentForm() {
     const { payment, markAsPendingReview } = usePayment();
     const { reservation } = useReservation();
-
+    const { insurance } = useInsurance();
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentErrors, setPaymentErrors] = useState({});
 
@@ -175,41 +176,23 @@ export function usePaymentForm() {
      * Crea una Reservation en PENDING_PAYMENT.
      */
     async function createPendingReservation() {
-        if (
-            !canCreateReservation ||
-            isProcessing
-        ) {
-            return null;
-        }
+        if (!canCreateReservation || isProcessing) return null;
 
         try {
             setIsProcessing(true);
+            const user = getStoredUser();
 
-            const reservationRequest =
-                buildReservationRequest(
-                    reservation,
-                    vehicleSubtotal,
-                    insuranceSubtotal,
-                    totalAmount
-                );
-
-            const reservationResponse =
-                await createReservation(
-                    reservationRequest
-                );
-
-            console.log(
-                "Reserva creada en PENDING_PAYMENT:",
-                reservationResponse
+            const reservationResponse = await reservationService.create(
+                reservation,
+                vehicleSubtotal,
+                insuranceSubtotal,
+                totalAmount,
+                user?.id
             );
 
             return reservationResponse;
         } catch (error) {
-            console.error(
-                "Error creando la reserva:",
-                error
-            );
-
+            console.error("Error creando la reserva:", error);
             throw error;
         } finally {
             setIsProcessing(false);
@@ -220,65 +203,28 @@ export function usePaymentForm() {
      * Registra el Payment después de crear
      * correctamente la Reservation.
      */
-    async function submitPayment(
-        reservationResponse
-    ) {
-        if (
-            !reservationResponse ||
-            !canSubmitPayment ||
-            isProcessing
-        ) {
-            return null;
-        }
+    async function submitPayment(reservationResponse) {
+        if (!reservationResponse || !canSubmitPayment || isProcessing) return null;
 
-        const reservationId =
-            reservationResponse.reservationId ??
-            reservationResponse.id;
+        const reservationId = reservationResponse.id; // el backend/mock devuelve `id`, no `reservationId`
 
         if (!reservationId) {
-            throw new Error(
-                "No se recibió el ID de la reserva."
-            );
+            throw new Error("No se recibió el ID de la reserva.");
         }
 
         const paymentData = {
             reservationId,
-
-            bankAccountId:
-                payment.bankAccountId,
-
-            amount:
-                totalAmount,
-
-            referenceNumber:
-                payment.referenceNumber?.trim() ||
-                null,
-
-            receiptFile:
-                payment.receiptFile,
+            bankAccountId: payment.bankAccountId,
+            amount: totalAmount,
+            referenceNumber: payment.referenceNumber?.trim() || null,
+            receiptFile: payment.receiptFile,
         };
 
-        const paymentResponse =
-            await createPayment(
-                paymentData
-            );
-
-        console.log(
-            "Payment enviado a revisión:",
-            paymentResponse
-        );
-
-        /**
-         * El pago fue enviado.
-         *
-         * PENDING_REVIEW NO significa APPROVED.
-         * El Admin debe revisar posteriormente
-         * el comprobante.
-         */
+        const paymentResponse = await paymentService.create(paymentData);
         markAsPendingReview();
-
         return paymentResponse;
     }
+
 
     /**
      * Flujo completo:
@@ -294,63 +240,33 @@ export function usePaymentForm() {
      */
     async function handlePayment() {
         setPaymentErrors({});
-
-        if (
-            !canSubmit ||
-            isProcessing
-        ) {
-            setPaymentErrors(
-                paymentValidation.errors
-            );
-
+        if (!canSubmit || isProcessing) {
+            setPaymentErrors(paymentValidation.errors);
             return null;
         }
 
         try {
             setIsProcessing(true);
+            const user = getStoredUser();
 
-            const reservationRequest =
-                buildReservationRequest(
-                    reservation,
-                    vehicleSubtotal,
-                    insuranceSubtotal,
-                    totalAmount
-                );
-
-            const reservationResponse =
-                await createReservation(
-                    reservationRequest
-                );
-
-            console.log(
-                "Reserva creada:",
-                reservationResponse
+            const reservationResponse = await reservationService.create(
+                reservation,
+                vehicleSubtotal,
+                insuranceSubtotal,
+                totalAmount,
+                user?.id
             );
 
-            const paymentResponse =
-                await submitPayment(
-                    reservationResponse
-                );
+            const paymentResponse = await submitPayment(reservationResponse);
 
-            return {
-                reservation:
-                    reservationResponse,
-
-                payment:
-                    paymentResponse,
-            };
+            return { reservation: reservationResponse, payment: paymentResponse };
         } catch (error) {
-            console.error(
-                "Error en el proceso de reserva y pago:",
-                error
-            );
-
+            console.error("Error en el proceso de reserva y pago:", error);
             throw error;
         } finally {
             setIsProcessing(false);
         }
     }
-
     return {
         // Información de la reserva
         days,

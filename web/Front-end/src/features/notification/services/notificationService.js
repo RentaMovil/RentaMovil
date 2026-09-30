@@ -1,4 +1,4 @@
-import { useCars } from "../../vehicles/hooks/useVehicles.js";
+import { useCars } from "../../vehicles/hooks/useCars.js";
 import { notificationsMock } from "../data/mocks/notificationsMock.js";
 import { attachVehicleToNotifications } from "../utils/notificationsUtils.js";
 

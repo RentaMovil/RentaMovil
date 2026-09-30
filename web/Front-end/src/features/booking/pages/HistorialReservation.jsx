@@ -4,41 +4,60 @@ import Navbar from "../../../shared/components/layout/Navbar.jsx";
 import Footer from "../../../shared/components/layout/Footer.jsx";
 import ReservationDetailModal from "../components/HistoryReservationDetail.jsx";
 import { useTranslation } from "react-i18next";
-import { useReservations } from "../hooks/useReservations.js";
-import { getBranchById } from "../../../shared/mocks/branches.js";
-
+import { useReservationsList } from "../hooks/useReservationsList.js";
+import { useCancelReservation } from "../hooks/useCancelReservation.js";
+import { useUpdateReturnBranch } from "../hooks/useUpdateReturnBranch.js";
+import { useBranches } from "../../admin/branches/hooks/useBranch.js";
 function HistorialReservation() {
   const { t } = useTranslation();
-  
-  const {
-    reservas,
-    selectedReserva,
-    showCancelModal,
-    setSelectedReserva,
-    setShowCancelModal,
-    handleCancelReservation,
-    handleUpdateReturnBranch,
-  } = useReservations();
 
+  const { reservations: reservas, isLoading, error, refetch } = useReservationsList();
+  const { cancelReservation } = useCancelReservation();
+  const { updateReturnBranch } = useUpdateReturnBranch();
+  const { branches } = useBranches();
+
+  const getBranchById = (id) => branches.find((b) => b.id === id);
+
+  const [selectedReserva, setSelectedReserva] = useState(null);
+  const [showCancelModal, setShowCancelModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+
+  const handleCancelReservation = async (id) => {
+    await cancelReservation(id);
+    await refetch();
+    setShowCancelModal(false);
+    setSelectedReserva(null);
+  };
+
+  const handleUpdateReturnBranch = async (id, returnBranchId) => {
+    await updateReturnBranch(id, returnBranchId);
+    await refetch();
+
+    setSelectedReserva((prev) =>
+      prev && prev.id === id ? { ...prev, returnBranchId } : prev
+    );
+  };
 
   return (
     <>
       <Navbar />
       <div className="historial-page">
         <div className="cards-container">
-          
+
           <h2 className="title">
             {t("historyReservation.myReservations", "Mis Reservas")}
           </h2>
 
-          {reservas.map((r) => {
+          {isLoading && <p className="title">Cargando reservas...</p>}
+          {!isLoading && error && <p className="title">{error}</p>}
+
+          {!isLoading && !error && reservas.map((r) => {
             const pickUpBranch = getBranchById(r.pickupBranchId);
             const returnBranch = getBranchById(r.returnBranchId);
 
             return (
             <article key={r.id} className="reserva-card">
-              
+
               {/* Barra superior de metadatos de la reserva */}
               <header className="reserva-header">
                 <div className="reserva-meta">
@@ -54,14 +73,14 @@ function HistorialReservation() {
 
               {/* El contenedor del cuerpo de la tarjeta */}
               <div className="reserva-body">
-                
+
                 {/* COLUMNA 1: Vehículo */}
                 <section className="reserva-vehiculo">
                   <div className="vehiculo-imagen-wrapper">
                     <img src={r.vehicle.img} alt={`${r.vehicle.brand} ${r.vehicle.model}`} />
                     <span className="vehiculo-placa">{r.vehicle.plate}</span>
                   </div>
-                  
+
                   <div className="vehiculo-info">
                     <span className="vehiculo-categoria">{r.vehicle.category?.toUpperCase()}</span>
                     <h4 className="titulo-card">{r.vehicle.brand} {r.vehicle.model}</h4>
@@ -79,20 +98,20 @@ function HistorialReservation() {
                     <span className="tiempo-fecha">{r.tiempos.start_date.split(' ').slice(0, 3).join(' ')}</span>
                     <span className="tiempo-hora">{r.tiempos.start_date.split(' ').slice(3).join(' ')}</span>
                   </div>
-                  
+
                   <div className="tiempo-bloque">
                     <span className="tiempo-label">{t("historyReservation.return", "DEVOLUCIÓN")}</span>
                     <span className="tiempo-fecha">{r.tiempos.end_date.split(' ').slice(0, 3).join(' ')}</span>
                     <span className="tiempo-hora">{r.tiempos.end_date.split(' ').slice(3).join(' ')}</span>
                   </div>
-                  
+
                   <div className="tiempo-duracion">
                     <span className="tiempo-label">{t("historyReservation.duration", "Duración:")}</span>
                     <span className="badge-duracion">{r.tiempos.days} {t("historyReservation.days", "Días")}</span>
                   </div>
                 </section>
 
-                {/* COLUMNA 3: Precios y BOTONES (Aquí adentro se acomodan perfecto) */}
+                {/* COLUMNA 3: Precios y BOTONES */}
                 <section className="reserva-acciones">
                   <div className="facturacion-resumen">
                     <span className="facturacion-label">{t("historyReservation.totalAmount", "MONTO FACTURADO")}</span>
@@ -105,9 +124,8 @@ function HistorialReservation() {
                     )}
                   </div>
 
-                  {/* Caja contenedora estricta de botones */}
                   <div className="acciones-botones">
-                    <button 
+                    <button
                       className="btn btn-primario"
                       onClick={() => {
                         setSelectedReserva(r);
@@ -116,7 +134,7 @@ function HistorialReservation() {
                     >
                       {t("historyReservation.details", "Ver Detalles")}
                     </button>
-                    
+
                     {r.status === "activa" && (
                       <button
                         className="btn btn-secundario"
@@ -159,9 +177,9 @@ function HistorialReservation() {
       )}
 
       {/* COMPONENTE MODAL DE DESGLOSE FINANCIERO */}
-      <ReservationDetailModal 
-        isOpen={showDetailsModal} 
-        reserva={selectedReserva} 
+      <ReservationDetailModal
+        isOpen={showDetailsModal}
+        reserva={selectedReserva}
         onClose={() => setShowDetailsModal(false)}
         onUpdateReturnBranch={handleUpdateReturnBranch}
       />

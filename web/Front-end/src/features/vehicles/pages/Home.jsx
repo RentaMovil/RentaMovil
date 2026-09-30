@@ -15,7 +15,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ProcessSteps from "../components/CardsInfo.jsx";
 import FilterCalendar from "../components/FilterCalendar.jsx";
 import { useState, useEffect, useRef } from "react";
-import { useCars } from "../hooks/useVehicles.js";
+import { useCars } from "../hooks/useCars.js";
 import { useIsMobile } from "../../../shared/hooks/useIsMobile.js";
 import { FaSearch, FaBars } from "react-icons/fa";
 import { filterAvailableVehicles } from "../utils/filterAvilableCars.js";
@@ -77,7 +77,7 @@ function Home() {
 
   const visibleCars = filterVehicles(carsFiltered, {
     brand: brandFilter,
-    type: typeFilter,
+    type: typeFilter,  
     category: categoryFilter,
     model: modelFilter,
     price: priceFilter

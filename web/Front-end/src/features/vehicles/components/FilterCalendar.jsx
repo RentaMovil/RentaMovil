@@ -186,9 +186,15 @@ const FilterCalendar = forwardRef(
     }
 
     try {
-      // 2. Llamamos al servicio de manera asíncrona usando await
-      const filtradas = await branchService.searchBranches(inputValue);
-      setSugerencias(filtradas);
+      const listaSucursales = branches || [];
+
+      // Filtramos localmente comparando el nombre, ciudad o dirección de la sucursal
+      const filtradas = listaSucursales.filter((branch) =>
+        branch.name?.toLowerCase().includes(inputValue.toLowerCase()) ||
+        branch.city?.toLowerCase().includes(inputValue.toLowerCase()) ||
+        branch.address?.toLowerCase().includes(inputValue.toLowerCase())
+      );
+      setSugerencias(filtradas)
     } catch (error) {
       console.error("Error al obtener las sucursales:", error);
       // Aquí puedes gestionar un estado de error visual si lo deseas

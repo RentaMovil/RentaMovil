@@ -9,9 +9,8 @@ import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 import Navbar from "../../../shared/components/layout/Navbar";
 import Footer from "../../../shared/components/layout/Footer";
-import { branches } from "../../../shared/mocks/branches";
 import { useIsMobile } from "../../../shared/hooks/useIsMobile";
-
+import { useBranches } from "../../admin/branches/hooks/useBranch";
 import FilterCalendar from "../../vehicles/components/FilterCalendar";
 import MapComponent from "../components/MapComponents";
 import { useReservationForm } from "../hooks/useReservationForm";
@@ -20,7 +19,7 @@ import VehicleReservationCard from "../components/VehicleReservationCard";
 import TermsAndConditions from "../components/TermsAndConditions";
 
 import { useReservation } from "../context/ReservationContext";
-import { insurance } from "./../data/mocks/insurance";
+import { useInsurance } from "../../admin/insuranceTypes/hooks/useInsurance";
 import {
     createTermsAcceptance,
     isValidTermsAcceptance,
@@ -65,6 +64,9 @@ function Reservation() {
         null;
 
     const isMobile = useIsMobile(768);
+
+    const { branches } = useBranches();
+    const { insurance } = useInsurance();
 
     const {
         reservation,
@@ -367,9 +369,7 @@ function Reservation() {
                                     {t("reservation.total")} ${reservationTotal}
                                 </h4>
 
-                                <InsuranceSelector
-                                    options={insurance}
-                                />
+                                <InsuranceSelector />
 
                                 <TermsAndConditions
                                     accepted={termsAccepted}

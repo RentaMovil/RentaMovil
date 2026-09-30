@@ -17,8 +17,15 @@ export  function useCars() {
                 carsService.getAll(),
                 branchService.getAll(),
             ]);
-            const branchesById = Object.fromEntries(branchesResponse.map((b) => [b.id, b]));
-            setCars(vehiclesResponse.map((v) => toClientVehicleViewModel(v, branchesById))); // <- esto faltaba
+
+            // 1. Blindamos branchesResponse asegurando que sea un array antes de mapear
+            const safeBranches = Array.isArray(branchesResponse) ? branchesResponse : [];
+            const branchesById = Object.fromEntries(safeBranches.map((b) => [b.id, b]));
+
+            // 2. Blindamos vehiclesResponse usando encadenamiento opcional y fallback a []
+            const safeVehicles = Array.isArray(vehiclesResponse) ? vehiclesResponse : [];
+            setCars(safeVehicles.map((v) => toClientVehicleViewModel(v, branchesById)));
+
         } catch (err) {
             setError(err.message || "No fue posible cargar los vehículos.");
         } finally {

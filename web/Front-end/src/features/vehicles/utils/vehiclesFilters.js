@@ -11,6 +11,8 @@ export const filterVehicles = (cars, { brand, type, category, model, price }) =>
         );
 };
 export function filterAvailableByBranch(cars, branch) {
+    console.log('branch seleccionado:', branch);
+    console.log('cars disponibles:', cars.map(c => ({ id: c.id, status: c.status, branchId: c.branchId })));
     return cars.filter(
         (car) => car.status === VEHICLE_STATUS.AVAILABLE && car.branchId === branch?.id
     );

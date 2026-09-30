@@ -9,7 +9,7 @@ import { useBranches } from "../hooks/useBranch";
 import { useCreateBranch } from "../hooks/useCreateBranch";
 import { useUpdateBranch } from "../hooks/useUpdateBranch";
 import { useDeleteBranch } from "../hooks/useDeleteBranch";
-import { useCars } from "../../../vehicles/hooks/useVehicles";
+import { useCars } from "../../../vehicles/hooks/useCars";
 import "./Branches.css";
 
 function formatHour(time) {
@@ -74,11 +74,16 @@ export default function Branches() {
 
   // El conteo real de vehículos por sucursal, cruzando con /vehicles en vez de un campo fijo
   const branchesWithCount = useMemo(
-    () =>
-      branches.map((branch) => ({
+    () => {
+      // Aseguramos que branches y cars sean arreglos válidos antes de operar
+      const listaBranches = branches || [];
+      const listaCars = cars || [];
+
+      return listaBranches.map((branch) => ({
         ...branch,
-        vehiclesAssigned: cars.filter((car) => car.branchId === branch.id).length,
-      })),
+        vehiclesAssigned: listaCars.filter((car) => car?.branchId?.toString() === branch.id?.toString()).length
+      }));
+    },
     [branches, cars]
   );
 
@@ -97,7 +102,15 @@ export default function Branches() {
 
   const openCreateModal = () => {
     setFormError(null);
-    setScheduleDraft( formatSchedule);
+    setScheduleDraft([
+    { id: "mon", open: "08:00", close: "18:00", closed: false },
+    { id: "tue", open: "08:00", close: "18:00", closed: false },
+    { id: "wed", open: "08:00", close: "18:00", closed: false },
+    { id: "thu", open: "08:00", close: "18:00", closed: false },
+    { id: "fri", open: "08:00", close: "18:00", closed: false },
+    { id: "sat", open: "08:00", close: "14:00", closed: false },
+    { id: "sun", open: "00:00", close: "00:00", closed: true },
+  ]);
     setEditingItem(null);
   };
 
