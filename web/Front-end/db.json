@@ -132,10 +132,10 @@
       "plate": "ABC111",
       "brand": "Renault",
       "model": "ix2020",
-      "date": "2026-09-26",
+      "date": "2026-10-01",
       "cost": 100000,
       "maintenanceType": "calibracion de llantas",
-      "observations": "no tiene llantas",
+      "observations": "no tiene llantass",
       "image": "https://res.cloudinary.com/dz6ohgjub/image/upload/v1790185034/278294_rcdeps.jpg",
       "status": "PENDIENTE",
       "id": 1
@@ -163,7 +163,7 @@
       "phone": "3001234567",
       "username": "nox",
       "password_hash": "$2a$12$reemplazaEsteHashGenerado",
-      "role": "ADMIN",
+      "role": "CLIENT",
       "status": "ACTIVE",
       "last_login": null,
       "photo": null,
@@ -177,9 +177,9 @@
       "phone": "3213547890",
       "username": "juaniti21",
       "password_hash": "$2b$12$arElmp4QqkZ1CiUZsjXEG./ffvutC7Wo4RgHAwgu9z13eEhYqaL2.",
-      "role": "CLIENT",
+      "role": "ADMIN",
       "status": "ACTIVE",
-      "last_login": "2026-09-30T04:59:52.481Z",
+      "last_login": "2026-09-30T15:28:01.623Z",
       "photo": null,
       "registeredAt": "2026-08-14"
     },
@@ -191,7 +191,7 @@
       "phone": "3112012020",
       "username": "FernandoZZZ",
       "password_hash": "$2b$12$O2a5DNRv44OFJEc37BlZOudXHwOL1Vp4t4W/jlwn5ENL42kRYzyf.",
-      "role": "CLIENT",
+      "role": "SUPER_ADMIN",
       "status": "ACTIVE",
       "last_login": "2026-09-29T22:33:14.343Z",
       "photo": null,
@@ -258,13 +258,23 @@
       "ip_address": "::ffff:127.0.0.1",
       "user_agent": "Mozilla/5.0 (X11; Linux x86_64; rv:156.0) Gecko/20100101 Firefox/156.0",
       "revoked": false
+    },
+    {
+      "id": "4ec9ff2e-fa91-4eac-b86d-bba0db77d068",
+      "user_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
+      "refresh_token": "8fda8625-ddd4-40c9-a19a-5def66fbc016",
+      "created_at": "2026-09-30T15:28:01.625Z",
+      "expires_at": "2026-10-07T15:28:01.625Z",
+      "ip_address": "::ffff:127.0.0.1",
+      "user_agent": "Mozilla/5.0 (X11; Linux x86_64; rv:156.0) Gecko/20100101 Firefox/156.0",
+      "revoked": false
     }
   ],
   "verificationCodes": [],
   "branches": [
     {
       "id": "1",
-      "name": "Neiva Centro",
+      "name": "Neiva Centros",
       "city": "Neiva",
       "phone": "6081234567",
       "address": "Calle 10 # 5-20",
@@ -440,7 +450,7 @@
   "insuranceTypes": [
     {
       "name": "Creando nuevo ",
-      "coverage_details": "este es este es okpkpkpk",
+      "coverage_details": "este es este es okpkpkpkw",
       "daily_cost": 10000,
       "id": 1
     }
@@ -453,6 +463,14 @@
       "qr_image_url": "https://res.cloudinary.com/dz6ohgjub/image/upload/v1790466257/images_gljlwr.jpg",
       "is_active": true,
       "id": 1
+    },
+    {
+      "bank_name": "new ae",
+      "account_holder": "eqeeqe",
+      "account_number": "3433343",
+      "qr_image_url": "https://res.cloudinary.com/dz6ohgjub/image/upload/v1790782485/278294_sko845.jpg",
+      "is_active": true,
+      "id": 2
     }
   ],
   "reservations": [
@@ -577,13 +595,13 @@
       "id": "2",
       "gps_id": "1",
       "latitude": 4.6183,
-      "longitude": -74.0850,
+      "longitude": -74.085,
       "timestamp": "2026-09-28T14:11:00Z"
     },
     {
       "id": "3",
       "gps_id": "1",
-      "latitude": 4.6270,
+      "latitude": 4.627,
       "longitude": -74.0885,
       "timestamp": "2026-09-28T14:17:00Z"
     }
