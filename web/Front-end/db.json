@@ -94,6 +94,36 @@
       "branchId": "EJHGhRa",
       "image": "https://res.cloudinary.com/dz6ohgjub/image/upload/v1790725208/images_jchtpj.jpg",
       "status": "Disponible"
+    },
+    {
+      "id": "ABC122",
+      "plate": "ABC122",
+      "brand": "cda",
+      "model": "vava",
+      "price": 10000,
+      "mileage": 1000,
+      "year": 2026,
+      "capacity": 2,
+      "vehicleType": "Hatchback",
+      "fuelType": "Gasolina",
+      "branchId": "EJHGhRa",
+      "image": "https://res.cloudinary.com/dz6ohgjub/image/upload/v1790728457/ChatGPT_Image_Aug_15_2026_02_48_06_PM_chjadd.png",
+      "status": "Disponible"
+    },
+    {
+      "id": "QQQ443",
+      "plate": "QQQ443",
+      "brand": "efr4fwr",
+      "model": "rfwfwwf",
+      "price": 100000,
+      "mileage": 1000,
+      "year": 2025,
+      "capacity": 3,
+      "vehicleType": "Hatchback",
+      "fuelType": "Gasolina",
+      "branchId": "vrxq5nq",
+      "image": "https://res.cloudinary.com/dz6ohgjub/image/upload/v1790728530/images_uanz6h.jpg",
+      "status": "Disponible"
     }
   ],
   "maintenances": [
@@ -235,7 +265,9 @@
           "close": "18:00",
           "closed": false
         }
-      ]
+      ],
+      "latitude": 2.9303217917862185,
+      "longitude": -75.26617026189342
     },
     {
       "name": "federi",
@@ -286,7 +318,9 @@
           "closed": true
         }
       ],
-      "id": "EJHGhRa"
+      "id": "EJHGhRa",
+      "latitude": 3.2197496410787494,
+      "longitude": -75.2377378640813
     },
     {
       "name": "new",
@@ -338,6 +372,59 @@
         }
       ],
       "id": "Uykw9pm"
+    },
+    {
+      "name": "perro",
+      "city": "neiva",
+      "phone": "3127899012",
+      "address": "calle 100 #30 32",
+      "latitude": 2.9276355861947594,
+      "longitude": -75.28717035020237,
+      "schedule": [
+        {
+          "id": "mon",
+          "open": "08:00",
+          "close": "18:00",
+          "closed": false
+        },
+        {
+          "id": "tue",
+          "open": "08:00",
+          "close": "18:00",
+          "closed": false
+        },
+        {
+          "id": "wed",
+          "open": "08:00",
+          "close": "18:00",
+          "closed": false
+        },
+        {
+          "id": "thu",
+          "open": "08:00",
+          "close": "18:00",
+          "closed": false
+        },
+        {
+          "id": "fri",
+          "open": "08:00",
+          "close": "18:00",
+          "closed": false
+        },
+        {
+          "id": "sat",
+          "open": "08:00",
+          "close": "14:00",
+          "closed": false
+        },
+        {
+          "id": "sun",
+          "open": "00:00",
+          "close": "00:00",
+          "closed": true
+        }
+      ],
+      "id": "vrxq5nq"
     }
   ],
   "insuranceTypes": [

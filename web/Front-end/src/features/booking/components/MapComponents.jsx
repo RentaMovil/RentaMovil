@@ -4,13 +4,14 @@ import {
     TileLayer,
     Marker,
     Popup,
-    useMap
+    useMap,
+    useMapEvents
 } from "react-leaflet";
 import L from "leaflet";
 
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
-
+import "leaflet/dist/leaflet.css"; // <-- ¡ESTO FALTA!
 const defaultMarkerIcon = L.icon({
     iconUrl: markerIcon,
     shadowUrl: markerShadow,
@@ -28,24 +29,25 @@ const selectedMarkerIcon = L.divIcon({
 
 function MapFocus({ selectedBranch }) {
     const map = useMap();
-
     useEffect(() => {
         if (
             selectedBranch &&
             Number.isFinite(Number(selectedBranch.lat)) &&
             Number.isFinite(Number(selectedBranch.lng))
         ) {
-            map.flyTo(
-                [
-                    Number(selectedBranch.lat),
-                    Number(selectedBranch.lng)
-                ],
-                14,
-                { duration: 0.6 }
-            );
+            map.flyTo([Number(selectedBranch.lat), Number(selectedBranch.lng)], 14, { duration: 0.6 });
         }
     }, [map, selectedBranch]);
+    return null;
+}
 
+// Nuevo: captura el clic del Admin y lo reporta hacia arriba
+function ClickToPick({ onPick }) {
+    useMapEvents({
+        click(e) {
+            onPick({ lat: e.latlng.lat, lng: e.latlng.lng });
+        },
+    });
     return null;
 }
 
@@ -54,7 +56,10 @@ function MapComponent({
     branch,
     branches = [],
     selectedBranch,
-    setSelectedBranch
+    setSelectedBranch,
+    pickedLat,
+    pickedLng,
+    onPick,
 }) {
 
     const isValidCoordinates = (location) => {
@@ -68,47 +73,28 @@ function MapComponent({
     let center = null;
 
     if (mode === "view" && isValidCoordinates(branch)) {
-        center = [
-            Number(branch.lat),
-            Number(branch.lng)
-        ];
+        center = [Number(branch.lat), Number(branch.lng)];
     }
 
-    if (
-        mode === "select" &&
-        isValidCoordinates(selectedBranch)
-    ) {
-        center = [
-            Number(selectedBranch.lat),
-            Number(selectedBranch.lng)
-        ];
+    if (mode === "select" && isValidCoordinates(selectedBranch)) {
+        center = [Number(selectedBranch.lat), Number(selectedBranch.lng)];
     }
 
-    if (
-        mode === "select" &&
-        !center &&
-        isValidCoordinates(branches[0])
-    ) {
-        center = [
-            Number(branches[0].lat),
-            Number(branches[0].lng)
-        ];
+    if (mode === "select" && !center && isValidCoordinates(branches[0])) {
+        center = [Number(branches[0].lat), Number(branches[0].lng)];
     }
 
-    // Todavía no tenemos coordenadas válidas
+    if (mode === "pick" && Number.isFinite(Number(pickedLat)) && Number.isFinite(Number(pickedLng))) {
+        center = [Number(pickedLat), Number(pickedLng)];
+    }
+
     if (!center) {
         return (
-            <div
-                style={{
-                    height: "250px",
-                    width: "100%",
-                    borderRadius: "10px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    background: "#f5f5f5"
-                }}
-            >
+            <div style={{
+                height: "250px", width: "100%", borderRadius: "10px",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                background: "#f5f5f5"
+            }}>
                 No hay ubicación disponible
             </div>
         );
@@ -117,70 +103,39 @@ function MapComponent({
     return (
         <MapContainer
             center={center}
-            zoom={13}
-            style={{
-                height: "250px",
-                width: "100%",
-                borderRadius: "10px"
-            }}
+            zoom={mode === "pick" ? 15 : 13}
+            style={{ height: "250px", width: "100%", borderRadius: "10px" }}
         >
             <TileLayer
                 attribution="&copy; OpenStreetMap"
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
 
-            {mode === "select" && (
-                <MapFocus selectedBranch={selectedBranch} />
-            )}
+            {mode === "select" && <MapFocus selectedBranch={selectedBranch} />}
+            {mode === "pick" && <ClickToPick onPick={onPick} />}
 
             {mode === "view" && isValidCoordinates(branch) && (
-                <Marker
-                    position={[
-                        Number(branch.lat),
-                        Number(branch.lng)
-                    ]}
-                    icon={defaultMarkerIcon}
-                >
-                    <Popup>
-                        <strong>{branch.name}</strong>
-                        <br />
-                        {branch.address}
-                    </Popup>
+                <Marker position={[Number(branch.lat), Number(branch.lng)]} icon={defaultMarkerIcon}>
+                    <Popup><strong>{branch.name}</strong><br />{branch.address}</Popup>
                 </Marker>
             )}
 
             {mode === "select" &&
-                branches
-                    .filter(isValidCoordinates)
-                    .map((branch) => (
-                        <Marker
-                            key={branch.id}
-                            position={[
-                                Number(branch.lat),
-                                Number(branch.lng)
-                            ]}
-                            icon={
-                                branch.id === selectedBranch?.id
-                                    ? selectedMarkerIcon
-                                    : defaultMarkerIcon
-                            }
-                            zIndexOffset={
-                                branch.id === selectedBranch?.id
-                                    ? 1000
-                                    : 0
-                            }
-                            eventHandlers={{
-                                click: () =>
-                                    setSelectedBranch?.(branch)
-                            }}
-                        >
-                            <Popup>
-                                <strong>{branch.name}</strong>
-                                <br />
-                                {branch.address}
-                            </Popup>
-                        </Marker>
-                    ))}
+                branches.filter(isValidCoordinates).map((b) => (
+                    <Marker
+                        key={b.id}
+                        position={[Number(b.lat), Number(b.lng)]}
+                        icon={b.id === selectedBranch?.id ? selectedMarkerIcon : defaultMarkerIcon}
+                        zIndexOffset={b.id === selectedBranch?.id ? 1000 : 0}
+                        eventHandlers={{ click: () => setSelectedBranch?.(b) }}
+                    >
+                        <Popup><strong>{b.name}</strong><br />{b.address}</Popup>
+                    </Marker>
+                ))}
+
+            {mode === "pick" && (
+                <Marker position={center} icon={defaultMarkerIcon} />
+            )}
         </MapContainer>
     );
 }

@@ -4,6 +4,8 @@ export function toCreateBranchPayload(formData) {
         city: formData.city,
         phone: formData.phone,
         address: formData.address,
+        latitude: formData.latitude,
+        longitude: formData.longitude,
         schedule: formData.schedule,
     };
 }
@@ -14,6 +16,8 @@ export function toUpdateBranchPayload(formData) {
         city: formData.city,
         phone: formData.phone,
         address: formData.address,
+        latitude: formData.latitude,
+        longitude: formData.longitude,
         schedule: formData.schedule,
     };
 }
@@ -25,6 +29,8 @@ export function toBranchViewModel(branch) {
         city: branch.city,
         phone: branch.phone,
         address: branch.address,
+        latitude: branch.latitude ?? null,
+        longitude: branch.longitude ?? null,
         schedule: branch.schedule || [],
     };
 }

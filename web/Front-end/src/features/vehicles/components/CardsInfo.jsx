@@ -121,11 +121,11 @@ export const ProcessSteps = () => {
                                     ))}
                                 </div>
 
-                                {selectedBranch && (
+                                {selectedBranch?.latitude != null && selectedBranch?.longitude != null && (
                                     <div className="branches-map" aria-label="Mapa de sucursales">
                                         <MapComponent
                                             mode="select"
-                                            branches={branches}
+                                            branches={branches.filter(b => b.latitude != null && b.longitude != null)}
                                             selectedBranch={selectedBranch}
                                             setSelectedBranch={setSelectedBranch}
                                         />

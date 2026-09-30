@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {FiSearch,FiPlus,FiEdit2,FiTrash2,FiX,FiAlertCircle,} from "react-icons/fi";
+import { FiSearch, FiPlus, FiEdit2, FiTrash2, FiX, FiAlertCircle, } from "react-icons/fi";
 
 import { FaBuilding, FaCar } from "react-icons/fa";
 import NavBarAdmin from "../../../../shared/components/layout/NavBarAdmin";
@@ -11,7 +11,7 @@ import { useUpdateBranch } from "../hooks/useUpdateBranch";
 import { useDeleteBranch } from "../hooks/useDeleteBranch";
 import { useCars } from "../../../vehicles/hooks/useCars";
 import "./Branches.css";
-
+import MapComponent from "../../../booking/components/MapComponents";
 function formatHour(time) {
   const [hStr, minutes] = time.split(":");
   const hour = parseInt(hStr, 10);
@@ -64,7 +64,8 @@ export default function Branches() {
   const isModalOpen = editingItem !== undefined;
   const isDeleteModalOpen = deletingItem !== null;
   const isSaving = isCreating || isUpdating;
-
+  const DEFAULT_LOCATION = { lat: 2.9273, lng: -75.2819 }; // Neiva, centro por defecto
+  const [pickedLocation, setPickedLocation] = useState(DEFAULT_LOCATION);
   useEffect(() => {
     document.body.style.overflow = isModalOpen || isDeleteModalOpen ? "hidden" : "";
     return () => {
@@ -102,24 +103,31 @@ export default function Branches() {
 
   const openCreateModal = () => {
     setFormError(null);
+    setPickedLocation(DEFAULT_LOCATION); // se resetea al centro por defecto en creación
     setScheduleDraft([
-    { id: "mon", open: "08:00", close: "18:00", closed: false },
-    { id: "tue", open: "08:00", close: "18:00", closed: false },
-    { id: "wed", open: "08:00", close: "18:00", closed: false },
-    { id: "thu", open: "08:00", close: "18:00", closed: false },
-    { id: "fri", open: "08:00", close: "18:00", closed: false },
-    { id: "sat", open: "08:00", close: "14:00", closed: false },
-    { id: "sun", open: "00:00", close: "00:00", closed: true },
-  ]);
+      { id: "mon", open: "08:00", close: "18:00", closed: false },
+      { id: "tue", open: "08:00", close: "18:00", closed: false },
+      { id: "wed", open: "08:00", close: "18:00", closed: false },
+      { id: "thu", open: "08:00", close: "18:00", closed: false },
+      { id: "fri", open: "08:00", close: "18:00", closed: false },
+      { id: "sat", open: "08:00", close: "14:00", closed: false },
+      { id: "sun", open: "00:00", close: "00:00", closed: true },
+    ]);
     setEditingItem(null);
   };
 
   const openEditModal = (item) => {
     setFormError(null);
+    // Si la sucursal ya tiene coordenadas guardadas, el mapa arranca ahí;
+    // si no (sucursales creadas antes de este cambio), cae al centro por defecto.
+    setPickedLocation(
+      Number.isFinite(item.latitude) && Number.isFinite(item.longitude)
+        ? { lat: item.latitude, lng: item.longitude }
+        : DEFAULT_LOCATION
+    );
     setScheduleDraft(item.schedule.map((d) => ({ ...d })));
     setEditingItem(item);
   };
-
   const closeModal = () => setEditingItem(undefined);
 
   const toggleDayClosed = (dayId) => {
@@ -144,6 +152,8 @@ export default function Branches() {
       city: data.get("city"),
       phone: data.get("phone"),
       address: data.get("address"),
+      latitude: pickedLocation.lat,
+      longitude: pickedLocation.lng,
       schedule: scheduleDraft,
     };
 
@@ -159,7 +169,6 @@ export default function Branches() {
       setFormError(err.message || t("branches.modal.saveError", { defaultValue: "No se pudo guardar la sucursal." }));
     }
   };
-
   const openDeleteModal = (item) => {
     if (item.vehiclesAssigned > 0) return;
     setDeletingItem(item);
@@ -176,6 +185,7 @@ export default function Branches() {
       closeDeleteModal();
     }
   };
+
 
   return (
     <div className="br-page">
@@ -385,6 +395,31 @@ export default function Branches() {
                   placeholder={t("branches.modal.addressPlaceholder")}
                 />
               </label>
+              <label className="br-field">
+                {t("branches.modal.address")}
+                <input
+                  name="address"
+                  type="text"
+                  required
+                  defaultValue={editingItem?.name ?? ""}
+                  placeholder={t("branches.modal.addressPlaceholder")}
+                />
+              </label>
+
+              {/* NUEVO: selector de ubicación */}
+              <div className="br-field">
+                <label>Ubicación en el mapa (haz clic para marcar el punto exacto)</label>
+                <MapComponent
+                  mode="pick"
+                  pickedLat={pickedLocation.lat}
+                  pickedLng={pickedLocation.lng}
+                  onPick={setPickedLocation}
+                />
+                <p className="br-map-hint" style={{ fontSize: "0.8rem", color: "#666", marginTop: "4px" }}>
+                  Lat: {pickedLocation.lat.toFixed(6)} — Lng: {pickedLocation.lng.toFixed(6)}
+                </p>
+              </div>
+
 
               <div className="br-schedule-section">
                 <div className="br-schedule-heading">
