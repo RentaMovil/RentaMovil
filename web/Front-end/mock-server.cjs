@@ -199,9 +199,6 @@ server.patch('/auth/me/password', requireAuth, (req, res) => {
 });
 
 
-server.use(router); // /vehicles, /maintenances siguen igual
-
-server.listen(3001, () => console.log('Mock API con JWT en http://localhost:3001'));
 
 // PATCH /auth/me — actualizar perfil del usuario logueado
 server.patch('/auth/me', requireAuth, (req, res) => {
@@ -237,3 +234,7 @@ server.patch('/users/:id/role', requireAuth, (req, res) => {
     db.get('users').find({ id: req.params.id }).assign({ role }).write();
     res.json(toPublicUser(db.get('users').find({ id: req.params.id }).value()));
 });
+
+server.use(router); // /vehicles, /maintenances siguen igual
+
+server.listen(3001, () => console.log('Mock API con JWT en http://localhost:3001'));

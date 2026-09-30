@@ -15,7 +15,7 @@ export default function InsuranceTypes() {
 
     const { insurance: types, isLoading, error, refetch } = useInsurance();
     const { createInsurance, isLoading: isCreating } = useCreateInsurance();
-    const { updateService, isLoading: isUpdating } = useUpdateInsurance();
+    const { updateInsurance, isLoading: isUpdating } = useUpdateInsurance();
     const { deleteInsurance, isLoading: isDeleting } = useDeleteInsurance();
 
     const [editingItem, setEditingItem] = useState(undefined);
@@ -74,7 +74,7 @@ export default function InsuranceTypes() {
 
         try {
             if (editingItem) {
-                await updateService(editingItem.id, formData);
+                await updateInsurance(editingItem.id, formData);
             } else {
                 await createInsurance(formData);
             }

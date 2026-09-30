@@ -17,24 +17,30 @@ export function useReservationsAdmin() {
         setIsLoading(true);
         setError(null);
         try {
-            const [reservationsRes, vehiclesRes, branchesRes, insuranceRes, usersRes, paymentsRes, rentalsRes, bankAccountsRes, gpsRes] =
-                await Promise.all([
-                    reservationService.getAll(),
-                    carsService.getAll(),
-                    branchService.getAll(),
-                    insuranceService.getAll(),
-                    //userService.getAll(),
-                    httpClient.get('/payments'),
-                    httpClient.get('/rentals'),
-                    httpClient.get('/bankAccounts'),
-                    httpClient.get('/gps'),
-                ]);
+            const [
+                reservationsRes,
+                vehiclesRes,
+                branchesRes,
+                insuranceRes,
+                paymentsRes,
+                rentalsRes,
+                bankAccountsRes,
+                gpsRes
+            ] = await Promise.all([
+                reservationService.getAll(),
+                carsService.getAll(),
+                branchService.getAll(),
+                insuranceService.getAll(),
+                httpClient.get('/payments'),
+                httpClient.get('/rentals'),
+                httpClient.get('/bankAccounts'),
+                httpClient.get('/gps'),
+            ]);
 
             const ctx = {
                 vehiclesById: Object.fromEntries(vehiclesRes.map((v) => [v.id, v])),
                 branchesById: Object.fromEntries(branchesRes.map((b) => [b.id, b])),
                 insuranceById: Object.fromEntries(insuranceRes.map((i) => [i.id, i])),
-                usersById: Object.fromEntries(usersRes.map((u) => [u.id, u])),
                 paymentsByReservation: Object.fromEntries(paymentsRes.map((p) => [p.reservation_id, p])),
                 rentalsByReservation: Object.fromEntries(rentalsRes.map((r) => [r.reservation_id, r])),
                 bankAccountsById: Object.fromEntries(bankAccountsRes.map((b) => [b.id, b])),
