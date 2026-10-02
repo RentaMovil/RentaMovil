@@ -1,22 +1,24 @@
+// Respuesta de GET /users/me (iam): campos en camelCase
 export function toProfileViewModel(user) {
     return {
         id: user.id,
-        firstName: user.first_name,
-        lastName: user.last_name,
+        firstName: user.firstName ?? "",
+        lastName: user.lastName ?? "",
         email: user.email,
-        phone: user.phone,
+        phone: user.phone ?? "",
         username: user.username,
         role: user.role,
-        image: user.photo ?? null, 
+        // iam no guarda foto de perfil todavía
+        image: null,
     };
 }
 
+// PATCH /users/me solo acepta nombre, apellido y teléfono.
+// El username no se puede cambiar y el email va por /users/me/email.
 export function toUpdateProfilePayload(formData) {
     return {
-        first_name: formData.firstName,
-        last_name: formData.lastName,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
         phone: formData.phone,
-        username: formData.username,
-        photo: formData.image ?? null,
     };
 }
