@@ -11,6 +11,7 @@ import english from "../../../assets/img/eeuu.png";
 import french from "../../../assets/img/francia2.png";
 import portuguese from "../../../assets/img/portugal.png";
 import { useCount } from "../hooks/useCount";
+import { useEffect, useState } from "react";
 import { useUpdateCount } from "../hooks/useUpdateCount";
 import { useImageUpload } from "../../../shared/hooks/useImageUpload";
 // falta DELETE — ver nota sobre modal de borrado en la conversación previa
