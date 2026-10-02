@@ -237,4 +237,4 @@ server.patch('/users/:id/role', requireAuth, (req, res) => {
 
 server.use(router); // /vehicles, /maintenances siguen igual
 
-server.listen(3001, () => console.log('Mock API con JWT en http://localhost:3001'));
+server.listen(3100, () => console.log('Mock API con JWT en http://localhost:3100'));

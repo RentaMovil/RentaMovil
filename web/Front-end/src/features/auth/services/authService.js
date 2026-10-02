@@ -56,6 +56,7 @@ export const authService = {
         );
 
         tokenStore.setAccessToken(response.accessToken);
+        saveSession({ refreshToken: response.refreshToken });
         return response;
     },
 
@@ -75,7 +76,7 @@ export const authService = {
     },
 
     async getProfile() {
-        const response = await httpClient.get(`${RESOURCE}/me`);
+        const response = await httpClient.get(`/users/me`);
         return toAuthUserViewModel(response);
     },
 

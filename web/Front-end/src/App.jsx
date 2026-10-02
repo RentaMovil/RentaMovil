@@ -1,71 +1,70 @@
-import './App.css'
-import 'leaflet/dist/leaflet.css';
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import "./App.css";
+import "leaflet/dist/leaflet.css";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 // Auth
-import Login from './features/auth/pages/Login.jsx';
-import Account from './features/count/pages/Account.jsx';
-import AccountAdmin from './features/count/pages/AccountAdmin.jsx';
+import Login from "./features/auth/pages/Login.jsx";
+import Account from "./features/count/pages/Account.jsx";
+import AccountAdmin from "./features/count/pages/AccountAdmin.jsx";
 
-import ChangePassword from './features/auth/pages/ChangePassword.jsx';
+import ChangePassword from "./features/auth/pages/ChangePassword.jsx";
 
-import VehicleInventory from './features/admin/VehicleInventory/pages/VehicleInventory.jsx';
+import VehicleInventory from "./features/admin/VehicleInventory/pages/VehicleInventory.jsx";
 // Vehicles
-import Home from './features/vehicles/pages/Home.jsx';
-import HomeS from './features/vehicles/pages/HomeS.jsx';
+import Home from "./features/vehicles/pages/Home.jsx";
+import HomeS from "./features/vehicles/pages/HomeS.jsx";
 
 // Booking
-import Reservation from './features/booking//pages/Reservation.jsx';
-import HistorialReservation from './features/booking/pages/HistorialReservation.jsx';
+import Reservation from "./features/booking//pages/Reservation.jsx";
+import HistorialReservation from "./features/booking/pages/HistorialReservation.jsx";
 
 // Payment
-import Payment from './features/payment/pages/Payment.jsx';
-import { RequireAuth, RequireRole } from './shared/components/ProtectedRoute.jsx';
+import Payment from "./features/payment/pages/Payment.jsx";
+import {
+  RequireAuth,
+  RequireRole,
+} from "./shared/components/ProtectedRoute.jsx";
 
 // Notification
-import Notification from './features/notification/pages/Notification.jsx';
-import NotificationAdmin from './features/notification/pages/NotificationAdmin.jsx';
+import Notification from "./features/notification/pages/Notification.jsx";
+import NotificationAdmin from "./features/notification/pages/NotificationAdmin.jsx";
 
 // Admin - Vehicles
-import RegisterVehicle from './features/admin/registerVehicle/pages/RegisterVehicle.jsx';
+import RegisterVehicle from "./features/admin/registerVehicle/pages/RegisterVehicle.jsx";
 
 // Admin - Maintenance
-import Maintenance from './features/admin/registerMaintenance/pages/Maintenance.jsx';
+import Maintenance from "./features/admin/registerMaintenance/pages/Maintenance.jsx";
 
 // Admin - HomeAdmin
-import HomeAdmin from './features/admin/HomeAdmin/pages/HomeAdmin.jsx';
+import HomeAdmin from "./features/admin/HomeAdmin/pages/HomeAdmin.jsx";
 
-import InsuranceTypes from './features/admin/insuranceTypes/pages/InsuranceTypes.jsx';
-import Branches from './features/admin/branches/pages/Branches.jsx';
-import ReservationsList from './features/admin/reservations/pages/ReservationsList.jsx';
-import ReservationDetail from './features/admin/reservations/pages/ReservationDetail.jsx';
-import VehicleLocation from './features/admin/vehicleLocation/pages/VehicleLocation.jsx';
-import RouteHistory from './features/admin/routeHistory/pages/RouteHistory.jsx';
+import InsuranceTypes from "./features/admin/insuranceTypes/pages/InsuranceTypes.jsx";
+import Branches from "./features/admin/branches/pages/Branches.jsx";
+import ReservationsList from "./features/admin/reservations/pages/ReservationsList.jsx";
+import ReservationDetail from "./features/admin/reservations/pages/ReservationDetail.jsx";
+import VehicleLocation from "./features/admin/vehicleLocation/pages/VehicleLocation.jsx";
+import RouteHistory from "./features/admin/routeHistory/pages/RouteHistory.jsx";
 
+import History from "./features/admin/historyMaintenance/pages/History.jsx";
 
-import History from './features/admin/historyMaintenance/pages/History.jsx';
+import RegisterForm from "./features/auth/components/RegisterForm.jsx";
 
-import RegisterForm from './features/auth/components/RegisterForm.jsx';
-
-import EmailVerification from './features/auth/pages/EmailVerification.jsx';
+import EmailVerification from "./features/auth/pages/EmailVerification.jsx";
 
 import CodeVerification from "./features/auth/pages/CodeVerification.jsx";
 
-import ChangePasswordLogin from './features/auth/pages/ChangePasswordLogin.jsx';
+import ChangePasswordLogin from "./features/auth/pages/ChangePasswordLogin.jsx";
 
 //----------
 
 // Super Admin
-import UserManagement from './features/admin/users/pages/UserManagement.jsx';
-import BankAccounts from './features/admin/bankAccounts/pages/BankAccounts.jsx';
-
-
-
+import UserManagement from "./features/admin/users/pages/UserManagement.jsx";
+import BankAccounts from "./features/admin/bankAccounts/pages/BankAccounts.jsx";
 
 function App() {
   const [theme, setTheme] = useState(
-    () => localStorage.getItem("theme") || "skylight"
+    () => localStorage.getItem("theme") || "skylight",
   );
 
   useEffect(() => {
@@ -74,7 +73,6 @@ function App() {
   }, [theme]);
   return (
     <BrowserRouter>
-
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<RegisterForm />} />
@@ -107,12 +105,13 @@ function App() {
             </RequireAuth>
           }
         />
+        {/* El home de cliente es solo para CLIENT: los admins tienen el mismo home en /HomeAdmin */}
         <Route
           path="/home"
           element={
-            <RequireAuth>
+            <RequireRole roles={["CLIENT"]}>
               <Home />
-            </RequireAuth>
+            </RequireRole>
           }
         />
         <Route
@@ -231,7 +230,10 @@ function App() {
         <Route
           path="/admin/users"
           element={
-            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+            <RequireRole
+              roles={["ADMIN", "SUPER_ADMIN"]}
+              permission="roles:grant"
+            >
               <UserManagement />
             </RequireRole>
           }
@@ -239,7 +241,10 @@ function App() {
         <Route
           path="/admin/bank-accounts"
           element={
-            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+            <RequireRole
+              roles={["ADMIN", "SUPER_ADMIN"]}
+              permission="bank-accounts:manage"
+            >
               <BankAccounts />
             </RequireRole>
           }

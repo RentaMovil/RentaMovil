@@ -10,51 +10,53 @@ import { useAuth } from "../../../contexts/AuthContext";
 import "./Login.css";
 
 function Login() {
-    const [isLoginMode, setIsLoginMode] = useState(true);
-    const navigate = useNavigate();
-    const { login, register } = useAuth();
+  const [isLoginMode, setIsLoginMode] = useState(true);
+  const navigate = useNavigate();
+  const { login, register } = useAuth();
 
-    const handleLogin = async (credentials) => {
-        const session = await login(credentials);
+  const handleLogin = async (credentials) => {
+    const session = await login(credentials);
 
-        navigate(
-            session.user.role === "ADMIN"
-                ? "/HomeAdmin"
-                : "/home",
-        );
-    };
-
-    const handleRegister = async (formData) => {
-        const session = await register(formData);
-        navigate(session.user.role === "ADMIN" ? "/HomeAdmin" : "/home");
-    };
-
-    return (
-        <>
-            <NavbarTwo />
-
-            <div className="login-container">
-
-                {/* Formularios */}
-                <div className="login-form-container">
-                    {isLoginMode ? (
-                        <LoginForm
-                            onSubmit={handleLogin}
-                            onSwitchToRegister={() => setIsLoginMode(false)}
-                        />
-                    ) : (
-                        <RegisterForm
-                            onSubmit={handleRegister}
-                            onSwitchToLogin={() => setIsLoginMode(true)}
-                        />
-                    )}
-                </div>
-
-            </div>
-
-            <FooterTwo />
-        </>
+    navigate(
+      ["ADMIN", "SUPER_ADMIN"].includes(session.user.role)
+        ? "/HomeAdmin"
+        : "/home",
     );
+  };
+
+  const handleRegister = async (formData) => {
+    const session = await register(formData);
+    navigate(
+      ["ADMIN", "SUPER_ADMIN"].includes(session.user.role)
+        ? "/HomeAdmin"
+        : "/home",
+    );
+  };
+
+  return (
+    <>
+      <NavbarTwo />
+
+      <div className="login-container">
+        {/* Formularios */}
+        <div className="login-form-container">
+          {isLoginMode ? (
+            <LoginForm
+              onSubmit={handleLogin}
+              onSwitchToRegister={() => setIsLoginMode(false)}
+            />
+          ) : (
+            <RegisterForm
+              onSubmit={handleRegister}
+              onSwitchToLogin={() => setIsLoginMode(true)}
+            />
+          )}
+        </div>
+      </div>
+
+      <FooterTwo />
+    </>
+  );
 }
 
 export default Login;

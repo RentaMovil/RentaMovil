@@ -1,14 +1,14 @@
 export function toLoginPayload({ email, password }) {
     return {
-        email: email.trim().toLowerCase(),
+        identifier: email.trim().toLowerCase(),
         password,
     };
 }
 
 export function toRegisterPayload(formData) {
     return {
-        first_name: formData.first_name.trim(),
-        last_name: formData.last_name.trim(),
+        firstName: formData.first_name.trim(),
+        lastName: formData.last_name.trim(),
         email: formData.email.trim().toLowerCase(),
         phone: formData.phone.trim(),
         username: formData.username.trim(),
@@ -30,5 +30,6 @@ export function toAuthUserViewModel(payload) {
         role: String(user.role ?? "CLIENT").toUpperCase(),
         status: String(user.status ?? "ACTIVE").toUpperCase(),
         lastLogin: user.lastLogin ?? user.last_login ?? null,
+        permissions: user.permissions ?? [],
     };
 }

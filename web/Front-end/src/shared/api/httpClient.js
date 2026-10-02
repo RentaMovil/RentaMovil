@@ -1,10 +1,24 @@
 import { tokenStore } from './tokenStore.js';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const MOCK_API_URL = import.meta.env.VITE_MOCK_API_URL || 'http://localhost:3100';
+
+// Rutas que ya tienen backend real (van al gateway). Todo lo demás sigue en el mock.
+// Cuando un servicio nuevo esté listo, se agrega su prefijo aquí (ej. '/vehicles' con fleet).
+const REAL_BACKEND_PREFIXES = ['/auth', '/users'];
+
+export function hasRealBackend(endpoint) {
+    return REAL_BACKEND_PREFIXES.some((prefix) => endpoint === prefix || endpoint.startsWith(`${prefix}/`));
+}
+
+function baseUrlFor(endpoint) {
+    return hasRealBackend(endpoint) ? API_URL : MOCK_API_URL;
+}
+
 let refreshPromise = null;
 async function rawRequest(endpoint, { method = 'GET', body, headers = {} } = {}) {
     const token = tokenStore.getAccessToken();
-    return fetch(`${BASE_URL}${endpoint}`, {
+    return fetch(`${baseUrlFor(endpoint)}${endpoint}`, {
         method,
         headers: {
             'Content-Type': 'application/json',
@@ -19,7 +33,7 @@ async function refreshAccessToken() {
     const refreshToken = localStorage.getItem('rentamovil_refresh_token');
     if (!refreshToken) throw new Error('No hay refresh token');
 
-    const res = await fetch(`${BASE_URL}/auth/refresh`, {
+    const res = await fetch(`${API_URL}/auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refreshToken }),
@@ -29,6 +43,7 @@ async function refreshAccessToken() {
 
     const data = await res.json();
     tokenStore.setAccessToken(data.accessToken);
+    localStorage.setItem('rentamovil_refresh_token', data.refreshToken);
     return data.accessToken;
 }
 
