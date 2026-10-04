@@ -10,7 +10,8 @@ export function toRegisterPayload(formData) {
         firstName: formData.first_name.trim(),
         lastName: formData.last_name.trim(),
         email: formData.email.trim().toLowerCase(),
-        phone: formData.phone.trim(),
+        // Opcional: vacío se manda como null y la persona queda sin teléfono
+        phone: formData.phone?.trim() || null,
         username: formData.username.trim(),
         password: formData.password,
     };

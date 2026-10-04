@@ -21,7 +21,8 @@ function RegisterForm({ onSubmit, onSwitchToLogin }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!firstName || !lastName || !phone || !username || !email || !password || !confirmPassword) {
+    // El teléfono es opcional
+    if (!firstName || !lastName || !username || !email || !password || !confirmPassword) {
       return setError(t('register.errorFields'));
     }
 
@@ -30,7 +31,7 @@ function RegisterForm({ onSubmit, onSwitchToLogin }) {
       return setError(t('register.emailInvalid'));
     }
 
-    if (!/^[0-9]{10}$/.test(phone)) {
+    if (phone && !/^[0-9]{10}$/.test(phone)) {
       return setError(t('register.phoneInvalid'));
     }
 
@@ -98,7 +99,6 @@ function RegisterForm({ onSubmit, onSwitchToLogin }) {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder={t('register.phonePlaceholder')}
-            required
           />
         </div>
 

@@ -20,6 +20,13 @@ import { tokenStore } from "../shared/api/tokenStore";
 
 const AuthContext = createContext(null);
 
+// /users/me no trae permisos (solo el login y el refresh): al actualizar el perfil
+// se conservan los que ya tenía la sesión, si no se esconde el menú de super admin
+const keepPermissions = (profile) => (prev) => ({
+  ...profile,
+  permissions: prev?.permissions ?? [],
+});
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -103,7 +110,7 @@ export function AuthProvider({ children }) {
 
     try {
       const profile = await authService.getProfile();
-      setUser(profile);
+      setUser(keepPermissions(profile));
       return profile;
     } catch (profileError) {
       setError(profileError?.message ?? "No fue posible cargar el perfil.");
@@ -121,7 +128,7 @@ export function AuthProvider({ children }) {
 
     try {
       const updated = await authService.updateProfile(changes);
-      setUser(updated);
+      setUser(keepPermissions(updated));
       saveSession({ user: updated });
       return updated;
     } catch (profileError) {
@@ -141,7 +148,7 @@ export function AuthProvider({ children }) {
    */
   const changeEmail = useCallback(async (newEmail, currentPassword) => {
     const updated = await authService.changeEmail(newEmail, currentPassword);
-    setUser(updated);
+    setUser(keepPermissions(updated));
     saveSession({ user: updated });
     return updated;
   }, []);

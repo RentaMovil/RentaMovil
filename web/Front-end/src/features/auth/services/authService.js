@@ -80,19 +80,15 @@ export const authService = {
         return toAuthUserViewModel(response);
     },
 
-    /**
-     * Guarda los cambios del perfil y devuelve el usuario ya actualizado.
-     *
-     * El view model usa firstName / lastName en camelCase, pero el endpoint
-     * espera los nombres de la API (first_name / last_name), asi que se
-     * traducen aqui. El backend ignora lo que no este en su lista blanca.
-     */
+    // PATCH /users/me (iam): solo cambia nombre, apellido, teléfono y foto.
+    // El username no se puede cambiar y el email va por /users/me/email.
+    // Solo viajan los campos que vengan en `changes` (los undefined no se mandan).
     async updateProfile(changes) {
-        const response = await httpClient.patch(`${RESOURCE}/me`, {
-            first_name: changes.firstName,
-            last_name: changes.lastName,
+        const response = await httpClient.patch("/users/me", {
+            firstName: changes.firstName,
+            lastName: changes.lastName,
             phone: changes.phone,
-            username: changes.username,
+            imageUrl: changes.imageUrl,
         });
 
         return toAuthUserViewModel(response);
@@ -115,7 +111,7 @@ export const authService = {
             { currentPassword, newPassword }
         ),
     async changeEmail(newEmail, currentPassword) {
-        const response = await httpClient.patch(`${RESOURCE}/me/email`, {
+        const response = await httpClient.patch("/users/me/email", {
             newEmail,
             currentPassword,
         });
