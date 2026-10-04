@@ -1,4 +1,5 @@
 import "./Account.css";
+import { useState, useEffect } from "react";
 import login from "../../../assets/login.png";
 import { FaEdit, FaMoon, FaGlobe, FaSave, FaTimes, FaTrash } from "react-icons/fa";
 import Navbar from "../../../shared/components/layout/Navbar";
@@ -100,7 +101,7 @@ function Account({ theme, setTheme }) {
       <div className="containerC">
         <div className="cardC">
           <div className="header-page">
-            <ButtonBack onClick={() => navigate(-1)} variant="overlay" />
+            <ButtonBack onClick={() => navigate(-1)} />
             <p className={`status2 ${isEditing && hasPendingChanges ? "pending" : ""}`}>
               {getStatusText()}
             </p>

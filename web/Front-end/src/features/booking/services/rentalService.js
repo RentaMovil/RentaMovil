@@ -3,7 +3,7 @@ import { fromApiRental, toCreatePickupPayload, toReturnPayload } from "./rentalM
 
 // Rentas de booking-reservation. Solo las usa el Administrador.
 export const rentalService = {
-    // "/rentals/in-progress" y no "/admin/rentals": el gateway no enruta /admin/**.
+    // Bajo /rentals/** porque el gateway no enruta /admin/**.
     getAll: async () => (await httpClient.get("/rentals/in-progress")).map(fromApiRental),
 
     // HU-RENTAL-001: la reserva debe estar CONFIRMED. El backend crea la renta en IN_PROGRESS.

@@ -19,8 +19,7 @@ export const reservationService = {
     getById: async (id) => fromApiReservation(await httpClient.get(`/reservations/${id}`)),
 
     // Panel de administración (HU-BOOKING-008). status opcional: PENDING_REVIEW, CONFIRMED...
-    // "/reservations/admin" y no "/admin/reservations": el gateway no enruta /admin/**, solo
-    // /reservations/**, /rentals/** y /notifications/**.
+    // Va bajo /reservations/** porque el gateway no enruta /admin/**.
     getAllAdmin: async (status) => {
         const query = status ? `?status=${encodeURIComponent(status)}` : "";
         return (await httpClient.get(`/reservations/admin${query}`)).map(fromApiReservation);

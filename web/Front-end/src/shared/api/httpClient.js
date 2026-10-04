@@ -32,6 +32,31 @@ async function refreshAccessToken() {
     return data.accessToken;
 }
 
+// Mensajes pensados para leerse en pantalla: el status y el endpoint no significan nada
+// para quien está usando la app.
+const FRIENDLY_MESSAGES = {
+    404: 'No encontramos lo que buscabas.',
+    401: 'Tu sesión expiró. Vuelve a iniciar sesión.',
+    403: 'No tienes permisos para ver esto.',
+    409: 'No se pudo completar la operación por un conflicto con datos existentes.',
+    429: 'Demasiados intentos. Espera un momento e inténtalo de nuevo.',
+    503: 'El servicio no está disponible en este momento. Inténtalo más tarde.',
+};
+
+function friendlyError(status, endpoint, serverMessage) {
+    // Si el backend manda un mensaje en español, tiene prioridad sobre el genérico.
+    const message = serverMessage || FRIENDLY_MESSAGES[status]
+        || 'No se pudo completar la operación. Inténtalo de nuevo.';
+    const error = new Error(message);
+    // Se conserva lo técnico para la consola, pero no se muestra en pantalla.
+    error.status = status;
+    error.endpoint = endpoint;
+    if (!serverMessage) {
+        console.warn(`[http] ${status} en ${endpoint}`);
+    }
+    return error;
+}
+
 async function request(endpoint, options = {}) {
     let res = await rawRequest(endpoint, options);
 
@@ -46,13 +71,13 @@ async function request(endpoint, options = {}) {
             refreshPromise = null;
             tokenStore.clear();
             tokenStore.triggerRefreshFail(); // el authService decide qué hacer (ej. redirigir a /Login)
-            throw new Error('Sesión expirada');
+            throw new Error('Tu sesión expiró. Vuelve a iniciar sesión.');
         }
     }
 
     if (!res.ok) {
         const errorBody = await res.json().catch(() => null);
-        throw new Error(errorBody?.message || `Error ${res.status} en ${endpoint}`);
+        throw friendlyError(res.status, endpoint, errorBody?.message);
     }
 
     if (res.status === 204) return null;

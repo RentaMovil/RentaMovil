@@ -1,10 +1,8 @@
 import { httpClient } from "../../../../shared/api/httpClient";
 import { fromApiInsurancePlan, toCreateInsurancePayload } from "./insuranceMapper";
 
-// Planes de seguro de booking-reservation, bajo /reservations porque el gateway solo
-// enruta /reservations/**, /rentals/** y /notifications/** hacia booking:
-//   GET  /reservations/insurance-types  público: el cliente los ve antes de iniciar sesión (HU-BOOKING-002)
-//   POST /reservations/insurance-types  solo Administrador (HU-BOOKING-009)
+// Bajo /reservations/** porque el gateway no enruta /insurance-types.
+// GET es público (HU-BOOKING-002), POST es solo Administrador (HU-BOOKING-009).
 const RESOURCE = "/reservations/insurance-types";
 
 const notSupported = (action) =>

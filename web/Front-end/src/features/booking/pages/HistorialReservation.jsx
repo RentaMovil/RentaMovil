@@ -51,7 +51,7 @@ function HistorialReservation() {
           {isLoading && <p className="title">Cargando reservas...</p>}
           {!isLoading && error && <p className="title">{error}</p>}
 
-          {/* Sin esto, un array vacío renderizaba una pantalla en blanco sin explicación */}
+          {/* Estado vacío: un array vacío no renderiza nada y deja la página en blanco */}
           {!isLoading && !error && !reservas.length && (
             <div className="historial-empty">
               <p>{t("historyReservation.emptyTitle", "No hay reservas que coincidan con estos filtros.")}</p>

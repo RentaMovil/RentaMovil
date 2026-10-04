@@ -1,16 +1,18 @@
+// LoginRequest acepta correo O username en el campo `identifier`. Mandar `email` da 400.
 export function toLoginPayload({ email, password }) {
     return {
-        email: email.trim().toLowerCase(),
+        identifier: email.trim().toLowerCase(),
         password,
     };
 }
 
+// RegisterRequest espera camelCase; `first_name` da 400. phone es opcional.
 export function toRegisterPayload(formData) {
     return {
-        first_name: formData.first_name.trim(),
-        last_name: formData.last_name.trim(),
+        firstName: formData.first_name.trim(),
+        lastName: formData.last_name.trim(),
         email: formData.email.trim().toLowerCase(),
-        phone: formData.phone.trim(),
+        phone: formData.phone?.trim() || null,
         username: formData.username.trim(),
         password: formData.password,
     };
