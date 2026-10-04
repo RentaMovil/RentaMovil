@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { reservationService } from "../services/reservationService";
+import { rentalService } from "../services/rentalService";
 import { toAdminReservationViewModel } from "../services/reservationMapper";
 import { carsService } from "../../vehicles/Services/carsService";
 import { branchService } from "../../admin/branches/services/branchService";
@@ -7,6 +8,10 @@ import { insuranceService } from "../../admin/insuranceTypes/services/insuranceS
 //import { userService } from "../../admin/userManagement/services/userService";
 
 import { httpClient } from "../../../shared/api/httpClient";
+
+// Lista de una petición opcional: si el servicio todavía no existe o falla, queda vacía
+const listOrEmpty = (result) =>
+    result.status === "fulfilled" && Array.isArray(result.value) ? result.value : [];
 
 export function useReservationsAdmin() {
     const [reservations, setReservations] = useState([]);
@@ -17,25 +22,24 @@ export function useReservationsAdmin() {
         setIsLoading(true);
         setError(null);
         try {
-            const [
-                reservationsRes,
-                vehiclesRes,
-                branchesRes,
-                insuranceRes,
-                paymentsRes,
-                rentalsRes,
-                bankAccountsRes,
-                gpsRes
-            ] = await Promise.all([
-                reservationService.getAll(),
+            // Lo de booking es obligatorio: sin reservas no hay pantalla.
+            const [reservationsRes, rentalsRes] = await Promise.all([
+                reservationService.getAllAdmin(),
+                rentalService.getAll(),
+            ]);
+
+            // Lo de los demás servicios solo completa la información (nombres, pagos, GPS).
+            // Con allSettled, si uno de ellos todavía no existe la pantalla carga igual.
+            const optional = await Promise.allSettled([
                 carsService.getAll(),
                 branchService.getAll(),
                 insuranceService.getAll(),
                 httpClient.get('/payments'),
-                httpClient.get('/rentals'),
                 httpClient.get('/bankAccounts'),
                 httpClient.get('/gps'),
             ]);
+            const [vehiclesRes, branchesRes, insuranceRes, paymentsRes, bankAccountsRes, gpsRes] =
+                optional.map(listOrEmpty);
 
             const ctx = {
                 vehiclesById: Object.fromEntries(vehiclesRes.map((v) => [v.id, v])),

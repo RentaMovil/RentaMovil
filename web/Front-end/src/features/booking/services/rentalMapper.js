@@ -1,18 +1,31 @@
-export function toCreatePickupPayload(reservationId, gpsId, mileage) {
+import { fromApiDateTime } from "../../../shared/utils/apiDate";
+
+// Respuesta de booking (camelCase) -> forma que usan los view models (snake_case)
+export function fromApiRental(rental) {
     return {
-        reservation_id: reservationId,
-        gps_id: gpsId,
-        actual_start_date: new Date().toISOString(),
-        initial_mileage: mileage,
-        status: 'IN_PROGRESS',
+        id: rental.id,
+        reservation_id: rental.reservationId,
+        gps_id: rental.gpsId,
+        actual_start_date: fromApiDateTime(rental.actualStartDate),
+        actual_end_date: fromApiDateTime(rental.actualEndDate),
+        initial_mileage: rental.initialMileage == null ? null : Number(rental.initialMileage),
+        final_mileage: rental.finalMileage == null ? null : Number(rental.finalMileage),
+        status: rental.status,
     };
 }
 
+// La fecha real del pickup y el estado los pone el servidor
+export function toCreatePickupPayload(gpsId, mileage) {
+    return {
+        gpsId: Number(gpsId),
+        initialMileage: Number(mileage),
+    };
+}
+
+// La fecha real de devolución y el estado COMPLETED los pone el servidor
 export function toReturnPayload(finalMileage) {
     return {
-        actual_end_date: new Date().toISOString(),
-        final_mileage: finalMileage,
-        status: 'COMPLETED',
+        finalMileage: Number(finalMileage),
     };
 }
 

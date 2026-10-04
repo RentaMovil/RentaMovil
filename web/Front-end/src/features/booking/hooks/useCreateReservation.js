@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { reservationService } from "../services/reservationService";
-import { getStoredUser } from "../../auth/services/sessionStorage";
 export function useCreateReservation() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -9,8 +8,8 @@ export function useCreateReservation() {
         setIsLoading(true);
         setError(null);
         try {
-            const user = getStoredUser();
-            return await reservationService.create(draft, user?.id);
+            // El titular sale del token: no se envía el id del usuario
+            return await reservationService.create(draft);
         } catch (err) {
             setError(err.message || "Error al crear la reserva");
             throw err;
