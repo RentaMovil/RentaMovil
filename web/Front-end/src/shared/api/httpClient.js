@@ -50,8 +50,12 @@ async function refreshAccessToken() {
 async function request(endpoint, options = {}) {
     let res = await rawRequest(endpoint, options);
 
+    // Un 401 por contraseña actual incorrecta (cambiar email/contraseña) no es un token vencido
+    const wrongPassword = res.status === 401
+        && (await res.clone().json().catch(() => null))?.error === 'INCORRECT_PASSWORD';
+
     // Si expiro el access token, intenta refrescar UNA vez y reintenta la peticion original
-    if (res.status === 401 && endpoint !== '/auth/login' && endpoint !== '/auth/refresh') {
+    if (res.status === 401 && !wrongPassword && endpoint !== '/auth/login' && endpoint !== '/auth/refresh') {
         try {
             refreshPromise = refreshPromise || refreshAccessToken();
             await refreshPromise;
@@ -70,8 +74,9 @@ async function request(endpoint, options = {}) {
         throw new Error(errorBody?.message || `Error ${res.status} en ${endpoint}`);
     }
 
-    if (res.status === 204) return null;
-    return res.json();
+    // 204 o 202 sin cuerpo (ej. /auth/password/forgot): no hay JSON que leer
+    const text = await res.text();
+    return text ? JSON.parse(text) : null;
 }
 
 export const httpClient = {

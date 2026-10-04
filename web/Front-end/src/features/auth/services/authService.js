@@ -96,18 +96,18 @@ export const authService = {
 
     getStoredUser,
 
+    // Recuperar contraseña (iam). Sin SMTP todavía: el código sale en el log de iam.
     forgotPassword: (email) =>
-        httpClient.post(`${RESOURCE}/forgot-password`, { email }),
+        httpClient.post(`${RESOURCE}/password/forgot`, { email }),
 
-    verifyCode: (email, code) =>
-        httpClient.post(`${RESOURCE}/verify-code`, { email, code }),
-
+    // { email, code, newPassword }. El código se valida aquí (no hay paso aparte de verificar).
     resetPassword: (payload) =>
-        httpClient.post(`${RESOURCE}/reset-password`, payload),
+        httpClient.post(`${RESOURCE}/password/reset`, payload),
 
+    // iam cierra todas las sesiones al cambiarla: después hay que iniciar sesión de nuevo
     changePassword: (currentPassword, newPassword) =>
         httpClient.patch(
-            `${RESOURCE}/me/password`,
+            "/users/me/password",
             { currentPassword, newPassword }
         ),
     async changeEmail(newEmail, currentPassword) {

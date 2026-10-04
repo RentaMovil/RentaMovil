@@ -24,10 +24,14 @@
     },
     {
         label: t("changePassword.specialCaracters"),
-        valid: /[#@!$%^&*-.]/.test(password),
+        valid: /[#@!$%^&*.-]/.test(password),
     },
     {
         label: t("changePassword.uppercase"),
         valid: /[A-Z]/.test(password),
+    },
+    {
+        label: t("changePassword.number"),
+        valid: /\d/.test(password),
     },
     ];

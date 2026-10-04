@@ -217,6 +217,7 @@
     "caracters": "Al menos 8 caracteres",
     "specialCaracters": "Al menos un carácter especial (#, @, etc)",
     "uppercase": "Al menos una letra mayúscula",
+    "number": "Al menos un número",
     "errorPassword": "Error al cambiar la contraseña",
     "successPassword": "Contraseña cambiada con éxito",
     "errorRequest": "Error en la solicitud",

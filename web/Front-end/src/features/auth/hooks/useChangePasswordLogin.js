@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { authService } from "../../auth/services/authService"; // ajusta la ruta real
+import { authService } from "../../auth/services/authService";
 import { isPasswordValid } from "../utils/passWorrdValidation.js";
 import { buildPasswordRules, getConfirmPasswordClassName, getPasswordClassName } from "../utils/changePasswordUtils.js";
 
@@ -8,6 +8,11 @@ function useChangePasswordLogin(t) {
     const location = useLocation();
     const navigate = useNavigate();
     const { email, code } = location.state || {};
+
+    // Si se entra directo a la URL (sin correo ni código) se vuelve a pedir el correo
+    useEffect(() => {
+        if (!email || !code) navigate("/EmailVerification", { replace: true });
+    }, [email, code, navigate]);
 
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
