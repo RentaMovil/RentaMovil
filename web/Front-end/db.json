@@ -8,7 +8,7 @@
       "plate": "DEQ123",
       "brand": "Chevrolet",
       "model": "sendero",
-      "branchId": "1",
+      "branchId": 1,
       "price": 100000,
       "mileage": 2000,
       "year": 2023,
@@ -18,14 +18,14 @@
       "location": "centro",
       "image": "https://res.cloudinary.com/dz6ohgjub/image/upload/v1789593278/260409_01h45m19s_screenshot_t0bag8.png",
       "status": "En mantenimiento",
-      "id": "lGpIl2fJQAk"
+      "id": 1
     },
     {
-      "id": "QQQ111",
+      "id": 2,
       "plate": "QQQ111",
       "brand": "Chevrolet",
       "model": "Corolla",
-      "branchId": "1",
+      "branchId": 1,
       "vehicleType": "Sedán",
       "fuelType": "Gasolina",
       "capacity": 5,
@@ -36,7 +36,7 @@
       "status": "DISPONIBLE"
     },
     {
-      "id": "ABC111",
+      "id": 3,
       "plate": "ABC111",
       "brand": "Renault",
       "model": "ix2020",
@@ -46,12 +46,12 @@
       "capacity": 4,
       "vehicleType": "Sedán",
       "fuelType": "Eléctrico",
-      "branchId": "1",
+      "branchId": 1,
       "image": "https://res.cloudinary.com/dz6ohgjub/image/upload/v1790185034/278294_rcdeps.jpg",
       "status": "En mantenimeinto"
     },
     {
-      "id": "QQQ444",
+      "id": 4,
       "plate": "QQQ444",
       "brand": "Toyota",
       "model": "toyima",
@@ -61,12 +61,12 @@
       "capacity": 4,
       "vehicleType": "Van",
       "fuelType": "Gasolina",
-      "branchId": "EJHGhRa",
+      "branchId": 2,
       "image": "https://res.cloudinary.com/dz6ohgjub/image/upload/v1790192026/images_gdrmsb.jpg",
       "status": "En mantenimeinto"
     },
     {
-      "id": "CAR234",
+      "id": 5,
       "plate": "CAR234",
       "brand": "Mercedes-Benz",
       "model": "volsks",
@@ -76,12 +76,12 @@
       "capacity": 2,
       "vehicleType": "Furgón",
       "fuelType": "Diésel",
-      "branchId": "Uykw9pm",
+      "branchId": 3,
       "image": "https://res.cloudinary.com/dz6ohgjub/image/upload/v1790192380/images_phxdko.jpg",
       "status": "Disponible"
     },
     {
-      "id": "QQQ421",
+      "id": 6,
       "plate": "QQQ421",
       "brand": "wfwfrw",
       "model": "wfwfw",
@@ -91,12 +91,12 @@
       "capacity": 2,
       "vehicleType": "Furgón",
       "fuelType": "Gas propano",
-      "branchId": "EJHGhRa",
+      "branchId": 2,
       "image": "https://res.cloudinary.com/dz6ohgjub/image/upload/v1790725208/images_jchtpj.jpg",
       "status": "Disponible"
     },
     {
-      "id": "ABC122",
+      "id": 7,
       "plate": "ABC122",
       "brand": "cda",
       "model": "vava",
@@ -106,12 +106,12 @@
       "capacity": 2,
       "vehicleType": "Hatchback",
       "fuelType": "Gasolina",
-      "branchId": "EJHGhRa",
+      "branchId": 2,
       "image": "https://res.cloudinary.com/dz6ohgjub/image/upload/v1790728457/ChatGPT_Image_Aug_15_2026_02_48_06_PM_chjadd.png",
       "status": "Disponible"
     },
     {
-      "id": "QQQ443",
+      "id": 8,
       "plate": "QQQ443",
       "brand": "efr4fwr",
       "model": "rfwfwwf",
@@ -121,14 +121,14 @@
       "capacity": 3,
       "vehicleType": "Hatchback",
       "fuelType": "Gasolina",
-      "branchId": "vrxq5nq",
+      "branchId": 4,
       "image": "https://res.cloudinary.com/dz6ohgjub/image/upload/v1790728530/images_uanz6h.jpg",
       "status": "Disponible"
     }
   ],
   "maintenances": [
     {
-      "vehicleId": "ABC111",
+      "vehicleId": 3,
       "plate": "ABC111",
       "brand": "Renault",
       "model": "ix2020",
@@ -141,7 +141,7 @@
       "id": 1
     },
     {
-      "vehicleId": "QQQ444",
+      "vehicleId": 4,
       "plate": "QQQ444",
       "brand": "Toyota",
       "model": "toyima",
@@ -156,7 +156,7 @@
   ],
   "users": [
     {
-      "id": "1",
+      "id": 1,
       "first_name": "Nox",
       "last_name": "Erez",
       "email": "nox@rentamovil.com",
@@ -170,7 +170,7 @@
       "registeredAt": "2026-01-10"
     },
     {
-      "id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
+      "id": 2,
       "first_name": "juan",
       "last_name": "hernandez",
       "email": "elcapitojuan@gmail.com",
@@ -184,7 +184,7 @@
       "registeredAt": "2026-08-14"
     },
     {
-      "id": "1484bae1-0f1d-4075-8a23-de6a7c5cb713",
+      "id": 3,
       "first_name": "pablo",
       "last_name": "Hernandez",
       "email": "fernadino@gmail.com",
@@ -201,7 +201,7 @@
   "sessions": [
     {
       "id": "ca6482bd-e885-45d6-977b-ce65715e8587",
-      "user_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
+      "user_id": 2,
       "refresh_token": "7ddd6752-6779-4a5f-8789-a592c20efb47",
       "created_at": "2026-09-21T16:33:33.055Z",
       "expires_at": "2026-09-28T16:33:33.055Z",
@@ -211,7 +211,7 @@
     },
     {
       "id": "624c155f-3f1b-4701-958a-b2c2c073f490",
-      "user_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
+      "user_id": 2,
       "refresh_token": "8d3df17a-f091-4c47-b952-c314e8f8bbf8",
       "created_at": "2026-09-21T16:33:51.790Z",
       "expires_at": "2026-09-28T16:33:51.790Z",
@@ -221,7 +221,7 @@
     },
     {
       "id": "e55b6222-a85f-4e7d-b7fd-548ccaebe7d4",
-      "user_id": "1484bae1-0f1d-4075-8a23-de6a7c5cb713",
+      "user_id": 3,
       "refresh_token": "b3fd2052-7cb8-4fa7-9120-22897d258371",
       "created_at": "2026-09-24T22:30:34.716Z",
       "expires_at": "2026-10-01T22:30:34.716Z",
@@ -230,18 +230,8 @@
       "revoked": false
     },
     {
-      "id": "d58c070b-7998-4000-a5eb-a97951e52498",
-      "user_id": "033f421f-a2a6-4ef7-b721-7022c153fe66",
-      "refresh_token": "2b0718d2-6fb1-430f-8ba1-aa815a84ccd1",
-      "created_at": "2026-09-26T22:49:59.956Z",
-      "expires_at": "2026-10-03T22:49:59.956Z",
-      "ip_address": "::ffff:127.0.0.1",
-      "user_agent": "Mozilla/5.0 (X11; Linux x86_64; rv:156.0) Gecko/20100101 Firefox/156.0",
-      "revoked": false
-    },
-    {
       "id": "6d6328e3-9b48-475c-adf8-459105b555b5",
-      "user_id": "1484bae1-0f1d-4075-8a23-de6a7c5cb713",
+      "user_id": 3,
       "refresh_token": "ce33b621-210f-425f-8cf9-8885499b1859",
       "created_at": "2026-09-29T22:33:14.346Z",
       "expires_at": "2026-10-06T22:33:14.346Z",
@@ -251,7 +241,7 @@
     },
     {
       "id": "252ed9d9-3ff8-4442-8233-910b0e17cbd7",
-      "user_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
+      "user_id": 2,
       "refresh_token": "b6cdcfe2-3aad-4e2d-99b0-0dfb878c7042",
       "created_at": "2026-09-30T04:59:52.484Z",
       "expires_at": "2026-10-07T04:59:52.484Z",
@@ -261,7 +251,7 @@
     },
     {
       "id": "4ec9ff2e-fa91-4eac-b86d-bba0db77d068",
-      "user_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
+      "user_id": 2,
       "refresh_token": "8fda8625-ddd4-40c9-a19a-5def66fbc016",
       "created_at": "2026-09-30T15:28:01.625Z",
       "expires_at": "2026-10-07T15:28:01.625Z",
@@ -273,7 +263,7 @@
   "verificationCodes": [],
   "branches": [
     {
-      "id": "1",
+      "id": 1,
       "name": "Neiva Centros",
       "city": "Neiva",
       "phone": "6081234567",
@@ -338,7 +328,7 @@
           "closed": true
         }
       ],
-      "id": "EJHGhRa",
+      "id": 2,
       "latitude": 3.2221538351269245,
       "longitude": -75.2386615262367
     },
@@ -391,7 +381,7 @@
           "closed": true
         }
       ],
-      "id": "Uykw9pm"
+      "id": 3
     },
     {
       "name": "perro",
@@ -444,7 +434,7 @@
           "closed": true
         }
       ],
-      "id": "vrxq5nq"
+      "id": 4
     }
   ],
   "insuranceTypes": [
@@ -475,11 +465,11 @@
   ],
   "reservations": [
     {
-      "client_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
-      "vehicle_id": "QQQ443",
+      "client_id": 2,
+      "vehicle_id": 8,
       "insurance_type_id": 1,
-      "pickup_branch_id": "vrxq5nq",
-      "return_branch_id": "1",
+      "pickup_branch_id": 4,
+      "return_branch_id": 1,
       "reservation_date": "2026-09-30T05:28:37.714Z",
       "start_date": "2026-09-30T00:00:00.000Z",
       "end_date": "2026-10-01T00:00:00.000Z",
@@ -490,11 +480,11 @@
       "id": 1
     },
     {
-      "client_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
-      "vehicle_id": "ABC122",
+      "client_id": 2,
+      "vehicle_id": 7,
       "insurance_type_id": null,
-      "pickup_branch_id": "EJHGhRa",
-      "return_branch_id": "EJHGhRa",
+      "pickup_branch_id": 2,
+      "return_branch_id": 2,
       "reservation_date": "2026-09-30T05:43:43.915Z",
       "start_date": "2026-09-30T00:00:00.000Z",
       "end_date": "2026-10-01T00:00:00.000Z",
@@ -505,11 +495,11 @@
       "id": 2
     },
     {
-      "client_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
-      "vehicle_id": "QQQ443",
+      "client_id": 2,
+      "vehicle_id": 8,
       "insurance_type_id": 1,
-      "pickup_branch_id": "vrxq5nq",
-      "return_branch_id": "1",
+      "pickup_branch_id": 4,
+      "return_branch_id": 1,
       "reservation_date": "2026-09-30T05:47:25.019Z",
       "start_date": "2026-09-30T00:00:00.000Z",
       "end_date": "2026-10-01T00:00:00.000Z",
@@ -523,7 +513,7 @@
   "payments": [
     {
       "reservation_id": 1,
-      "bank_account_id": "BANK-001",
+      "bank_account_id": 1,
       "payment_date": "2026-09-30T05:28:38.962Z",
       "amount": 100,
       "reference_number": "223234",
@@ -533,7 +523,7 @@
     },
     {
       "reservation_id": 2,
-      "bank_account_id": "BANK-002",
+      "bank_account_id": 2,
       "payment_date": "2026-09-30T05:43:45.332Z",
       "amount": 10,
       "reference_number": "wswwdwd",
@@ -543,7 +533,7 @@
     },
     {
       "reservation_id": 3,
-      "bank_account_id": "BANK-001",
+      "bank_account_id": 1,
       "payment_date": "2026-09-30T05:47:27.203Z",
       "amount": 100,
       "reference_number": "wedwdwd",
@@ -554,30 +544,32 @@
   ],
   "notifications": [
     {
+      "id": 1,
       "notification_id": 1,
-      "person_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
+      "person_id": 2,
       "type": "reserva_confirmada",
       "message": "Tu reserva fue confirmada.",
       "sent_date": "2026-08-28T10:00:00Z",
       "is_read": true,
       "reservation_id": 105,
-      "vehicle_id": "lGpIl2fJQAk",
+      "vehicle_id": 1,
       "read_at": "2026-09-27T02:59:29.561Z"
     },
     {
+      "id": 2,
       "notification_id": 2,
-      "person_id": "9d05f8b7-96e0-4595-9aaf-5252ea08f7e5",
+      "person_id": 2,
       "type": "pago_confirmado",
       "message": "Tu pago fue procesado correctamente.",
       "sent_date": "2026-08-28T11:00:00Z",
       "is_read": false,
       "payment_id": 210,
-      "vehicle_id": "lGpIl2fJQAk"
+      "vehicle_id": 1
     }
   ],
   "gps": [
     {
-      "id": "1",
+      "id": 1,
       "serial": "GPS-001-2024",
       "model": "Standard Tracker",
       "is_active": true
@@ -585,22 +577,22 @@
   ],
   "locations": [
     {
-      "id": "1",
-      "gps_id": "1",
+      "id": 1,
+      "gps_id": 1,
       "latitude": 4.6097,
       "longitude": -74.0817,
       "timestamp": "2026-09-28T14:05:00Z"
     },
     {
-      "id": "2",
-      "gps_id": "1",
+      "id": 2,
+      "gps_id": 1,
       "latitude": 4.6183,
       "longitude": -74.085,
       "timestamp": "2026-09-28T14:11:00Z"
     },
     {
-      "id": "3",
-      "gps_id": "1",
+      "id": 3,
+      "gps_id": 1,
       "latitude": 4.627,
       "longitude": -74.0885,
       "timestamp": "2026-09-28T14:17:00Z"
