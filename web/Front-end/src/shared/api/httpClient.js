@@ -15,6 +15,20 @@ function baseUrlFor(endpoint) {
     return hasRealBackend(endpoint) ? API_URL : MOCK_API_URL;
 }
 
+// Error de la API con lo necesario para decidir qué mostrar:
+// status (ej. 423, 429), code (el "error" del backend, ej. ACCOUNT_BLOCKED) y
+// retryAfter (segundos del header Retry-After que pone el rate limit del gateway)
+export class ApiError extends Error {
+    constructor(res, body, endpoint) {
+        super(body?.message || `Error ${res.status} en ${endpoint}`);
+        this.name = 'ApiError';
+        this.status = res.status;
+        this.code = body?.error ?? null;
+        const retryAfter = Number(res.headers.get('Retry-After'));
+        this.retryAfter = Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter : null;
+    }
+}
+
 let refreshPromise = null;
 async function rawRequest(endpoint, { method = 'GET', body, headers = {} } = {}) {
     const token = tokenStore.getAccessToken();
@@ -61,7 +75,7 @@ async function request(endpoint, options = {}) {
             await refreshPromise;
             refreshPromise = null;
             res = await rawRequest(endpoint, options);
-        } catch (err) {
+        } catch {
             refreshPromise = null;
             tokenStore.clear();
             tokenStore.triggerRefreshFail(); // el authService decide qué hacer (ej. redirigir a /Login)
@@ -71,7 +85,7 @@ async function request(endpoint, options = {}) {
 
     if (!res.ok) {
         const errorBody = await res.json().catch(() => null);
-        throw new Error(errorBody?.message || `Error ${res.status} en ${endpoint}`);
+        throw new ApiError(res, errorBody, endpoint);
     }
 
     // 204 o 202 sin cuerpo (ej. /auth/password/forgot): no hay JSON que leer

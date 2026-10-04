@@ -1,4 +1,5 @@
 {
+  "dialog": { "accept": "Aceptar", "cancel": "Cancelar" },
   "navbar": {
     "linkInit": "Inicio",
     "linkNotifications": "Notificaciones",
@@ -108,6 +109,10 @@
     "noAccount": "¿No tienes cuenta? Regístrate",
     "forgotPassword": "¿Olvidaste tu contraseña?",
     "changePassword": "¿Deseas actualizar tu contraseña?",
+    "invalidCredentials": "Correo o contraseña incorrectos",
+    "accountBlocked": "Tu cuenta está bloqueada por demasiados intentos fallidos. Recupera tu contraseña o contacta a un administrador.",
+    "tooManyAttempts": "Demasiados intentos. Espera {{time}} e inténtalo de nuevo.",
+    "serviceUnavailable": "El servicio no está disponible en este momento. Intenta más tarde.",
     "error": "Error"
   },
   "register": {
@@ -733,6 +738,10 @@
     "actions": "Acciones",
     "registeredOn": "Registrado el {{date}}",
     "changeRole": "Cambiar rol",
+    "deactivate": "Desactivar",
+    "unblock": "Desbloquear",
+    "confirmDeactivate": "¿Desactivar la cuenta de {{name}}? No podrá iniciar sesión.",
+    "you": "Tú",
     "notFound": "No se encontraron usuarios con esos criterios.",
     "showingCount": "Mostrando {{count}} usuario",
     "showingCount_other": "Mostrando {{count}} usuarios",

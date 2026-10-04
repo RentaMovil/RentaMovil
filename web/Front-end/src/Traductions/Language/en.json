@@ -1,4 +1,5 @@
 {
+  "dialog": { "accept": "OK", "cancel": "Cancel" },
   "navbar": {
     "linkInit": "Home",
     "linkNotifications": "Notifications",
@@ -108,6 +109,10 @@
     "noAccount": "Don't have an account? Sign up",
     "forgotPassword": "Forgot your password?",
     "changePassword": "Do you want to update your password?",
+    "invalidCredentials": "Incorrect email or password",
+    "accountBlocked": "Your account is locked after too many failed attempts. Reset your password or contact an administrator.",
+    "tooManyAttempts": "Too many attempts. Wait {{time}} and try again.",
+    "serviceUnavailable": "The service is unavailable right now. Try again later.",
     "error": "Error"
   },
   "register": {
@@ -731,6 +736,10 @@
     "actions": "Actions",
     "registeredOn": "Registered on {{date}}",
     "changeRole": "Change role",
+    "deactivate": "Deactivate",
+    "unblock": "Unblock",
+    "confirmDeactivate": "Deactivate {{name}}'s account? They won't be able to sign in.",
+    "you": "You",
     "notFound": "No users found matching those criteria.",
     "showingCount": "Showing {{count}} user",
     "showingCount_other": "Showing {{count}} users",

@@ -2,18 +2,47 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   FiShield, FiUsers, FiUser, FiStar, FiTrendingUp, FiSearch, FiKey, FiX, FiAlertTriangle,
+  FiUserX, FiUnlock,
 } from "react-icons/fi";
 import NavBarAdmin from "../../../../shared/components/layout/NavBarAdmin";
 import FooterAdmin from "../../../../shared/components/layout/FooterAdmin";
+import { useAuth } from "../../../../contexts/AuthContext";
+import { useDialog } from "../../../../shared/components/dialog/dialogContext";
 import { useUsers } from "../hooks/useUsers";
 import { useUpdateUserRole } from "../hooks/useUpdateUserRole";
+import { useUpdateUserStatus } from "../hooks/useUpdateUserStatus";
 import "./UserManagement.css";
 
 export default function UserManagement() {
   const { t } = useTranslation();
+  const { user: me } = useAuth();
+  const { confirm } = useDialog();
 
   const { users, isLoading, error, refetch } = useUsers();
   const { updateUserRole, isLoading: isSaving } = useUpdateUserRole();
+  const { updateUserStatus, isLoading: isChangingStatus } = useUpdateUserStatus();
+  const [statusError, setStatusError] = useState(null);
+
+  // iam solo permite desactivar (ACTIVE -> INACTIVE) y desbloquear (BLOCKED -> ACTIVE).
+  // Una cuenta INACTIVE no se puede reactivar desde aquí (entities-and-rules.md).
+  const handleStatus = async (u, status) => {
+    if (status === "INACTIVE") {
+      const ok = await confirm({
+        title: t("userManagement.deactivate"),
+        message: t("userManagement.confirmDeactivate", { name: `${u.firstName} ${u.lastName}` }),
+        confirmText: t("userManagement.deactivate"),
+        danger: true,
+      });
+      if (!ok) return;
+    }
+    setStatusError(null);
+    try {
+      await updateUserStatus(u.id, status);
+      await refetch();
+    } catch (err) {
+      setStatusError(err.message);
+    }
+  };
 
   const [search, setSearch] = useState("");
   const [roleFilter, setRoleFilter] = useState("ALL");
@@ -33,7 +62,8 @@ export default function UserManagement() {
     const matchesSearch =
       term === "" ||
       `${u.firstName} ${u.lastName}`.toLowerCase().includes(term) ||
-      u.email.toLowerCase().includes(term);
+      u.email.toLowerCase().includes(term) ||
+      u.username.toLowerCase().includes(term);
     const matchesRole = roleFilter === "ALL" || u.role === roleFilter;
     return matchesSearch && matchesRole;
   });
@@ -121,6 +151,12 @@ export default function UserManagement() {
 
         {isLoading && <p className="um-empty">Cargando usuarios...</p>}
         {!isLoading && error && <p className="um-empty">{error}</p>}
+        {statusError && (
+          <div className="um-warning">
+            <FiAlertTriangle />
+            <p>{statusError}</p>
+          </div>
+        )}
 
         {!isLoading && !error && (
           <>
@@ -167,10 +203,11 @@ export default function UserManagement() {
                         <td>
                           <div className="um-user-cell">
                             <div>
-                              <div className="um-user-name">{u.firstName} {u.lastName}</div>
-                              <div className="um-user-since">
-                                {t("userManagement.registeredOn", { date: u.registeredAt })}
+                              <div className="um-user-name">
+                                {u.firstName} {u.lastName}
+                                {u.id === me?.id && ` (${t("userManagement.you")})`}
                               </div>
+                              <div className="um-user-since">@{u.username}</div>
                             </div>
                           </div>
                         </td>
@@ -188,9 +225,26 @@ export default function UserManagement() {
                           </span>
                         </td>
                         <td className="right">
-                          <button className="um-btn-role" onClick={() => openRoleModal(u)}>
-                            <FiKey /> {t("userManagement.changeRole")}
-                          </button>
+                          {/* iam no deja cambiar el rol ni el estado de la propia cuenta */}
+                          {u.id !== me?.id && (
+                            <div style={{ display: "inline-flex", gap: "0.5rem", flexWrap: "wrap", justifyContent: "flex-end" }}>
+                              <button className="um-btn-role" onClick={() => openRoleModal(u)}>
+                                <FiKey /> {t("userManagement.changeRole")}
+                              </button>
+                              {u.status === "ACTIVE" && (
+                                <button className="um-btn-role" disabled={isChangingStatus}
+                                        onClick={() => handleStatus(u, "INACTIVE")}>
+                                  <FiUserX /> {t("userManagement.deactivate")}
+                                </button>
+                              )}
+                              {u.status === "BLOCKED" && (
+                                <button className="um-btn-role" disabled={isChangingStatus}
+                                        onClick={() => handleStatus(u, "ACTIVE")}>
+                                  <FiUnlock /> {t("userManagement.unblock")}
+                                </button>
+                              )}
+                            </div>
+                          )}
                         </td>
                       </tr>
                     ))}

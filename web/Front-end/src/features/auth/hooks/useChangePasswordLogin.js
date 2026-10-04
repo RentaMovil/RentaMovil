@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { authService } from "../../auth/services/authService";
+import { useDialog } from "../../../shared/components/dialog/dialogContext";
 import { isPasswordValid } from "../utils/passWorrdValidation.js";
 import { buildPasswordRules, getConfirmPasswordClassName, getPasswordClassName } from "../utils/changePasswordUtils.js";
 
 function useChangePasswordLogin(t) {
     const location = useLocation();
     const navigate = useNavigate();
+    const { alert } = useDialog();
     const { email, code } = location.state || {};
 
     // Si se entra directo a la URL (sin correo ni código) se vuelve a pedir el correo
@@ -34,7 +36,7 @@ function useChangePasswordLogin(t) {
         setLoading(true);
         try {
             await authService.resetPassword({ email, code, newPassword: password });
-            window.alert(t("changePassword.successPassword"));
+            await alert({ message: t("changePassword.successPassword"), tone: "success" });
             navigate('/'); // vuelve a login con la contraseña ya actualizada
         } catch (err) {
             setError(err.message || t("changePassword.errorRequest"));

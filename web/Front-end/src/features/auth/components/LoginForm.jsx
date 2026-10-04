@@ -5,6 +5,27 @@
     import "./RegisterForm.jsx";
     import { useNavigate } from "react-router-dom";
 
+    // "90 segundos" -> "2 minutos": el rate limit del login es de 5 minutos
+    function formatWait(seconds) {
+    if (!seconds) return "unos minutos";
+    if (seconds < 60) return `${seconds} s`;
+    return `${Math.ceil(seconds / 60)} min`;
+    }
+
+    // Mensaje según lo que respondió el backend:
+    // 401 = datos incorrectos, 423 = cuenta bloqueada (5 intentos fallidos en iam),
+    // 429 = demasiados intentos desde esta red (rate limit del gateway), 503 = servicio caído
+    function loginErrorFor(err) {
+    switch (err?.status) {
+        case 401: return "loginForm.invalidCredentials";
+        case 423: return "loginForm.accountBlocked";
+        case 429: return { key: "loginForm.tooManyAttempts", params: { time: formatWait(err.retryAfter) } };
+        case 503:
+        case 504: return "loginForm.serviceUnavailable";
+        default: return "loginForm.errorAuthentication";
+    }
+    }
+
     function LoginForm({ onSubmit, onSwitchToRegister }) {
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -32,7 +53,7 @@
         try {
         await onSubmit({ email, password });
         } catch (err) {
-        setError("loginForm.errorAuthentication");
+        setError(loginErrorFor(err));
         } finally {
         setLoading(false);
         }
@@ -77,7 +98,7 @@
 
             {error && (
             <div className="login-error" role="alert">
-                {t(error)}
+                {typeof error === "string" ? t(error) : t(error.key, error.params)}
             </div>
             )}
 

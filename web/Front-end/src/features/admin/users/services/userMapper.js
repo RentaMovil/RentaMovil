@@ -1,15 +1,22 @@
+// UserSummary de iam (GET /users): campos en camelCase
 export function toUserViewModel(user) {
     return {
         id: user.id,
-        firstName: user.first_name,
-        lastName: user.last_name,
-        email: user.email,
+        firstName: user.firstName ?? "",
+        lastName: user.lastName ?? "",
+        email: user.email ?? "",
+        username: user.username ?? "",
         role: user.role,
         status: user.status,
-        registeredAt: user.registeredAt || null,
+        imageUrl: user.imageUrl ?? null,
     };
 }
 
 export function toUpdateRolePayload(role) {
     return { role };
+}
+
+// Solo ACTIVE o INACTIVE: a BLOCKED se llega solo (5 intentos fallidos)
+export function toUpdateStatusPayload(status) {
+    return { status };
 }
