@@ -4,8 +4,11 @@ import { useNavigate } from "react-router-dom";
 // Componentes Web del proyecto
 import VehicleReservationCard from "../../booking/components/VehicleReservationCard";
 import Navbar from "../../../shared/components/layout/Navbar";
+import NavbarAdmin from "../../../shared/components/layout/NavBarAdmin";
 import InvoiceCard from "../components/InvoiceCard";
 import Footer from "../../../shared/components/layout/Footer";
+import FooterAdmin from "../../../shared/components/layout/FooterAdmin";
+import { useAuth } from "../../../contexts/AuthContext.jsx";
 import BankAccountSelector from "../components/BankAccountSelector";
 import ContinueButton from "../../../shared/components/continueButton";
 import PaymentReceiptUpload from "../components/PaymentReceiptUpload";
@@ -44,6 +47,11 @@ function PaySectionHeader({ title, subtitle, badge }) {
 export default function PaymentPage() {
 
     const navigate = useNavigate();
+
+    const { user } = useAuth();
+    const isAdmin = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
+    const NavbarComponent = isAdmin ? NavbarAdmin : Navbar;
+    const FooterComponent = isAdmin ? FooterAdmin : Footer;
 
     const { reservation, clearReservation } = useReservation();
     const { clearPayment } = usePayment();
@@ -113,7 +121,7 @@ export default function PaymentPage() {
     ) {
         return (
             <>
-                <Navbar />
+                <NavbarComponent />
                 <div className="pay-page-container">
                     <p className="pay-empty-state">
                         {!reservation?.vehicle
@@ -123,7 +131,7 @@ export default function PaymentPage() {
                                 : "La reserva está incompleta. Regresa y completa los datos antes de pagar."}
                     </p>
                 </div>
-                <Footer />
+                <FooterComponent />
             </>
         );
     }
@@ -131,7 +139,7 @@ export default function PaymentPage() {
     if (submitted) {
         return (
             <>
-                <Navbar />
+                <NavbarComponent />
 
                 <div className="pay-page-container">
                     <section className="pay-card pay-success">
@@ -155,14 +163,14 @@ export default function PaymentPage() {
                     </section>
                 </div>
 
-                <Footer />
+                <FooterComponent />
             </>
         );
     }
 
     return (
         <>
-            <Navbar />
+            <NavbarComponent />
 
             <div className="pay-page-container">
 
@@ -247,7 +255,7 @@ export default function PaymentPage() {
 
             </div>
 
-            <Footer />
+            <FooterComponent />
         </>
     );
 }

@@ -1,7 +1,10 @@
 import { useState } from "react";
 import "./HistorialReservation.css";
 import Navbar from "../../../shared/components/layout/Navbar.jsx";
+import NavbarAdmin from "../../../shared/components/layout/NavBarAdmin.jsx";
 import Footer from "../../../shared/components/layout/Footer.jsx";
+import FooterAdmin from "../../../shared/components/layout/FooterAdmin.jsx";
+import { useAuth } from "../../../contexts/AuthContext.jsx";
 import ReservationDetailModal from "../components/HistoryReservationDetail.jsx";
 import { useTranslation } from "react-i18next";
 import { useReservationsList } from "../hooks/useReservationsList.js";
@@ -10,6 +13,11 @@ import { useUpdateReturnBranch } from "../hooks/useUpdateReturnBranch.js";
 import { useBranches } from "../../admin/branches/hooks/useBranch.js";
 function HistorialReservation() {
   const { t } = useTranslation();
+
+  const { user } = useAuth();
+  const isAdmin = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
+  const NavbarComponent = isAdmin ? NavbarAdmin : Navbar;
+  const FooterComponent = isAdmin ? FooterAdmin : Footer;
 
   const { reservations: reservas, isLoading, error, refetch } = useReservationsList();
   const { cancelReservation } = useCancelReservation();
@@ -40,7 +48,7 @@ function HistorialReservation() {
 
   return (
     <>
-      <Navbar />
+      <NavbarComponent />
       <div className="historial-page">
         <div className="cards-container">
 
@@ -192,7 +200,7 @@ function HistorialReservation() {
         onUpdateReturnBranch={handleUpdateReturnBranch}
       />
 
-      <Footer />
+      <FooterComponent />
     </>
   );
 }

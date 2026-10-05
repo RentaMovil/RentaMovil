@@ -8,4 +8,7 @@ const RESOURCE = '/vehicles'
 export const carsService = {
     getAll: async () => fromApiVehiclePage(await httpClient.get(`${RESOURCE}?limit=100`)),
     getById: async (id) => fromApiVehicle(await httpClient.get(`${RESOURCE}/${id}`)),
+    // fleet-maintenance: GET /vehicles/{id}/availability?from=YYYY-MM-DD&to=YYYY-MM-DD
+    getAvailability: async (id, from, to) =>
+        httpClient.get(`${RESOURCE}/${id}/availability?from=${from}&to=${to}`),
 }

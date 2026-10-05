@@ -13,6 +13,7 @@ import img3 from "../../../assets/img/img3.webp";
 import FilterCalendar from "../components/FilterCalendar.jsx";
 import { useState, useEffect, useRef } from "react";
 import { useCars } from "../hooks/useCars.js";
+import { filterAvailableVehicles } from "../utils/filterAvilableCars.js";
 import { FaSearch, FaBars, FaTimes } from "react-icons/fa";
 
 function Home() {
@@ -65,11 +66,7 @@ function Home() {
   const handleSearch = ({ branch, startDate, endDate }) => {
     setCalendarFilters((current) => ({ ...current, branch, startDate, endDate }));
 
-    const disponibles = cars.filter(
-      (car) => car.branchName === branch?.name && car.status === "Disponible"
-    );
-
-    setCarsFiltered(disponibles);
+    filterAvailableVehicles(cars, branch, startDate, endDate).then(setCarsFiltered);
   };
 
   const handleClearFilters = () => {

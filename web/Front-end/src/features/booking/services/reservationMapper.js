@@ -31,6 +31,8 @@ export function fromApiReservation(reservation) {
         insurance_subtotal: Number(reservation.insuranceSubtotal) || 0,
         total_amount: Number(reservation.totalAmount) || 0,
         status: reservation.status,
+        // Solo las reservas ADMIN lo traen; el cliente normal no necesita saber quién hizo la reserva ajena.
+        client_id: reservation.clientId ?? null,
     };
 }
 
@@ -146,9 +148,10 @@ export function toAdminReservationViewModel(reservation, ctx) {
             mileage: vehicle.mileage || 0,
         },
         customer: {
-            name: [customer.first_name, customer.last_name].filter(Boolean).join(' '),
-            email: customer.email,
-            phone: customer.phone,
+            // GET /users de iam devuelve camelCase: firstName/lastName/email
+            name: [customer.firstName, customer.lastName].filter(Boolean).join(' ') || customer.username || '',
+            email: customer.email ?? '',
+            phone: customer.phone ?? '',
         },
         pickup: {
             date: reservation.start_date,
