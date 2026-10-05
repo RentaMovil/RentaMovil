@@ -14,7 +14,6 @@ import { validatePayment } from "../validators/paymentValidator";
 import { useInsurance } from "../../admin/insuranceTypes/hooks/useInsurance";
 import { reservationService } from "../../booking/services/reservationService";
 import { paymentService } from "../services/paymentService";
-import { getStoredUser } from "../../auth/services/sessionStorage";
 
 export function usePaymentForm() {
     const { payment, markAsPendingReview } = usePayment();
@@ -52,6 +51,9 @@ export function usePaymentForm() {
                 item.id === reservation.insuranceId
         );
     }, [
+        // insurance llega de la API después del primer render: sin esta dependencia el
+        // seguro elegido no se encuentra y su subtotal queda en 0
+        insurance,
         reservation.insuranceId,
     ]);
 
@@ -180,15 +182,10 @@ export function usePaymentForm() {
 
         try {
             setIsProcessing(true);
-            const user = getStoredUser();
 
-            const reservationResponse = await reservationService.create(
-                reservation,
-                vehicleSubtotal,
-                insuranceSubtotal,
-                totalAmount,
-                user?.id
-            );
+            // Los montos de arriba son solo para mostrar: booking calcula los reales
+            // y el titular sale del token.
+            const reservationResponse = await reservationService.create(reservation);
 
             return reservationResponse;
         } catch (error) {
@@ -215,7 +212,8 @@ export function usePaymentForm() {
         const paymentData = {
             reservationId,
             bankAccountId: payment.bankAccountId,
-            amount: totalAmount,
+            // El monto a pagar es el que calculó booking, no el estimado de la pantalla
+            amount: reservationResponse.total_amount ?? totalAmount,
             referenceNumber: payment.referenceNumber?.trim() || null,
             receiptFile: payment.receiptFile,
         };
@@ -247,15 +245,10 @@ export function usePaymentForm() {
 
         try {
             setIsProcessing(true);
-            const user = getStoredUser();
 
-            const reservationResponse = await reservationService.create(
-                reservation,
-                vehicleSubtotal,
-                insuranceSubtotal,
-                totalAmount,
-                user?.id
-            );
+            // Los montos de arriba son solo para mostrar: booking calcula los reales
+            // y el titular sale del token.
+            const reservationResponse = await reservationService.create(reservation);
 
             const paymentResponse = await submitPayment(reservationResponse);
 

@@ -9,6 +9,9 @@ import {
 } from "./sessionStorage";
 
 const RESOURCE = "/auth";
+// El perfil vive en /users/me (ProfileController), no bajo /auth: el gateway le quita el
+// prefijo a /auth/** y iam no expone un /me suelto.
+const USERS_RESOURCE = "/users";
 
 export const authService = {
     async login(credentials) {
@@ -75,23 +78,20 @@ export const authService = {
     },
 
     async getProfile() {
-        const response = await httpClient.get(`${RESOURCE}/me`);
+        const response = await httpClient.get(`${USERS_RESOURCE}/me`);
         return toAuthUserViewModel(response);
     },
 
     /**
      * Guarda los cambios del perfil y devuelve el usuario ya actualizado.
      *
-     * El view model usa firstName / lastName en camelCase, pero el endpoint
-     * espera los nombres de la API (first_name / last_name), asi que se
-     * traducen aqui. El backend ignora lo que no este en su lista blanca.
+     * El backend espera camelCase (UpdateProfileRequest en rtm-iam), no snake_case.
      */
     async updateProfile(changes) {
-        const response = await httpClient.patch(`${RESOURCE}/me`, {
-            first_name: changes.firstName,
-            last_name: changes.lastName,
+        const response = await httpClient.patch(`${USERS_RESOURCE}/me`, {
+            firstName: changes.firstName,
+            lastName: changes.lastName,
             phone: changes.phone,
-            username: changes.username,
         });
 
         return toAuthUserViewModel(response);
@@ -100,21 +100,18 @@ export const authService = {
     getStoredUser,
 
     forgotPassword: (email) =>
-        httpClient.post(`${RESOURCE}/forgot-password`, { email }),
-
-    verifyCode: (email, code) =>
-        httpClient.post(`${RESOURCE}/verify-code`, { email, code }),
+        httpClient.post(`${RESOURCE}/password/forgot`, { email }),
 
     resetPassword: (payload) =>
-        httpClient.post(`${RESOURCE}/reset-password`, payload),
+        httpClient.post(`${RESOURCE}/password/reset`, payload),
 
     changePassword: (currentPassword, newPassword) =>
         httpClient.patch(
-            `${RESOURCE}/me/password`,
+            `${USERS_RESOURCE}/me/password`,
             { currentPassword, newPassword }
         ),
     async changeEmail(newEmail, currentPassword) {
-        const response = await httpClient.patch(`${RESOURCE}/me/email`, {
+        const response = await httpClient.patch(`${USERS_RESOURCE}/me/email`, {
             newEmail,
             currentPassword,
         });

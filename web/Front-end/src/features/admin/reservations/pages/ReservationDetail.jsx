@@ -10,7 +10,6 @@ import { FaCar, FaSatelliteDish } from "react-icons/fa";
 import NavBarAdmin from "../../../../shared/components/layout/NavBarAdmin";
 import FooterAdmin from "../../../../shared/components/layout/FooterAdmin";
 import { useReservationsAdmin } from "../../../booking/hooks/useReservationAdmin";
-import { reservationService } from "../../../booking/services/reservationService";
 import { paymentService } from "../../../payment/services/paymentService";
 import { rentalService } from "../../../booking/services/rentalService";
 import { useGps } from "../../vehicleLocation/hooks/useGps";
@@ -26,7 +25,8 @@ export default function ReservationDetail() {
   const { reservations, isLoading, error, refetch } = useReservationsAdmin();
   const { gpsDevices } = useGps();
 
-  const reservation = reservations.find((r) => r.id === id);
+  // El id de la URL es texto y el de booking es número
+  const reservation = reservations.find((r) => String(r.id) === id);
 
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
@@ -86,8 +86,9 @@ export default function ReservationDetail() {
     setActionError(null);
     try {
       const reviewer = getStoredUser();
+      // Aprobar el pago lo hace payment-billing; booking recibe el evento y confirma la
+      // reserva por su cuenta (PENDING_REVIEW -> CONFIRMED). El frontend no cambia estados.
       await paymentService.approve(reservation.payment.id, reviewer?.id);
-      await reservationService.updateStatus(reservation.id, 'CONFIRMED');
       await refetch();
     } catch (err) {
       setActionError(err.message || "No se pudo aprobar el pago.");
@@ -102,11 +103,11 @@ export default function ReservationDetail() {
     setActionError(null);
     try {
       const reviewer = getStoredUser();
+      // Igual que al aprobar: booking pasa la reserva a PENDING_PAYMENT o CANCELLED
+      // según el resultado del rechazo que le informe payment-billing (INV-016).
+      // PENDIENTE: rejectAction ("reupload" / "cancel") debe llegar a payment-billing
+      // cuando exista; paymentService.reject todavía no lo envía.
       await paymentService.reject(reservation.payment.id, reviewer?.id, rejectReason.trim());
-      await reservationService.updateStatus(
-        reservation.id,
-        rejectAction === "cancel" ? 'CANCELLED' : 'PENDING_PAYMENT'
-      );
       await refetch();
       closeReject();
     } catch (err) {
@@ -128,8 +129,8 @@ export default function ReservationDetail() {
         const gpsId = data.get("gps");
         await rentalService.createPickup(reservation.id, gpsId, mileage);
       } else {
+        // Booking cierra la renta y pasa la reserva a COMPLETED en la misma operación
         await rentalService.registerReturn(reservation.rental.id, mileage);
-        await reservationService.updateStatus(reservation.id, 'COMPLETED');
       }
       await refetch();
       closeOperation();

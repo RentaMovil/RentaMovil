@@ -51,6 +51,13 @@ function HistorialReservation() {
           {isLoading && <p className="title">Cargando reservas...</p>}
           {!isLoading && error && <p className="title">{error}</p>}
 
+          {/* Estado vacío: un array vacío no renderiza nada y deja la página en blanco */}
+          {!isLoading && !error && !reservas.length && (
+            <div className="historial-empty">
+              <p>{t("historyReservation.emptyTitle", "No hay reservas que coincidan con estos filtros.")}</p>
+            </div>
+          )}
+
           {!isLoading && !error && reservas.map((r) => {
             const pickUpBranch = getBranchById(r.pickupBranchId);
             const returnBranch = getBranchById(r.returnBranchId);
@@ -135,7 +142,8 @@ function HistorialReservation() {
                       {t("historyReservation.details", "Ver Detalles")}
                     </button>
 
-                    {r.status === "activa" && (
+                    {/* INV-004: solo reservas vigentes, hasta 3 días antes de la recogida */}
+                    {r.canCancel && (
                       <button
                         className="btn btn-secundario"
                         onClick={() => {

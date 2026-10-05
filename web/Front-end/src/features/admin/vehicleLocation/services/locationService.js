@@ -1,5 +1,7 @@
 import { httpClient } from '../../../../shared/api/httpClient';
 import { toLocationViewModel } from "./locationMapper";
+import { rentalService } from "../../../booking/services/rentalService";
+import { reservationService } from "../../../booking/services/reservationService";
 
 export const locationService = {
     // Vehículos con rental IN_PROGRESS + su última posición conocida.
@@ -7,10 +9,11 @@ export const locationService = {
     // cruzando 4 colecciones — mismo patrón que useReservationsAdmin.
     getTrackedVehicles: async () => {
         const [rentals, gpsDevices, locations, reservations, vehicles] = await Promise.all([
-            httpClient.get('/rentals'),
+            rentalService.getAll(),
+            // /gps y /locations son de telemetry-gps, que todavía no existe
             httpClient.get('/gps'),
             httpClient.get('/locations'),
-            httpClient.get('/reservations'),
+            reservationService.getAllAdmin(),
             httpClient.get('/vehicles'),
         ]);
 

@@ -1,6 +1,7 @@
 export function toVehiclePayload(formData) {
     return {
-        id: formData.plate.toUpperCase(),
+        // Sin "id": lo asigna el servidor como entero, igual que booking.vehicle_id.
+        // La placa es un dato del vehículo, no su identificador.
         plate: formData.plate,
         brand: formData.brand,
         model: formData.model,
@@ -10,13 +11,13 @@ export function toVehiclePayload(formData) {
         capacity: Number(formData.capacity),
         vehicleType: formData.vehicleType,
         fuelType: formData.fuelType,
-        branchId: formData.branchId,   
+        branchId: Number(formData.branchId),
         image: formData.image,
         status: 'Disponible',              
     };
 }export function toCreatePayload(formData) {
     return {
-        id: formData.plate.toUpperCase(),
+        // Sin "id": lo asigna el servidor como entero, igual que booking.vehicle_id
         plate: formData.plate.toUpperCase(),
         brand: formData.brand,
         model: formData.model,
@@ -26,7 +27,7 @@ export function toVehiclePayload(formData) {
         capacity: Number(formData.capacity),
         vehicleType: formData.vehicleType,
         fuelType: formData.fuelType,
-        branchId: formData.branchId,      // antes: location: formData.location
+        branchId: Number(formData.branchId),      // antes: location: formData.location
         image: formData.image,
         status: VEHICLE_STATUS.AVAILABLE,
     };
@@ -43,7 +44,7 @@ export function toUpdatePayload(formData) {
         capacity: Number(formData.capacity),
         vehicleType: formData.vehicleType,
         fuelType: formData.fuelType,
-        branchId: formData.branchId,
+        branchId: Number(formData.branchId),
         image: formData.image,
     };
 }

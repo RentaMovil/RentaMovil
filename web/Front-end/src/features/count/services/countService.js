@@ -1,7 +1,8 @@
 import { httpClient } from "../../../shared/api/httpClient";
 import { toUpdateProfilePayload } from "./countMapper";
 
-const RESOURCE = "/auth/me";
+// El perfil vive en /users/me (ProfileController de iam), no bajo /auth/me.
+const RESOURCE = "/users/me";
 
 export const countService = {
     getProfile: () => httpClient.get(RESOURCE),

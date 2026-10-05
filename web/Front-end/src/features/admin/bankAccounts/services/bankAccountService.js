@@ -1,7 +1,8 @@
 import { httpClient } from "../../../../shared/api/httpClient";
 import { toCreateBankAccountPayload } from "./bankAccountMapper";
 
-const RESOURCE = "/bankAccounts";
+// El gateway enruta /bank-accounts/**, con guion.
+const RESOURCE = "/bank-accounts";
 
 export const bankAccountService = {
     getAll: () => httpClient.get(RESOURCE),

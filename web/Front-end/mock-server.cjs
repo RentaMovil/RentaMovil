@@ -85,8 +85,10 @@ server.post('/auth/register', (req, res) => {
         return res.status(409).json({ message: 'El correo ya está registrado' });
     }
 
+    // Ids enteros, como en booking (person_id / client_id): siguiente al mayor existente
+    const nextId = Math.max(0, ...db.get('users').map('id').value().map(Number).filter(Number.isFinite)) + 1;
     const newUser = {
-        id: randomUUID(),
+        id: nextId,
         first_name, last_name, email, phone, username,
         password_hash: bcrypt.hashSync(password, 12),
         role: 'CLIENT',
@@ -228,13 +230,17 @@ server.get('/users', requireAuth, (req, res) => {
 // PATCH /users/:id/role — cambia el rol de un usuario (requiere sesión)
 server.patch('/users/:id/role', requireAuth, (req, res) => {
     const { role } = req.body;
-    const user = db.get('users').find({ id: req.params.id }).value();
+    // req.params.id llega como texto y los ids son enteros
+    const id = Number(req.params.id);
+    const user = db.get('users').find({ id }).value();
     if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
 
-    db.get('users').find({ id: req.params.id }).assign({ role }).write();
-    res.json(toPublicUser(db.get('users').find({ id: req.params.id }).value()));
+    db.get('users').find({ id }).assign({ role }).write();
+    res.json(toPublicUser(db.get('users').find({ id }).value()));
 });
 
 server.use(router); // /vehicles, /maintenances siguen igual
 
-server.listen(3001, () => console.log('Mock API con JWT en http://localhost:3001'));
+// PORT permite correrlo junto a los servicios reales (iam usa el 3001): PORT=3002 npm run mock-api
+const PORT = Number(process.env.PORT) || 3001;
+server.listen(PORT, () => console.log(`Mock API con JWT en http://localhost:${PORT}`));

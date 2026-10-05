@@ -9,6 +9,10 @@ import { useAuth } from "../../../contexts/AuthContext";
 
 import "./Login.css";
 
+// ADMIN y SUPER_ADMIN van al panel de administración. Comparar solo con "ADMIN"
+// mandaba al SUPER_ADMIN a /home, que es el panel de cliente.
+const isAdminRole = (role) => role === "ADMIN" || role === "SUPER_ADMIN";
+
 function Login() {
     const [isLoginMode, setIsLoginMode] = useState(true);
     const navigate = useNavigate();
@@ -18,7 +22,7 @@ function Login() {
         const session = await login(credentials);
 
         navigate(
-            session.user.role === "ADMIN"
+            isAdminRole(session.user.role)
                 ? "/HomeAdmin"
                 : "/home",
         );
@@ -26,7 +30,7 @@ function Login() {
 
     const handleRegister = async (formData) => {
         const session = await register(formData);
-        navigate(session.user.role === "ADMIN" ? "/HomeAdmin" : "/home");
+        navigate(isAdminRole(session.user.role) ? "/HomeAdmin" : "/home");
     };
 
     return (
