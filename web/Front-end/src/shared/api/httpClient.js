@@ -4,11 +4,17 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 const MOCK_API_URL = import.meta.env.VITE_MOCK_API_URL || 'http://localhost:3100';
 
 // Rutas que ya tienen backend real (van al gateway). Todo lo demás sigue en el mock.
-// Cuando un servicio nuevo esté listo, se agrega su prefijo aquí (ej. '/vehicles' con fleet).
-const REAL_BACKEND_PREFIXES = ['/auth', '/users'];
+// Cuando un servicio nuevo esté listo, se agrega su prefijo aquí.
+const REAL_BACKEND_PREFIXES = [
+    '/auth', '/users',
+    // fleet-maintenance: catálogos de referencia
+    '/brands', '/categories', '/engine-types', '/vehicle-models', '/maintenance-types',
+];
 
 export function hasRealBackend(endpoint) {
-    return REAL_BACKEND_PREFIXES.some((prefix) => endpoint === prefix || endpoint.startsWith(`${prefix}/`));
+    // Se compara solo la ruta: '/vehicles?status=ALL' es '/vehicles'
+    const path = endpoint.split('?')[0];
+    return REAL_BACKEND_PREFIXES.some((prefix) => path === prefix || path.startsWith(`${prefix}/`));
 }
 
 function baseUrlFor(endpoint) {
