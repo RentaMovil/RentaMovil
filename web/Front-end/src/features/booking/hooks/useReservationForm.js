@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { calculateRentalDays, calculateTotal } from "../../../shared/utils/rental";
 import { hasInvalidDateRange, isAdult } from "../../../shared/utils/validation";
+import { useDialog } from "../../../shared/components/dialog/dialogContext";
 
 export const useReservationForm = (price, navigate, t, initialBranch = null, initialSearch = {}) => {
+  const { alert } = useDialog();
   const [opcion, setOpcion] = useState("");
   const [selectedBranch, setSelectedBranch] = useState(initialBranch ?? null);
   const [pickupBranch, setPickupBranch] = useState(initialSearch.branch ?? initialBranch ?? null);
@@ -38,17 +40,17 @@ export const useReservationForm = (price, navigate, t, initialBranch = null, ini
 
   const handlePayment = () => {
     if (!pickupDate || !returnDate) {
-      alert(t("reservation.selectDates"));
+      alert({ message: t("reservation.selectDates"), tone: "warning" });
       return;
     }
 
     if (errorFecha) {
-      alert(errorFecha);
+      alert({ message: errorFecha, tone: "warning" });
       return;
     }
 
     if (errorEdad) {
-      alert(errorEdad);
+      alert({ message: errorEdad, tone: "warning" });
       return;
     }
 

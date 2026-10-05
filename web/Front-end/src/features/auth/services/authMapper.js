@@ -1,4 +1,3 @@
-// LoginRequest acepta correo O username en el campo `identifier`. Mandar `email` da 400.
 export function toLoginPayload({ email, password }) {
     return {
         identifier: email.trim().toLowerCase(),
@@ -6,12 +5,12 @@ export function toLoginPayload({ email, password }) {
     };
 }
 
-// RegisterRequest espera camelCase; `first_name` da 400. phone es opcional.
 export function toRegisterPayload(formData) {
     return {
         firstName: formData.first_name.trim(),
         lastName: formData.last_name.trim(),
         email: formData.email.trim().toLowerCase(),
+        // Opcional: vacío se manda como null y la persona queda sin teléfono
         phone: formData.phone?.trim() || null,
         username: formData.username.trim(),
         password: formData.password,
@@ -32,5 +31,6 @@ export function toAuthUserViewModel(payload) {
         role: String(user.role ?? "CLIENT").toUpperCase(),
         status: String(user.status ?? "ACTIVE").toUpperCase(),
         lastLogin: user.lastLogin ?? user.last_login ?? null,
+        permissions: user.permissions ?? [],
     };
 }

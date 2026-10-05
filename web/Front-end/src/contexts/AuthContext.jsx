@@ -1,207 +1,203 @@
 /* eslint-disable react-refresh/only-export-components */
 
 import {
-    createContext,
-    useCallback,
-    useContext,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
 } from "react";
 
 import { authService } from "../features/auth/services/authService";
 import {
-    clearSession,
-    getStoredRefreshToken,
-    saveSession,
+  clearSession,
+  getStoredRefreshToken,
+  saveSession,
 } from "../features/auth/services/sessionStorage";
 import { tokenStore } from "../shared/api/tokenStore";
 
 const AuthContext = createContext(null);
 
+// /users/me no trae permisos (solo el login y el refresh): al actualizar el perfil
+// se conservan los que ya tenía la sesión, si no se esconde el menú de super admin
+const keepPermissions = (profile) => (prev) => ({
+  ...profile,
+  permissions: prev?.permissions ?? [],
+});
+
 export function AuthProvider({ children }) {
-    const [user, setUser] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const restoreStarted = useRef(false);
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const restoreStarted = useRef(false);
 
-    const clearLocalAuth = useCallback(() => {
-        tokenStore.clear();
-        clearSession();
-        setUser(null);
-    }, []);
+  const clearLocalAuth = useCallback(() => {
+    tokenStore.clear();
+    clearSession();
+    setUser(null);
+  }, []);
 
-    const restoreSession = useCallback(async () => {
-        setIsLoading(true);
-        setError(null);
+  const restoreSession = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
 
-        try {
-            const refreshToken = getStoredRefreshToken();
+    try {
+      const refreshToken = getStoredRefreshToken();
 
-            if (!refreshToken) {
-                return;
-            }
+      if (!refreshToken) {
+        return;
+      }
 
-            await authService.refreshSession();
-            const profile = await authService.getProfile();
+      const session = await authService.refreshSession();
+      const profile = await authService.getProfile();
 
-            setUser(profile);
-        } catch (restoreError) {
-            clearLocalAuth();
-            setError(
-                restoreError?.message ??
-                    "No fue posible restaurar la sesión."
-            );
-        } finally {
-            setIsLoading(false);
-        }
-    }, [clearLocalAuth]);
+      // /users/me no trae permisos, se toman de la respuesta del refresh
+      setUser({ ...profile, permissions: session.user?.permissions ?? [] });
 
-    useEffect(() => {
-        if (restoreStarted.current) {
-            return;
-        }
+    } catch (restoreError) {
+      clearLocalAuth();
+      setError(restoreError?.message ?? "No fue posible restaurar la sesión.");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [clearLocalAuth]);
 
-        restoreStarted.current = true;
+  useEffect(() => {
+    if (restoreStarted.current) {
+      return;
+    }
 
-        // La restauración sincroniza el estado inicial con la sesión remota.
-        restoreSession();
-    }, [restoreSession]);
+    restoreStarted.current = true;
 
-    useEffect(() => {
-        tokenStore.setOnRefreshFail(() => {
-            clearLocalAuth();
-            setError("Tu sesión expiró. Inicia sesión nuevamente.");
-        });
+    // La restauración sincroniza el estado inicial con la sesión remota.
+    restoreSession();
+  }, [restoreSession]);
 
-        return () => {
-            tokenStore.setOnRefreshFail(() => {});
-        };
-    }, [clearLocalAuth]);
+  useEffect(() => {
+    tokenStore.setOnRefreshFail(() => {
+      clearLocalAuth();
+      setError("Tu sesión expiró. Inicia sesión nuevamente.");
+    });
 
-    const login = useCallback(async (credentials) => {
-        setError(null);
-        const session = await authService.login(credentials);
-        setUser(session.user);
-        return session;
-    }, []);
+    return () => {
+      tokenStore.setOnRefreshFail(() => {});
+    };
+  }, [clearLocalAuth]);
 
-    const register = useCallback(async (formData) => {
-        setError(null);
-        const session = await authService.register(formData);
-        setUser(session.user);
-        return session;
-    }, []);
+  const login = useCallback(async (credentials) => {
+    setError(null);
+    const session = await authService.login(credentials);
+    setUser(session.user);
+    return session;
+  }, []);
 
-    const logout = useCallback(async () => {
-        await authService.logout();
-        clearLocalAuth();
-    }, [clearLocalAuth]);
+  const register = useCallback(async (formData) => {
+    setError(null);
+    const session = await authService.register(formData);
+    setUser(session.user);
+    return session;
+  }, []);
 
-    const refreshProfile = useCallback(async () => {
-        setError(null);
+  const logout = useCallback(async () => {
+    await authService.logout();
+    clearLocalAuth();
+  }, [clearLocalAuth]);
 
-        try {
-            const profile = await authService.getProfile();
-            setUser(profile);
-            return profile;
-        } catch (profileError) {
-            setError(
-                profileError?.message ??
-                    "No fue posible cargar el perfil."
-            );
-            throw profileError;
-        }
-    }, []);
+  const refreshProfile = useCallback(async () => {
+    setError(null);
 
-    /**
-     * Guarda los cambios del perfil y sincroniza el estado global con lo que
-     * devolvio el servidor, para que el resto de la app vea el nombre nuevo
-     * sin tener que recargar.
-     */
-    const updateProfile = useCallback(async (changes) => {
-        setError(null);
+    try {
+      const profile = await authService.getProfile();
+      setUser(keepPermissions(profile));
+      return profile;
+    } catch (profileError) {
+      setError(profileError?.message ?? "No fue posible cargar el perfil.");
+      throw profileError;
+    }
+  }, []);
 
-        try {
-            const updated = await authService.updateProfile(changes);
-            setUser(updated);
-            saveSession({ user: updated });
-            return updated;
-        } catch (profileError) {
-            setError(
-                profileError?.message ??
-                    "No fue posible guardar el perfil."
-            );
-            throw profileError;
-        }
-    }, []);
+  /**
+   * Guarda los cambios del perfil y sincroniza el estado global con lo que
+   * devolvio el servidor, para que el resto de la app vea el nombre nuevo
+   * sin tener que recargar.
+   */
+  const updateProfile = useCallback(async (changes) => {
+    setError(null);
 
-    /**
-     * Cambia el correo del usuario autenticado y sincroniza el estado global
-     * con lo que devolvio el servidor.
-     *
-     * A diferencia de `updateProfile`, no escribe en el error global: el
-     * formulario pide un unico mensaje generico para cualquier fallo, y el
-     * texto concreto del backend no debe aparecer en otra parte de la
-     * pantalla. Quien llama decide que mostrar.
-     */
-    const changeEmail = useCallback(async (newEmail, currentPassword) => {
-        const updated = await authService.changeEmail(newEmail, currentPassword);
-        setUser(updated);
-        saveSession({ user: updated });
-        return updated;
-    }, []);
+    try {
+      const updated = await authService.updateProfile(changes);
+      setUser(keepPermissions(updated));
+      saveSession({ user: updated });
+      return updated;
+    } catch (profileError) {
+      setError(profileError?.message ?? "No fue posible guardar el perfil.");
+      throw profileError;
+    }
+  }, []);
 
-    const hasRole = useCallback(
-        (...roles) => roles.includes(user?.role),
-        [user?.role]
-    );
+  /**
+   * Cambia el correo del usuario autenticado y sincroniza el estado global
+   * con lo que devolvio el servidor.
+   *
+   * A diferencia de `updateProfile`, no escribe en el error global: el
+   * formulario pide un unico mensaje generico para cualquier fallo, y el
+   * texto concreto del backend no debe aparecer en otra parte de la
+   * pantalla. Quien llama decide que mostrar.
+   */
+  const changeEmail = useCallback(async (newEmail, currentPassword) => {
+    const updated = await authService.changeEmail(newEmail, currentPassword);
+    setUser(keepPermissions(updated));
+    saveSession({ user: updated });
+    return updated;
+  }, []);
 
-    const value = useMemo(
-        () => ({
-            user,
-            isAuthenticated: Boolean(user),
-            isLoading,
-            error,
-            login,
-            register,
-            logout,
-            restoreSession,
-            refreshProfile,
-            updateProfile,
-            changeEmail,
-            hasRole,
-            clearError: () => setError(null),
-        }),
-        [
-            user,
-            isLoading,
-            error,
-            login,
-            register,
-            logout,
-            restoreSession,
-            refreshProfile,
-            updateProfile,
-            changeEmail,
-            hasRole,
-        ]
-    );
+  const hasRole = useCallback(
+    (...roles) => roles.includes(user?.role),
+    [user?.role],
+  );
 
-    return (
-        <AuthContext.Provider value={value}>
-            {children}
-        </AuthContext.Provider>
-    );
+  const value = useMemo(
+    () => ({
+      user,
+      isAuthenticated: Boolean(user),
+      isLoading,
+      error,
+      login,
+      register,
+      logout,
+      restoreSession,
+      refreshProfile,
+      updateProfile,
+      changeEmail,
+      hasRole,
+      clearError: () => setError(null),
+    }),
+    [
+      user,
+      isLoading,
+      error,
+      login,
+      register,
+      logout,
+      restoreSession,
+      refreshProfile,
+      updateProfile,
+      changeEmail,
+      hasRole,
+    ],
+  );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
-    const context = useContext(AuthContext);
+  const context = useContext(AuthContext);
 
-    if (!context) {
-        throw new Error("useAuth debe utilizarse dentro de AuthProvider");
-    }
+  if (!context) {
+    throw new Error("useAuth debe utilizarse dentro de AuthProvider");
+  }
 
-    return context;
+  return context;
 }

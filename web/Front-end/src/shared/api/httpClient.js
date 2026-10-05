@@ -76,15 +76,21 @@ const FRIENDLY_MESSAGES = {
     503: 'El servicio no está disponible en este momento. Inténtalo más tarde.',
 };
 
-function friendlyError(status, endpoint, serverMessage) {
+function friendlyError(res, endpoint, body) {
+    const status = res.status;
     // Si el backend manda un mensaje en español, tiene prioridad sobre el genérico.
-    const message = serverMessage || FRIENDLY_MESSAGES[status]
+    const message = body?.message || FRIENDLY_MESSAGES[status]
         || 'No se pudo completar la operación. Inténtalo de nuevo.';
     const error = new Error(message);
     // Se conserva lo técnico para la consola, pero no se muestra en pantalla.
     error.status = status;
     error.endpoint = endpoint;
-    if (!serverMessage) {
+    // code: el "error" del backend (ej. ACCOUNT_BLOCKED). retryAfter: segundos del Retry-After
+    // que pone el rate limit del gateway (el login lo muestra en el 429)
+    error.code = body?.error ?? null;
+    const retryAfter = Number(res.headers.get('Retry-After'));
+    error.retryAfter = Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter : null;
+    if (!body?.message) {
         console.warn(`[http] ${status} en ${endpoint}`);
     }
     return error;
@@ -115,7 +121,7 @@ async function request(endpoint, options = {}) {
 
     if (!res.ok) {
         const errorBody = await res.json().catch(() => null);
-        throw friendlyError(res.status, endpoint, errorBody?.message);
+        throw friendlyError(res, endpoint, errorBody);
     }
 
     // 204, o 202 sin cuerpo (ej. /auth/password/forgot): no hay JSON que leer

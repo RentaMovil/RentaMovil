@@ -9,9 +9,6 @@ import {
 } from "./sessionStorage";
 
 const RESOURCE = "/auth";
-// El perfil vive en /users/me (ProfileController), no bajo /auth: el gateway le quita el
-// prefijo a /auth/** y iam no expone un /me suelto.
-const USERS_RESOURCE = "/users";
 
 export const authService = {
     async login(credentials) {
@@ -74,20 +71,19 @@ export const authService = {
     },
 
     async getProfile() {
-        const response = await httpClient.get(`${USERS_RESOURCE}/me`);
+        const response = await httpClient.get(`/users/me`);
         return toAuthUserViewModel(response);
     },
 
-    /**
-     * Guarda los cambios del perfil y devuelve el usuario ya actualizado.
-     *
-     * El backend espera camelCase (UpdateProfileRequest en rtm-iam), no snake_case.
-     */
+    // PATCH /users/me (iam): solo cambia nombre, apellido, teléfono y foto.
+    // El username no se puede cambiar y el email va por /users/me/email.
+    // Solo viajan los campos que vengan en `changes` (los undefined no se mandan).
     async updateProfile(changes) {
-        const response = await httpClient.patch(`${USERS_RESOURCE}/me`, {
+        const response = await httpClient.patch("/users/me", {
             firstName: changes.firstName,
             lastName: changes.lastName,
             phone: changes.phone,
+            imageUrl: changes.imageUrl,
         });
 
         return toAuthUserViewModel(response);
@@ -95,19 +91,22 @@ export const authService = {
 
     getStoredUser,
 
+    // Recuperar contraseña (iam). Sin SMTP todavía: el código sale en el log de iam.
     forgotPassword: (email) =>
         httpClient.post(`${RESOURCE}/password/forgot`, { email }),
 
+    // { email, code, newPassword }. El código se valida aquí (no hay paso aparte de verificar).
     resetPassword: (payload) =>
         httpClient.post(`${RESOURCE}/password/reset`, payload),
 
+    // iam cierra todas las sesiones al cambiarla: después hay que iniciar sesión de nuevo
     changePassword: (currentPassword, newPassword) =>
         httpClient.patch(
-            `${USERS_RESOURCE}/me/password`,
+            "/users/me/password",
             { currentPassword, newPassword }
         ),
     async changeEmail(newEmail, currentPassword) {
-        const response = await httpClient.patch(`${USERS_RESOURCE}/me/email`, {
+        const response = await httpClient.patch("/users/me/email", {
             newEmail,
             currentPassword,
         });

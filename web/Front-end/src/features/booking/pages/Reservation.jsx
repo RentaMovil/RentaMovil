@@ -19,6 +19,7 @@ import VehicleReservationCard from "../components/VehicleReservationCard";
 import TermsAndConditions from "../components/TermsAndConditions";
 
 import { useReservation } from "../context/ReservationContext";
+import { useDialog } from "../../../shared/components/dialog/dialogContext";
 import { useInsurance } from "../../admin/insuranceTypes/hooks/useInsurance";
 import {
     createTermsAcceptance,
@@ -37,6 +38,7 @@ function Reservation() {
     const navigate = useNavigate();
     const location = useLocation();
     const filterCalendarRef = useRef(null);
+    const { alert } = useDialog();
 
     const {
         vehicle: rawVehicle,
@@ -128,12 +130,12 @@ function Reservation() {
      */
     const handlePaymentWithReservation = () => {
         if (!pickupDate || !returnDate) {
-            alert(t("reservation.selectDates"));
+            alert({ message: t("reservation.selectDates"), tone: "warning" });
             return;
         }
 
         if (!termsAccepted) {
-            alert(t("terms.acceptError"));
+            alert({ message: t("terms.acceptError"), tone: "warning" });
             return;
         }
 

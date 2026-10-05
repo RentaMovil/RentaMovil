@@ -1,4 +1,5 @@
 {
+  "dialog": { "accept": "Accepter", "cancel": "Annuler" },
   "navbar": {
     "linkInit": "Accueil",
     "linkNotifications": "Notifications",
@@ -110,6 +111,10 @@
     "noAccount": "Vous n'avez pas de compte ? Inscrivez-vous",
     "forgotPassword": "Mot de passe oublié ?",
     "changePassword": "Voulez-vous mettre à jour votre mot de passe ?",
+    "invalidCredentials": "E-mail ou mot de passe incorrect",
+    "accountBlocked": "Votre compte est bloqué après trop de tentatives échouées. Réinitialisez votre mot de passe ou contactez un administrateur.",
+    "tooManyAttempts": "Trop de tentatives. Attendez {{time}} et réessayez.",
+    "serviceUnavailable": "Le service est indisponible pour le moment. Réessayez plus tard.",
     "error": "Erreur"
   },
   "register": {
@@ -220,6 +225,7 @@
     "caracters": "Au moins 8 caractères",
     "specialCaracters": "Au moins un caractère spécial (#, @, etc)",
     "uppercase": "Au moins une lettre majuscule",
+    "number": "Au moins un chiffre",
     "errorPassword": "Erreur lors du changement du mot de passe",
     "successPassword": "Mot de passe modifié avec succès",
     "errorRequest": "Erreur de requête",
@@ -733,6 +739,10 @@
     "actions": "Actions",
     "registeredOn": "Inscrit le {{date}}",
     "changeRole": "Changer le rôle",
+    "deactivate": "Désactiver",
+    "unblock": "Débloquer",
+    "confirmDeactivate": "Désactiver le compte de {{name}} ? Cette personne ne pourra plus se connecter.",
+    "you": "Vous",
     "notFound": "Aucun utilisateur trouvé avec ces critères.",
     "showingCount": "Affichage de {{count}} utilisateur",
     "showingCount_other": "Affichage de {{count}} utilisateurs",

@@ -1,4 +1,5 @@
 {
+  "dialog": { "accept": "Aceitar", "cancel": "Cancelar" },
   "navbar": {
     "linkInit": "Início",
     "linkNotifications": "Notificações",
@@ -110,6 +111,10 @@
     "noAccount": "Não tem uma conta? Cadastre-se",
     "forgotPassword": "Esqueceu sua senha?",
     "changePassword": "Deseja atualizar sua senha?",
+    "invalidCredentials": "E-mail ou senha incorretos",
+    "accountBlocked": "Sua conta está bloqueada por muitas tentativas falhas. Recupere sua senha ou contate um administrador.",
+    "tooManyAttempts": "Muitas tentativas. Aguarde {{time}} e tente novamente.",
+    "serviceUnavailable": "O serviço não está disponível no momento. Tente mais tarde.",
     "error": "Erro"
   },
   "register": {
@@ -220,6 +225,7 @@
     "caracters": "Pelo menos 8 caracteres",
     "specialCaracters": "Pelo menos um caractere especial (#, @, etc)",
     "uppercase": "Pelo menos uma letra maiúscula",
+    "number": "Pelo menos um número",
     "errorPassword": "Erro ao alterar a senha",
     "successPassword": "Senha alterada com sucesso",
     "errorRequest": "Erro na solicitação",
@@ -733,6 +739,10 @@
     "actions": "Ações",
     "registeredOn": "Registrado em {{date}}",
     "changeRole": "Alterar função",
+    "deactivate": "Desativar",
+    "unblock": "Desbloquear",
+    "confirmDeactivate": "Desativar a conta de {{name}}? Não poderá mais entrar.",
+    "you": "Você",
     "notFound": "Nenhum usuário encontrado com esses critérios.",
     "showingCount": "Mostrando {{count}} usuário",
     "showingCount_other": "Mostrando {{count}} usuários",
