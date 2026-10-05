@@ -1,3 +1,5 @@
+// Vehículos sin foto en fleet (image_url es opcional): se muestra una genérica
+import carPlaceholder from "../../../assets/carro.png";
 export function toClientVehicleViewModel(vehicle, branchesById = {}) {
     return {
         id: vehicle.id,
@@ -14,6 +16,6 @@ export function toClientVehicleViewModel(vehicle, branchesById = {}) {
         mileage: vehicle.mileage,
         dailyPrice: Number(vehicle.price) || 0,
         status: vehicle.status,
-        imageUrl: vehicle.image || null,
+        imageUrl: vehicle.image || carPlaceholder,
     };
 }

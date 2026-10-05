@@ -1,4 +1,4 @@
-import { httpClient } from "../../../shared/api/httpClient";
+import { httpClient, refreshSession } from "../../../shared/api/httpClient";
 import { tokenStore } from "../../../shared/api/tokenStore";
 import { toLoginPayload, toRegisterPayload, toAuthUserViewModel } from "./authMapper";
 import {
@@ -53,15 +53,9 @@ export const authService = {
             throw new Error("No hay refresh token");
         }
 
-        const response = await httpClient.post(
-            `${RESOURCE}/refresh`,
-            { refreshToken }
-        );
-
-        tokenStore.setAccessToken(response.accessToken);
-        // iam rota el refresh token: hay que guardar el nuevo o el siguiente refresh cierra la sesión
-        saveSession({ refreshToken: response.refreshToken });
-        return response;
+        // El mismo refresh que usa httpClient ante un 401: si ya hay uno en curso se reutiliza.
+        // Guarda el access token y el refresh token rotado.
+        return refreshSession();
     },
 
     async logout() {

@@ -59,6 +59,7 @@ export default function PaymentPage() {
         canCreateReservation,
         isProcessing,
         handlePayment,
+        createPendingReservation,
         days,
         total,
     } = usePaymentForm();
@@ -87,6 +88,20 @@ export default function PaymentPage() {
                 error?.message ??
                     "No fue posible registrar el pago. Intenta de nuevo."
             );
+        }
+    };
+
+    // Crea la reserva en PENDING_PAYMENT sin comprobante: el cliente paga dentro de las 24 h
+    const handleReserveOnly = async () => {
+        setSubmitError(null);
+
+        try {
+            await createPendingReservation();
+            clearReservation();
+            clearPayment();
+            navigate("/HistorialReservation");
+        } catch (error) {
+            setSubmitError(error?.message ?? "No fue posible crear la reserva. Intenta de nuevo.");
         }
     };
 
@@ -193,7 +208,7 @@ export default function PaymentPage() {
                             <PaySectionHeader
                                 title="Comprobante de pago"
                                 subtitle="Adjunta el comprobante correspondiente a la transferencia realizada."
-                                badge="Obligatorio"
+                                badge="Para pagar ahora"
                             />
                             <PaymentReceiptUpload />
                         </section>
@@ -222,11 +237,23 @@ export default function PaymentPage() {
                                     Procesando tu pago...
                                 </div>
                             ) : (
-                                <ContinueButton
-                                    title="Reservar"
-                                    onPress={handleSubmit}
-                                    disabled={!canSubmit}
-                                />
+                                <>
+                                    <ContinueButton
+                                        title="Reservar y enviar comprobante"
+                                        onPress={handleSubmit}
+                                        disabled={!canSubmit}
+                                    />
+                                    {/* INV-015: la reserva espera el pago 24 h en PENDING_PAYMENT */}
+                                    <ContinueButton
+                                        title="Reservar y pagar después"
+                                        onPress={handleReserveOnly}
+                                        disabled={!canCreateReservation}
+                                    />
+                                    <p className="pay-later-note">
+                                        Si reservas sin pagar, tienes 24 horas para subir el comprobante
+                                        desde "Mis reservas". Pasado ese plazo la reserva se cancela sola.
+                                    </p>
+                                </>
                             )}
                         </div>
                     </aside>
