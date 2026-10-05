@@ -2,6 +2,7 @@ import { httpClient } from '../../../../shared/api/httpClient';
 import { toLocationViewModel } from "./locationMapper";
 import { rentalService } from "../../../booking/services/rentalService";
 import { reservationService } from "../../../booking/services/reservationService";
+import { inventoryService } from "../../VehicleInventory/services/inventoryService";
 
 export const locationService = {
     // Vehículos con rental IN_PROGRESS + su última posición conocida.
@@ -14,7 +15,7 @@ export const locationService = {
             httpClient.get('/gps'),
             httpClient.get('/locations'),
             reservationService.getAllAdmin(),
-            httpClient.get('/vehicles'),
+            inventoryService.getAll(),
         ]);
 
         const gpsById = Object.fromEntries(gpsDevices.map((g) => [g.id, g]));

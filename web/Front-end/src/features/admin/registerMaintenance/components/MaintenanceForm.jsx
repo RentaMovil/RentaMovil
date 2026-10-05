@@ -1,7 +1,7 @@
 import style from './MaintenanceForm.module.css';
 import { AiOutlineDashboard } from 'react-icons/ai';
 import Animation from '../../../../shared/components/layout/Animation';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import ValidateDate from './ValidateDate';
 import VehicleCard from './VehcileCard';
 import { useForm } from 'react-hook-form';
@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import FilterVehicle from './FilterVehicle';
 import { useVehicles } from '../../registerVehicle/hooks/useVehicles';
-import { vehicleService } from '../../registerVehicle/services/vehicleService';
+import { maintenanceService } from '../../maintenance/service/maintenanceService';
 import { VEHICLE_STATUS } from '../../registerVehicle/constans/vehicleStatus';
 import { useCreateMaintenance } from '../hooks/useCreateMaintenance';
 
@@ -23,6 +23,11 @@ function MaintenanceForm() {
 
     const { vehicles, refetch } = useVehicles();
     const { createMaintenance, isLoading } = useCreateMaintenance();
+    const [maintenanceTypes, setMaintenanceTypes] = useState([]);
+
+    useEffect(() => {
+        maintenanceService.getTypes().then(setMaintenanceTypes).catch(() => setMaintenanceTypes([]));
+    }, []);
 
     const filteredVehicles = useMemo(() => {
         const searchTerm = search.trim().toLowerCase();
@@ -66,8 +71,8 @@ function MaintenanceForm() {
             data.plate = data.plate.toUpperCase();
             data.image = selectedVehicle.image || ''; // reutiliza la foto del registro del vehículo
 
+            // Abrir el mantenimiento ya pasa el vehículo a MAINTENANCE en fleet
             await createMaintenance(data);
-            await vehicleService.updateStatus(selectedVehicle.id, VEHICLE_STATUS.MAINTENANCE);
             await refetch();
 
             reset();
@@ -241,21 +246,11 @@ function MaintenanceForm() {
                                         }
                                     })}
                                 />
+                                {/* Los tipos válidos son los del catálogo de fleet (maintenance_type) */}
                                 <datalist id="maintenance-options">
-                                    <option value={t("MaintenanceForm.options.option1")} />
-                                    <option value={t("MaintenanceForm.options.option2")} />
-                                    <option value={t("MaintenanceForm.options.option3")} />
-                                    <option value={t("MaintenanceForm.options.option4")} />
-                                    <option value={t("MaintenanceForm.options.option5")} />
-                                    <option value={t("MaintenanceForm.options.option6")} />
-                                    <option value={t("MaintenanceForm.options.option7")} />
-                                    <option value={t("MaintenanceForm.options.option8")} />
-                                    <option value={t("MaintenanceForm.options.option9")} />
-                                    <option value={t("MaintenanceForm.options.option10")} />
-                                    <option value={t("MaintenanceForm.options.option11")} />
-                                    <option value={t("MaintenanceForm.options.option12")} />
-                                    <option value={t("MaintenanceForm.options.option13")} />
-                                    <option value={t("MaintenanceForm.options.option14")} />
+                                    {maintenanceTypes.map((type) => (
+                                        <option key={type.id} value={type.name} />
+                                    ))}
                                 </datalist>
                                 {errors.maintenanceType && (
                                     <p className={style['error-message']}>

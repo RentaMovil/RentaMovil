@@ -1,8 +1,8 @@
 import { httpClient } from "../../../../shared/api/httpClient";
-import { toInventoryViewModel  } from "./inventoryMapper";
-const RESOURCE = "/vehicles";
+import { fromApiVehicle } from "../../../vehicles/Services/fleetVehicleMapper";
 
-export const  inventoryService = {
-    getAll: () => httpClient.get(RESOURCE),
-    getById: (id) => httpClient.get(`${RESOURCE}/${id}`),
+// Inventario de administración: todos los vehículos, en cualquier estado
+export const inventoryService = {
+    getAll: async () => (await httpClient.get("/vehicles/inventory")).map(fromApiVehicle),
+    getById: async (id) => fromApiVehicle(await httpClient.get(`/vehicles/${id}`)),
 }

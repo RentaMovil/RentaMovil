@@ -540,6 +540,16 @@
       "receipt_file_url": "https://res.cloudinary.com/dz6ohgjub/image/upload/v1790747245/278294_jpxzva.jpg",
       "status": "PENDING_REVIEW",
       "id": 3
+    },
+    {
+      "reservation_id": 2,
+      "bank_account_id": "BANK-001",
+      "payment_date": "2026-10-05T16:09:27.910Z",
+      "amount": 170000,
+      "reference_number": "25129652361",
+      "receipt_file_url": "https://res.cloudinary.com/dz6ohgjub/image/upload/v1791216567/Certificado_tecnico_1_lihugw.pdf",
+      "status": "PENDING_REVIEW",
+      "id": 4
     }
   ],
   "notifications": [
