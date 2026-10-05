@@ -299,7 +299,12 @@
     "imgp": "Asegúrate de que la imagen sea nítida y muestre el vehículo completo. Esto agiliza el proceso de validación.",
     "imgp2": "Suelta la imagen aquí...",
     "imgp3": "Arrastra la imagen aquí o haz clic para seleccionar una imagen",
-    "changeImage": "Cambiar imagen"
+    "changeImage": "Cambiar imagen",
+    "disabledBrand": "Selecciona una marca...",
+    "disabledModel": "Selecciona un modelo...",
+    "chooseBrandFirst": "Primero elige una marca",
+    "fromModel": "Se completa al elegir el modelo",
+    "plateExists": "Ya existe un vehículo con esta placa"
   },
   "contractHistory": {
     "title": "Historial de contratos",
@@ -510,7 +515,8 @@
     "close": "Cerrar",
     "stateSee": "Ver estado",
     "all_m": "Todos",
-    "all_f": "Todas"
+    "all_f": "Todas",
+    "retired": "Retirado"
   },
   "CheckStatus": {
     "checkStatus": "Consultar estado",

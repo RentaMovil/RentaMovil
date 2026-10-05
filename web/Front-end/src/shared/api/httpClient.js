@@ -7,7 +7,8 @@ const MOCK_API_URL = import.meta.env.VITE_MOCK_API_URL || 'http://localhost:3100
 // Cuando un servicio nuevo esté listo, se agrega su prefijo aquí.
 const REAL_BACKEND_PREFIXES = [
     '/auth', '/users',
-    // fleet-maintenance: catálogos de referencia
+    // fleet-maintenance
+    '/vehicles', '/branches',
     '/brands', '/categories', '/engine-types', '/vehicle-models', '/maintenance-types',
 ];
 
