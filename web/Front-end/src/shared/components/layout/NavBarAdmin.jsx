@@ -44,6 +44,13 @@ function NavbarAdmin() {
               {t("navbar.linkNotifications")}
             </Link>
 
+              <Link
+                to="/HistorialReservation"
+                onClick={() => setOpen(false)}
+            >
+                {t("navbar.linkReservation")}
+            </Link>
+
             <span
               className={`navbar-admin-panel-toggle ${adminOpen ? "active" : ""}`}
               onClick={toggleAdminPanel}
