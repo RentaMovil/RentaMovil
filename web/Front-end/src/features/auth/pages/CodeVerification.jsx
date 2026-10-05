@@ -3,7 +3,6 @@ import { useLocation,useNavigate } from 'react-router-dom';
 import NavbarTwo from '../../../shared/components/layout/NavbarTwo';
 import Footer from '../../../shared/components/layout/Footer';
 import style from "../../auth/pages/CodeVerification.module.css";
-import { authService } from '../services/authService';
 
 function CodeVerification() {
     const location = useLocation();
@@ -13,8 +12,8 @@ function CodeVerification() {
     const inputsRef = useRef([]);
     const navigate = useNavigate();
 
-    // acepta solo un caracter alfanumerico
-    const allowedChars = /^[a-zA-Z0-9]$/;
+    // El código de iam son 6 dígitos
+    const allowedChars = /^[0-9]$/;
 
     const handleChange = (e, index) => {
         const value = e.target.value;
@@ -63,12 +62,9 @@ function CodeVerification() {
         const joined = code.join('');
         if (joined.length !== CODE_LENGTH || code.some((c) => c === '')) return;
 
-        try {
-            await authService.verifyCode(email, joined);
-            navigate('/ChangePasswordLogin', { state: { email, code: joined } });
-        } catch (err) {
-            console.error('Código inválido:', err);
-        }
+        // iam no tiene un endpoint para verificar el código solo: se valida junto con la
+        // nueva contraseña en POST /auth/password/reset (si está mal, el error sale allá)
+        navigate('/ChangePasswordLogin', { state: { email, code: joined } });
     };
 
     return (
@@ -84,7 +80,7 @@ function CodeVerification() {
                                 className={style["code-input"]}
                                 key={i}
                                 type="text"
-                                inputMode="text"
+                                inputMode="numeric"
                                 maxLength={1}
                                 value={c}
                                 onChange={(e) => handleChange(e, i)}

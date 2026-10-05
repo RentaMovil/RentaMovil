@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaGlobe, FaMoon, FaPen, FaSignOutAlt, FaTimes, FaInfoCircle, FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -20,6 +20,11 @@ export default function AccountView({ theme, setTheme, admin = false }) {
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
     const { user, isLoading, error, refreshProfile, updateProfile, changeEmail, logout } = useAuth();
+
+    // El login no trae el teléfono ni la foto actualizada: al entrar se pide el perfil completo
+    useEffect(() => {
+        refreshProfile().catch(() => {});
+    }, [refreshProfile]);
     const [showThemeModal, setShowThemeModal] = useState(false);
     const [showLangModal, setShowLangModal] = useState(false);
 
@@ -58,6 +63,8 @@ export default function AccountView({ theme, setTheme, admin = false }) {
             }
             setIsEditing(false);
             setSaved(hayCambios);
+        } catch {
+            // El mensaje del backend queda en el error de AuthContext y se muestra arriba
         } finally {
             setIsSaving(false);
         }

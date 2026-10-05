@@ -3,15 +3,16 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import login from "../../../assets/login.png";
+import { useImageUpload } from "../../../shared/hooks/useImageUpload";
 
 const EMPTY = "—";
 
 // Campos editables. El correo NO se incluye a proposito: cambiarlo es una
-// operacion aparte (verificacion por correo) y no un guardado de perfil.
+// operacion aparte (pide la contraseña) y no un guardado de perfil.
+// El username tampoco: iam no permite cambiarlo.
 const CAMPOS = [
     { key: "firstName", etiqueta: "account.nombre", tipo: "text" },
     { key: "lastName", etiqueta: "account.apellido", tipo: "text" },
-    { key: "username", etiqueta: "account.usuario", tipo: "text" },
     { key: "phone", etiqueta: "account.telefono", tipo: "tel" },
 ];
 
@@ -23,6 +24,8 @@ export default function ProfileIdentity({
     onChangeEmail,
 }) {
     const { t } = useTranslation();
+    const { uploadImage, isUploading } = useImageUpload();
+    const [uploadError, setUploadError] = useState("");
 
     // El borrador vive aqui, no en el padre, porque es el componente que tiene
     // los inputs. Se reinicia cada vez que se entra o se sale del modo edicion,
@@ -37,8 +40,8 @@ export default function ProfileIdentity({
         setBorrador({
             firstName: user?.firstName ?? "",
             lastName: user?.lastName ?? "",
-            username: user?.username ?? "",
             phone: user?.phone ?? "",
+            imageUrl: user?.imageUrl ?? "",
         });
     }, [isEditing, user]);
 
@@ -48,31 +51,65 @@ export default function ProfileIdentity({
 
     const valor = (key) => (isEditing ? (borrador[key] ?? "") : user[key] || EMPTY);
 
+    // La foto se sube a Cloudinary apenas se elige; a iam solo va la URL al guardar
+    const elegirFoto = async (e) => {
+        const archivo = e.target.files?.[0];
+        if (!archivo) return;
+        setUploadError("");
+        try {
+            const url = await uploadImage(archivo);
+            setBorrador((b) => ({ ...b, imageUrl: url }));
+        } catch {
+            setUploadError("No se pudo subir la foto. Intenta de nuevo.");
+        }
+    };
+
     const guardar = () => {
-        // Solo se manda lo que cambio de verdad. Si no hay nada, se cierra el
-        // modo edicion sin llamar a la API: el backend responde 400 "No hay
-        // cambios validos" y al usuario le pareceria un fallo.
+        // Solo se manda lo que cambio de verdad. Si no hay nada, el padre cierra
+        // el modo edicion sin llamar a la API.
         const cambios = {};
         for (const c of CAMPOS) {
             const nuevo = (borrador[c.key] ?? "").trim();
-            if (nuevo && nuevo !== (user[c.key] ?? "")) {
+            const antes = user[c.key] ?? "";
+            // Nombre y apellido no pueden quedar vacios; el telefono si (vacio = borrarlo)
+            if (nuevo !== antes && (nuevo || c.key === "phone")) {
                 cambios[c.key] = nuevo;
             }
+        }
+        if ((borrador.imageUrl ?? "") !== (user.imageUrl ?? "")) {
+            cambios.imageUrl = borrador.imageUrl;
         }
 
         onSave?.(cambios);
     };
 
+    const foto = (isEditing ? borrador.imageUrl : user.imageUrl) || login;
+
     return (
         <>
             <div className="form-image">
-                <div className="form-image-preview">
+                <label className="form-image-preview">
                     <img
                         className="imgPerfile"
-                        src={user.imageUrl || login}
+                        src={foto}
                         alt={t("account.profileImage")}
                     />
-                </div>
+                    {isEditing && (
+                        <>
+                            <p className="edit editingText">
+                                {isUploading ? t("account.guardando") : t("account.cambiarFoto")}
+                            </p>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={elegirFoto}
+                                disabled={isUploading}
+                                style={{ display: "none" }}
+                            />
+                        </>
+                    )}
+                </label>
+                {uploadError && <p className="account-error" role="alert">{uploadError}</p>}
             </div>
 
             {CAMPOS.map((campo) => (
@@ -95,6 +132,20 @@ export default function ProfileIdentity({
                     />
                 </div>
             ))}
+
+            {/* El username se muestra pero nunca se edita */}
+            <div className="form-groupC">
+                <label className="form-labelC" htmlFor="profile-username">
+                    {t("account.usuario")}:
+                </label>
+                <input
+                    id="profile-username"
+                    className="inputC"
+                    type="text"
+                    value={user.username || EMPTY}
+                    readOnly
+                />
+            </div>
 
             <div className="form-groupC">
                 <label className="form-labelC" htmlFor="profile-email">
@@ -141,7 +192,7 @@ export default function ProfileIdentity({
                         className="btn-saveProfile"
                         type="button"
                         onClick={guardar}
-                        disabled={isSaving}
+                        disabled={isSaving || isUploading}
                     >
                         {isSaving ? t("account.guardando") : t("account.guardar")}
                     </button>

@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { authService } from "../../auth/services/authService"; // ajusta la ruta real
+import { useNavigate } from "react-router-dom";
+import { authService } from "../../auth/services/authService";
+import { useAuth } from "../../../contexts/AuthContext";
+import { useDialog } from "../../../shared/components/dialog/dialogContext";
 import { isPasswordValid } from "../utils/passWorrdValidation.js";
 import {
     buildPasswordRules,
@@ -9,6 +12,9 @@ import {
 } from "../utils/changePasswordUtils.js";
 
 function useChangePassword(t) {
+    const navigate = useNavigate();
+    const { logout } = useAuth();
+    const { alert } = useDialog();
     const [currentPassword, setCurrentPassword] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -32,10 +38,10 @@ function useChangePassword(t) {
 
         try {
             await authService.changePassword(currentPassword, password);
-            window.alert(t("changePassword.successPassword"));
-            setCurrentPassword("");
-            setPassword("");
-            setConfirmPassword("");
+            await alert({ message: t("changePassword.successPassword"), tone: "success" });
+            // iam ya cerró todas las sesiones (también esta): se limpia lo local y se vuelve al login
+            await logout();
+            navigate("/", { replace: true });
         } catch (err) {
             setError(err.message || t("changePassword.errorRequest"));
         } finally {

@@ -109,12 +109,13 @@ function App() {
             </RequireAuth>
           }
         />
+        {/* El home de cliente es solo para CLIENT: los admins tienen el mismo home en /HomeAdmin */}
         <Route
           path="/home"
           element={
-            <RequireAuth>
+            <RequireRole roles={["CLIENT"]}>
               <Home />
-            </RequireAuth>
+            </RequireRole>
           }
         />
         <Route
@@ -233,7 +234,7 @@ function App() {
         <Route
           path="/admin/users"
           element={
-            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]} permission="roles:grant">
               <UserManagement />
             </RequireRole>
           }
@@ -241,7 +242,7 @@ function App() {
         <Route
           path="/admin/bank-accounts"
           element={
-            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]}>
+            <RequireRole roles={["ADMIN", "SUPER_ADMIN"]} permission="bank-accounts:manage">
               <BankAccounts />
             </RequireRole>
           }
