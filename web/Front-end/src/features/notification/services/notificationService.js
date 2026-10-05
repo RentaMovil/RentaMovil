@@ -1,10 +1,5 @@
-import { useCars } from "../../vehicles/hooks/useCars.js";
-import { notificationsMock } from "../data/mocks/notificationsMock.js";
-import { attachVehicleToNotifications } from "../utils/notificationsUtils.js";
 import { httpClient } from "../../../shared/api/httpClient";
 import { fromApiDateTime } from "../../../shared/utils/apiDate";
-
-const API_URL = import.meta.env.VITE_API_URL;
 
 // Tipos de booking -> tipos que muestra la interfaz (NOTIFICATION_TYPES).
 // Los que no tienen equivalente visual caen en "recordatorio"; el tipo original
@@ -28,26 +23,11 @@ const fromApiNotification = (notification) => ({
   vehicle: null,
 });
 
-const getMockNotifications = async () => {
-  const vehicles = await useCars();
-  return attachVehicleToNotifications(notificationsMock, vehicles);
-};
-
-// Sin VITE_API_URL se usan los datos de prueba. Con ella, se consume booking a
-// través del gateway, con el token de la sesión (httpClient lo agrega).
+// Notificaciones in-app de booking, con el token de la sesión (httpClient lo agrega)
 export const getNotifications = async () => {
-  if (!API_URL) {
-    return getMockNotifications();
-  }
-
   const notifications = await httpClient.get("/notifications");
   return notifications.map(fromApiNotification);
 };
 
-export const markNotificationAsRead = async (notificationId) => {
-  if (!API_URL) {
-    return Promise.resolve({ success: true, notification_id: notificationId });
-  }
-
-  return fromApiNotification(await httpClient.patch(`/notifications/${notificationId}/read`));
-};
+export const markNotificationAsRead = async (notificationId) =>
+  fromApiNotification(await httpClient.patch(`/notifications/${notificationId}/read`));

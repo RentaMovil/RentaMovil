@@ -6,6 +6,7 @@ export const branchService = {
     getAll: () => httpClient.get(RESOURCE),
     getById: (id) => httpClient.get(`${RESOURCE}/${id}`),
     create: (formData) => httpClient.post(RESOURCE, toCreateBranchPayload(formData)),
-    update: (id, formData) => httpClient.patch(`${RESOURCE}/${id}`, toUpdateBranchPayload(formData)),
+    // fleet edita la sucursal completa (PUT), no por partes
+    update: (id, formData) => httpClient.put(`${RESOURCE}/${id}`, toUpdateBranchPayload(formData)),
     remove: (id) => httpClient.delete(`${RESOURCE}/${id}`),
 };

@@ -1,3 +1,5 @@
+import { VEHICLE_STATUS } from '../constans/vehicleStatus';
+
 export function toVehiclePayload(formData) {
     return {
         // Sin "id": lo asigna el servidor como entero, igual que booking.vehicle_id.

@@ -1,10 +1,29 @@
 import { tokenStore } from './tokenStore.js';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+// /api y /mock son rutas del proxy de Vite (vite.config.js): el gateway (:8080) y el mock (:3100).
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+const MOCK_API_URL = import.meta.env.VITE_MOCK_API_URL || '/mock';
+
+// Lo que ya tiene servicio real va al gateway; el resto (pagos, cuentas bancarias, GPS) sigue en
+// el mock hasta que su servicio exista. Al publicar uno nuevo se agrega aquí su prefijo.
+const REAL_BACKEND_PREFIXES = [
+    '/auth', '/users',
+    '/reservations', '/rentals', '/notifications',
+    '/vehicles', '/branches', '/maintenances',
+    '/brands', '/categories', '/engine-types', '/vehicle-models', '/maintenance-types',
+];
+
+export function hasRealBackend(endpoint) {
+    return REAL_BACKEND_PREFIXES.some((prefix) =>
+        endpoint === prefix || endpoint.startsWith(`${prefix}/`) || endpoint.startsWith(`${prefix}?`));
+}
+
+const baseUrlFor = (endpoint) => (hasRealBackend(endpoint) ? API_URL : MOCK_API_URL);
+
 let refreshPromise = null;
 async function rawRequest(endpoint, { method = 'GET', body, headers = {} } = {}) {
     const token = tokenStore.getAccessToken();
-    return fetch(`${BASE_URL}${endpoint}`, {
+    return fetch(`${baseUrlFor(endpoint)}${endpoint}`, {
         method,
         headers: {
             'Content-Type': 'application/json',
@@ -19,7 +38,7 @@ async function refreshAccessToken() {
     const refreshToken = localStorage.getItem('rentamovil_refresh_token');
     if (!refreshToken) throw new Error('No hay refresh token');
 
-    const res = await fetch(`${BASE_URL}/auth/refresh`, {
+    const res = await fetch(`${API_URL}/auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refreshToken }),
@@ -29,6 +48,9 @@ async function refreshAccessToken() {
 
     const data = await res.json();
     tokenStore.setAccessToken(data.accessToken);
+    // iam rota el refresh token en cada uso: si no se guarda el nuevo, el siguiente refresh
+    // manda el viejo, iam lo toma como robado y cierra todas las sesiones
+    localStorage.setItem('rentamovil_refresh_token', data.refreshToken);
     return data.accessToken;
 }
 
@@ -60,14 +82,18 @@ function friendlyError(status, endpoint, serverMessage) {
 async function request(endpoint, options = {}) {
     let res = await rawRequest(endpoint, options);
 
+    // Un 401 por contraseña actual incorrecta (cambiar correo/contraseña) no es un token vencido
+    const wrongPassword = res.status === 401
+        && (await res.clone().json().catch(() => null))?.error === 'INCORRECT_PASSWORD';
+
     // Si expiro el access token, intenta refrescar UNA vez y reintenta la peticion original
-    if (res.status === 401 && endpoint !== '/auth/login' && endpoint !== '/auth/refresh') {
+    if (res.status === 401 && !wrongPassword && endpoint !== '/auth/login' && endpoint !== '/auth/refresh') {
         try {
             refreshPromise = refreshPromise || refreshAccessToken();
             await refreshPromise;
             refreshPromise = null;
             res = await rawRequest(endpoint, options);
-        } catch (err) {
+        } catch {
             refreshPromise = null;
             tokenStore.clear();
             tokenStore.triggerRefreshFail(); // el authService decide qué hacer (ej. redirigir a /Login)
@@ -80,8 +106,9 @@ async function request(endpoint, options = {}) {
         throw friendlyError(res.status, endpoint, errorBody?.message);
     }
 
-    if (res.status === 204) return null;
-    return res.json();
+    // 204, o 202 sin cuerpo (ej. /auth/password/forgot): no hay JSON que leer
+    const text = await res.text();
+    return text ? JSON.parse(text) : null;
 }
 
 export const httpClient = {

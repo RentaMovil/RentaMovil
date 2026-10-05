@@ -59,6 +59,8 @@ export const authService = {
         );
 
         tokenStore.setAccessToken(response.accessToken);
+        // iam rota el refresh token: hay que guardar el nuevo o el siguiente refresh cierra la sesión
+        saveSession({ refreshToken: response.refreshToken });
         return response;
     },
 

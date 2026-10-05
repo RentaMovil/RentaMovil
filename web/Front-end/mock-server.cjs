@@ -241,6 +241,6 @@ server.patch('/users/:id/role', requireAuth, (req, res) => {
 
 server.use(router); // /vehicles, /maintenances siguen igual
 
-// PORT permite correrlo junto a los servicios reales (iam usa el 3001): PORT=3002 npm run mock-api
-const PORT = Number(process.env.PORT) || 3001;
+// 3100 para no chocar con los servicios reales (3001-3005) ni con el gateway (8080). El proxy de Vite apunta aquí
+const PORT = Number(process.env.PORT) || 3100;
 server.listen(PORT, () => console.log(`Mock API con JWT en http://localhost:${PORT}`));
