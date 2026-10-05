@@ -51,7 +51,18 @@ async function refreshAccessToken() {
     // iam rota el refresh token en cada uso: si no se guarda el nuevo, el siguiente refresh
     // manda el viejo, iam lo toma como robado y cierra todas las sesiones
     localStorage.setItem('rentamovil_refresh_token', data.refreshToken);
-    return data.accessToken;
+    return data;
+}
+
+// Un solo refresh a la vez para toda la app (el de AuthContext al recargar y el de cualquier 401).
+// Dos refresh con el mismo token = iam lo toma como reuso y cierra todas las sesiones.
+export function refreshSession() {
+    if (!refreshPromise) {
+        refreshPromise = refreshAccessToken().finally(() => {
+            refreshPromise = null;
+        });
+    }
+    return refreshPromise;
 }
 
 // Mensajes pensados para leerse en pantalla: el status y el endpoint no significan nada
@@ -80,6 +91,10 @@ function friendlyError(status, endpoint, serverMessage) {
 }
 
 async function request(endpoint, options = {}) {
+    // Si la sesión se está renovando, se espera el token nuevo en vez de salir sin él
+    if (refreshPromise) {
+        await refreshPromise.catch(() => {});
+    }
     let res = await rawRequest(endpoint, options);
 
     // Un 401 por contraseña actual incorrecta (cambiar correo/contraseña) no es un token vencido
@@ -89,12 +104,9 @@ async function request(endpoint, options = {}) {
     // Si expiro el access token, intenta refrescar UNA vez y reintenta la peticion original
     if (res.status === 401 && !wrongPassword && endpoint !== '/auth/login' && endpoint !== '/auth/refresh') {
         try {
-            refreshPromise = refreshPromise || refreshAccessToken();
-            await refreshPromise;
-            refreshPromise = null;
+            await refreshSession();
             res = await rawRequest(endpoint, options);
         } catch {
-            refreshPromise = null;
             tokenStore.clear();
             tokenStore.triggerRefreshFail(); // el authService decide qué hacer (ej. redirigir a /Login)
             throw new Error('Tu sesión expiró. Vuelve a iniciar sesión.');

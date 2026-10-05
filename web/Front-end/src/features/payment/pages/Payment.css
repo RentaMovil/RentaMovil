@@ -303,3 +303,12 @@
     text-align: left;
   }
 }
+
+/* Aviso del plazo de 24 h para pagar una reserva hecha sin comprobante */
+.pay-later-note {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--placeholder);
+  text-align: center;
+}
