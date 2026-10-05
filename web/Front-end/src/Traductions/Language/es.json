@@ -664,7 +664,8 @@
       "option12": "Lavado",
       "option13": "Pintura",
       "option14": "Latonería"
-    }
+    },
+    "startNow": "Iniciar ahora (el vehículo pasa a mantenimiento)"
   },
   "CartVehiculeMaintenance": {
     "veicle": "Vehículo",
@@ -715,7 +716,15 @@
       "Oct",
       "Nov",
       "Dic"
-    ]
+    ],
+    "cost": "Costo",
+    "start": "Iniciar",
+    "complete": "Completar",
+    "cancelMaintenance": "Cancelar mantenimiento",
+    "isCancel": "¿Seguro que deseas cancelar este mantenimiento?",
+    "back": "Volver",
+    "closedReadOnly": "Este mantenimiento está cerrado y no se puede modificar.",
+    "futureDate": "Un mantenimiento en progreso no puede iniciar en el futuro"
   },
   "FleetChartMaintenance": {
     "pending": "Pendiente",

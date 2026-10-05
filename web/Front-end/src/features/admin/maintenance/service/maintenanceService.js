@@ -6,5 +6,6 @@ export const maintenanceService = {
     getAll: () => httpClient.get(RESOURCE),
     create: (formData) => httpClient.post(RESOURCE, toCreateMaintenancePayload(formData)),
     update: (id, formData) => httpClient.patch(`${RESOURCE}/${id}`, toUpdateMaintenancePayload(formData)),
-    remove: (id) => httpClient.delete(`${RESOURCE}/${id}`),
+    // Iniciar, completar o cancelar; el backend valida la transición y cambia el estado del vehículo
+    changeStatus: (id, status) => httpClient.patch(`${RESOURCE}/${id}/status`, { status }),
 };

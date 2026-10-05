@@ -7,10 +7,10 @@ function FiltrerHistory({ query, setSearch, filterState, setFilterState }) {
     const { t } = useTranslation();
     const states = [
         { key: "all", label: t("FiltrerHistory.all") },
-        { key: "Pendiente", label: t("FleetChartMaintenance.pending") },
-        { key: "En progreso", label: t("FleetChartMaintenance.inProgress") },
-        { key: "Completado", label: t("FleetChartMaintenance.completed") },
-        { key: "Cancelado", label: t("FleetChartMaintenance.cancel") },
+        { key: "SCHEDULED", label: t("FleetChartMaintenance.pending") },
+        { key: "IN_PROGRESS", label: t("FleetChartMaintenance.inProgress") },
+        { key: "COMPLETED", label: t("FleetChartMaintenance.completed") },
+        { key: "CANCELLED", label: t("FleetChartMaintenance.cancel") },
     ];// Array de estados para el filtro, se puede modificar según los estados reales de los vehículos
 
     return (

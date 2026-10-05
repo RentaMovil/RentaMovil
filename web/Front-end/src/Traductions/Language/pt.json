@@ -627,7 +627,8 @@
       "option12": "Lavagem",
       "option13": "Pintura",
       "option14": "Funilaria"
-    }
+    },
+    "startNow": "Iniciar agora (o veículo entra em manutenção)"
   },
   "CartVehiculeMaintenance": {
     "veicle": "Veículo",
@@ -678,7 +679,15 @@
       "Out",
       "Nov",
       "Dez"
-    ]
+    ],
+    "cost": "Custo",
+    "start": "Iniciar",
+    "complete": "Concluir",
+    "cancelMaintenance": "Cancelar manutenção",
+    "isCancel": "Tem certeza de que deseja cancelar esta manutenção?",
+    "back": "Voltar",
+    "closedReadOnly": "Esta manutenção está encerrada e não pode ser alterada.",
+    "futureDate": "Uma manutenção em andamento não pode começar no futuro"
   },
   "FleetChartMaintenance": {
     "pending": "Pendente",

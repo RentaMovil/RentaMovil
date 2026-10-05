@@ -627,7 +627,8 @@
       "option12": "Lavage",
       "option13": "Peinture",
       "option14": "Carrosserie"
-    }
+    },
+    "startNow": "Démarrer maintenant (le véhicule passe en entretien)"
   },
   "CartVehiculeMaintenance": {
     "veicle": "Véhicule",
@@ -678,7 +679,15 @@
       "Oct",
       "Nov",
       "Déc"
-    ]
+    ],
+    "cost": "Coût",
+    "start": "Démarrer",
+    "complete": "Terminer",
+    "cancelMaintenance": "Annuler l'entretien",
+    "isCancel": "Voulez-vous vraiment annuler cet entretien ?",
+    "back": "Retour",
+    "closedReadOnly": "Cet entretien est clôturé et ne peut plus être modifié.",
+    "futureDate": "Un entretien en cours ne peut pas commencer dans le futur"
   },
   "FleetChartMaintenance": {
     "pending": "En attente",

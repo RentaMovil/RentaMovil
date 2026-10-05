@@ -69,6 +69,13 @@ width: 100%;
     outline: none;
     margin-bottom: 0;
 }
+/* Casilla "Iniciar ahora" bajo la fecha */
+.maintenance-start-now {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
 .maintenance-form textarea {
     border-radius: 12px;        /* menos redondo, más natural para textarea */
     background-color: aliceblue;

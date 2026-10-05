@@ -627,7 +627,8 @@
       "option12": "Car wash",
       "option13": "Painting",
       "option14": "Bodywork"
-    }
+    },
+    "startNow": "Start now (the vehicle goes into maintenance)"
   },
   "CartVehiculeMaintenance": {
     "veicle": "Vehicle",
@@ -678,7 +679,15 @@
       "Oct",
       "Nov",
       "Dec"
-    ]
+    ],
+    "cost": "Cost",
+    "start": "Start",
+    "complete": "Complete",
+    "cancelMaintenance": "Cancel maintenance",
+    "isCancel": "Are you sure you want to cancel this maintenance?",
+    "back": "Back",
+    "closedReadOnly": "This maintenance is closed and can no longer be changed.",
+    "futureDate": "A maintenance in progress cannot start in the future"
   },
   "FleetChartMaintenance": {
     "pending": "Pending",

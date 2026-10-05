@@ -9,7 +9,7 @@ const REAL_BACKEND_PREFIXES = [
     '/auth', '/users',
     // fleet-maintenance
     '/vehicles', '/branches',
-    '/brands', '/categories', '/engine-types', '/vehicle-models', '/maintenance-types',
+    '/brands', '/categories', '/engine-types', '/vehicle-models', '/maintenance-types', '/maintenances',
 ];
 
 export function hasRealBackend(endpoint) {
