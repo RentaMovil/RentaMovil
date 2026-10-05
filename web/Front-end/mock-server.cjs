@@ -239,6 +239,8 @@ server.patch('/users/:id/role', requireAuth, (req, res) => {
     res.json(toPublicUser(db.get('users').find({ id }).value()));
 });
 
+// El frontend ya usa las rutas del contrato real (/bank-accounts); en db.json la colección es bankAccounts
+server.use(jsonServer.rewriter({ '/bank-accounts*': '/bankAccounts$1' }));
 server.use(router); // /vehicles, /maintenances siguen igual
 
 // 3100 para no chocar con los servicios reales (3001-3005) ni con el gateway (8080). El proxy de Vite apunta aquí
