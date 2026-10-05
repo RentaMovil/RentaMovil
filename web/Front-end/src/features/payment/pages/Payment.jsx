@@ -19,13 +19,7 @@ import { usePayment } from "../context/PaymentContext";
 
 import "./Payment.css";
 
-/**
- * Encabezado estándar de cada sección de la página de pago: un
- * punto + título (y opcionalmente subtítulo/badge), igual para
- * Resumen de factura, Cuenta bancaria, Transferencia y Comprobante.
- * Centralizar esto acá evita que cada componente hijo reinvente su
- * propio encabezado con estilos distintos.
- */
+
 function PaySectionHeader({ title, subtitle, badge }) {
     return (
         <div className="pay-card-header">
@@ -63,17 +57,11 @@ export default function PaymentPage() {
         total,
     } = usePaymentForm();
 
-    // Resultado del último intento de envío. No forma parte de
-    // usePaymentForm porque es puramente de presentación (qué mostrar
-    // en esta pantalla), no una regla de negocio.
+
     const [submitError, setSubmitError] = useState(null);
     const [submitted, setSubmitted] = useState(false);
 
-    /**
-     * handlePayment ya valida, crea la Reservation (PENDING_PAYMENT) y
-     * registra el Payment (PENDING_REVIEW). Acá solo se refleja el
-     * resultado en la interfaz: confirmación o error legible.
-     */
+
     const handleSubmit = async () => {
         setSubmitError(null);
 
@@ -100,8 +88,6 @@ export default function PaymentPage() {
         reservation?.termsAcceptance
     );
 
-    // No se puede acceder al pago si no existe una reserva completa,
-    // incluida la aceptación de los términos vigentes.
     if (
         (
             !reservation?.vehicle ||
