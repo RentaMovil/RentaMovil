@@ -3,9 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 // Componentes Web del proyecto
 import VehicleReservationCard from "../../booking/components/VehicleReservationCard";
-import Navbar from "../../../shared/components/layout/Navbar";
+import { RoleNavbar, RoleFooter } from "../../../shared/components/layout/RoleChrome";
 import InvoiceCard from "../components/InvoiceCard";
-import Footer from "../../../shared/components/layout/Footer";
 import BankAccountSelector from "../components/BankAccountSelector";
 import ContinueButton from "../../../shared/components/continueButton";
 import PaymentReceiptUpload from "../components/PaymentReceiptUpload";
@@ -113,7 +112,7 @@ export default function PaymentPage() {
     ) {
         return (
             <>
-                <Navbar />
+                <RoleNavbar />
                 <div className="pay-page-container">
                     <p className="pay-empty-state">
                         {!reservation?.vehicle
@@ -123,7 +122,7 @@ export default function PaymentPage() {
                                 : "La reserva está incompleta. Regresa y completa los datos antes de pagar."}
                     </p>
                 </div>
-                <Footer />
+                <RoleFooter />
             </>
         );
     }
@@ -131,7 +130,7 @@ export default function PaymentPage() {
     if (submitted) {
         return (
             <>
-                <Navbar />
+                <RoleNavbar />
 
                 <div className="pay-page-container">
                     <section className="pay-card pay-success">
@@ -155,14 +154,14 @@ export default function PaymentPage() {
                     </section>
                 </div>
 
-                <Footer />
+                <RoleFooter />
             </>
         );
     }
 
     return (
         <>
-            <Navbar />
+            <RoleNavbar />
 
             <div className="pay-page-container">
 
@@ -247,7 +246,7 @@ export default function PaymentPage() {
 
             </div>
 
-            <Footer />
+            <RoleFooter />
         </>
     );
 }

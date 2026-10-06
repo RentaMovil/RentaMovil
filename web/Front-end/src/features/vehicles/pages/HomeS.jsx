@@ -1,6 +1,5 @@
 import './Home.css';
-import Navbar from "../../../shared/components/layout/Navbar.jsx";
-import Footer from "../../../shared/components/layout/Footer.jsx";
+import { RoleNavbar, RoleFooter } from "../../../shared/components/layout/RoleChrome.jsx";
 import CartVehicule from "../components/CartVehiculeS.jsx";
 import FiltrerBrand from "../components/FiltrerBrand.jsx";
 import FiltrerPrice from "../components/FiltrerPrice.jsx";
@@ -100,7 +99,7 @@ function Home() {
 
   return (
     <>
-      <Navbar />
+      <RoleNavbar />
 
       <div className="banner-wrapper">
         <div className="banner-container">
@@ -237,7 +236,7 @@ function Home() {
         )}
       </section>
 
-      <Footer />
+      <RoleFooter />
     </>
   );
 }
