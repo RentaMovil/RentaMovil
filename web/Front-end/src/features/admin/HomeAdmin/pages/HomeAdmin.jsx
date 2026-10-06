@@ -50,9 +50,10 @@ function HomeAdmin() {
 
       setSearchData({ branch, startDate, endDate });
 
-      const disponibles = filterAvailableVehicles(cars, branch, startDate, endDate);
-      setCarsFiltered(disponibles);
-      setHasSearchedCars(true);
+      filterAvailableVehicles(cars, branch, startDate, endDate).then((disponibles) => {
+        setCarsFiltered(disponibles);
+        setHasSearchedCars(true);
+      });
 
       navigate(location.pathname, { replace: true, state: {} });
     }
@@ -62,9 +63,10 @@ function HomeAdmin() {
     const newSearchData = { branch, startDate, endDate };
     setSearchData(newSearchData);
 
-    const disponibles = filterAvailableVehicles(cars, branch, startDate, endDate);
-    setCarsFiltered(disponibles);
-    setHasSearchedCars(true);
+    filterAvailableVehicles(cars, branch, startDate, endDate).then((disponibles) => {
+      setCarsFiltered(disponibles);
+      setHasSearchedCars(true);
+    });
   };
 
   const handleClearFilters = () => {

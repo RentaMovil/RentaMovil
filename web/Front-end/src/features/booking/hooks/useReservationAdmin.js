@@ -37,8 +37,9 @@ export function useReservationsAdmin() {
                 httpClient.get('/payments'),
                 httpClient.get('/bankAccounts'),
                 httpClient.get('/gps'),
+                httpClient.get('/users'),
             ]);
-            const [vehiclesRes, branchesRes, insuranceRes, paymentsRes, bankAccountsRes, gpsRes] =
+            const [vehiclesRes, branchesRes, insuranceRes, paymentsRes, bankAccountsRes, gpsRes, usersRes] =
                 optional.map(listOrEmpty);
 
             const ctx = {
@@ -49,6 +50,7 @@ export function useReservationsAdmin() {
                 rentalsByReservation: Object.fromEntries(rentalsRes.map((r) => [r.reservation_id, r])),
                 bankAccountsById: Object.fromEntries(bankAccountsRes.map((b) => [b.id, b])),
                 gpsById: Object.fromEntries(gpsRes.map((g) => [g.id, g])),
+                usersById: Object.fromEntries(usersRes.map((u) => [u.id, u])),
             };
 
             setReservations(reservationsRes.map((r) => toAdminReservationViewModel(r, ctx)));
