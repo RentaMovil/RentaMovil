@@ -1,19 +1,17 @@
-import { insurance } from "../mocks/insurance";
-
+import { httpClient } from "../../../shared/api/httpClient";
+import { toInsuranceViewModel } from "./insuranceMapper";
 import type { InsuranceType } from "../../../types";
 
-/**
- * Acceso al catalogo de seguros.
- *
- * NO esta en la API mock, asi que se resuelve localmente. La consumen las
- * features payment y reservation, por eso queda detras de un servicio y no
- * se importa desde `mocks/` directamente.
- */
-export async function getInsuranceOptions(): Promise<InsuranceType[]> {
-  // Futuro:
-  // return supabase
-  //   .from("insurance_types")
-  //   .select("*");
+const RESOURCE = "/insuranceTypes";
 
-  return insurance;
+/**
+ * Acceso al catálogo de seguros.
+ *
+ * Antes se resolvía localmente con un mock; ahora viene de la misma API
+ * real que usa el frontend web (/insuranceTypes).
+ */
+
+export async function getInsuranceOptions(): Promise<InsuranceType[]> {
+    const response = await httpClient.get<any[]>(RESOURCE);
+    return response.map(toInsuranceViewModel);
 }
