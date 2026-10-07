@@ -93,3 +93,17 @@ export async function changePassword(
 ): Promise<void> {
   await httpClient.patch<void>(API_ROUTES.auth.changePassword, data);
 }
+
+/**
+ * Actualiza el perfil del usuario autenticado.
+ *
+ * `PATCH /auth/me` — el server resuelve el usuario por el access token,
+ */
+export async function updateProfile(data: {
+  first_name: string;
+  last_name: string;
+  phone: string;
+  photo?: string | null;
+}): Promise<User> {
+  return httpClient.patch<User>(API_ROUTES.auth.me, data);
+}

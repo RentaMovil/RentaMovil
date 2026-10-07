@@ -36,9 +36,10 @@ export default function Account() {
         user,
         logout,
         refreshUser,
+        updateProfile,
     } = useAuth();
 
-
+    const [saveError, setSaveError] = useState<string | null>(null);
     const {
         themeName,
     } = useTheme();
@@ -120,20 +121,29 @@ export default function Account() {
 
         };
 
-        async function handleSave() {
+    async function handleSave() {
+        if (!user) return;
 
-    if (!user) return;
+        setSaveError(null);
 
-    // `mock-server.cjs` no expone PATCH /users/:id todavia (solo
-    // PATCH /auth/me/password), asi que la API no puede persistir la
-    // edicion de perfil. Se resincroniza contra /auth/me en lugar de
-    // escribir un estado local que mentiria sobre lo que quedo guardado.
-    // Cuando exista el endpoint, aqui se sustituye por la llamada real.
-    await refreshUser();
+        const [firstName, ...rest] = name.trim().split(" ");
+        const lastName = rest.join(" ");
 
-    setEditing(false);
+        try {
+            await updateProfile({
+                first_name: firstName,
+                last_name: lastName,
+                phone,
+                photo: image ?? null,
+            });
 
-}
+            setEditing(false);
+        } catch (err) {
+            setSaveError(
+                err instanceof Error ? err.message : "No se pudo guardar el perfil.",
+            );
+        }
+    }
 
 
     async function handleLogout() {
@@ -152,46 +162,46 @@ export default function Account() {
             {/* FOTO */}
 
             <View style={styles.profileHeader}>
-            <View style={styles.photoContainer}>
+                <View style={styles.photoContainer}>
 
-                <View style={styles.photoRing}>
-                <Image
+                    <View style={styles.photoRing}>
+                        <Image
 
-                    source={
-                        image
-                            ? { uri: image }
-                            : defaultUser
-                    }
+                            source={
+                                image
+                                    ? { uri: image }
+                                    : defaultUser
+                            }
 
-                    style={styles.image}
+                            style={styles.image}
 
-                />
-                </View>
+                        />
+                    </View>
 
 
-                <TouchableOpacity
+                    <TouchableOpacity
 
-                    style={styles.selectButton}
+                        style={styles.selectButton}
 
-                    onPress={pickImage}
+                        onPress={pickImage}
 
-                >
-
-                    <Text
-                        style={
-                            styles.selectButtonText
-                        }
                     >
 
-                        Cambiar foto
+                        <Text
+                            style={
+                                styles.selectButtonText
+                            }
+                        >
 
-                    </Text>
+                            Cambiar foto
 
-                </TouchableOpacity>
+                        </Text>
 
-            </View>
-            <Text style={styles.pageTitle}>{user ? `${user.first_name} ${user.last_name}` : "Mi cuenta"}</Text>
-            <Text style={styles.pageSubtitle}>Gestiona tu información y preferencias.</Text>
+                    </TouchableOpacity>
+
+                </View>
+                <Text style={styles.pageTitle}>{user ? `${user.first_name} ${user.last_name}` : "Mi cuenta"}</Text>
+                <Text style={styles.pageSubtitle}>Gestiona tu información y preferencias.</Text>
             </View>
 
 
@@ -430,28 +440,28 @@ export default function Account() {
                 }
             >
 
-        <TouchableOpacity
-            style={styles.editButton}
-            onPress={() => {
+                <TouchableOpacity
+                    style={styles.editButton}
+                    onPress={() => {
 
-                if (editing) {
+                        if (editing) {
 
-                    handleSave();
+                            handleSave();
 
-                } else {
+                        } else {
 
-                    setEditing(true);
+                            setEditing(true);
 
-                }
+                        }
 
-            }}
-        >
-            <Text style={styles.buttonEditar}>
+                    }}
+                >
+                    <Text style={styles.buttonEditar}>
 
-                {editing ? "Guardar" : "Editar"}
+                        {editing ? "Guardar" : "Editar"}
 
-            </Text>
-        </TouchableOpacity>
+                    </Text>
+                </TouchableOpacity>
 
 
                 <TouchableOpacity
