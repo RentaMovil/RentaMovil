@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FaGlobe, FaMoon, FaPen, FaSignOutAlt, FaTimes, FaInfoCircle } from "react-icons/fa";
+import { FaGlobe, FaMoon, FaPen, FaSignOutAlt, FaTimes, FaInfoCircle, FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -34,6 +34,7 @@ export default function AccountView({ theme, setTheme, admin = false }) {
     const [showEmailModal, setShowEmailModal] = useState(false);
     const [newEmail, setNewEmail] = useState("");
     const [currentPassword, setCurrentPassword] = useState("");
+    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [emailError, setEmailError] = useState("");
     const [isChangingEmail, setIsChangingEmail] = useState(false);
     const [emailChanged, setEmailChanged] = useState(false);
@@ -417,16 +418,28 @@ export default function AccountView({ theme, setTheme, admin = false }) {
                                 >
                                     {t("changeEmail.currentPassword")}
                                 </label>
-                                <input
-                                    id="ce-current-password"
-                                    className="inputC"
-                                    type="password"
-                                    autoComplete="current-password"
-                                    placeholder={t("changeEmail.currentPasswordPlaceholder")}
-                                    value={currentPassword}
-                                    onChange={(e) => setCurrentPassword(e.target.value)}
-                                    disabled={isChangingEmail}
-                                />
+                                <div className="password-input-wrap">
+                                    <input
+                                        id="ce-current-password"
+                                        className="inputC"
+                                        type={showCurrentPassword ? "text" : "password"}
+                                        autoComplete="current-password"
+                                        placeholder={t("changeEmail.currentPasswordPlaceholder")}
+                                        value={currentPassword}
+                                        onChange={(e) => setCurrentPassword(e.target.value)}
+                                        disabled={isChangingEmail}
+                                    />
+                                    <button
+                                        type="button"
+                                        className="password-toggle"
+                                        onClick={() => setShowCurrentPassword((prev) => !prev)}
+                                        disabled={isChangingEmail}
+                                        aria-label={t("loginForm.showPassword")}
+                                        title={t("loginForm.showPassword")}
+                                    >
+                                        {showCurrentPassword ? <FaEyeSlash /> : <FaEye />}
+                                    </button>
+                                </div>
                                 <span className="ce-hint">
                                     {t("changeEmail.passwordHint")}
                                 </span>

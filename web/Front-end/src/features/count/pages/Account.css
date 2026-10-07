@@ -657,3 +657,47 @@
         right: 20px;
     }
     }
+/* ─── Campo de contraseña con botón mostrar/ocultar ──────────────────────────
+   El input conserva su .inputC; el botón se superpone a la derecha. */
+.password-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-wrap .inputC {
+    width: 100%;
+    padding-right: 46px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--button);
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.password-toggle:hover:not(:disabled) {
+    background: rgba(245, 176, 65, 0.15);
+}
+
+.password-toggle:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.password-toggle:focus-visible {
+    outline: 2px solid var(--button);
+    outline-offset: 1px;
+}

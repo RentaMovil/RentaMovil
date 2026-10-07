@@ -24,6 +24,10 @@ export default function RouteHistory() {
 
     const { vehicles, lastUpdated, isLoading, error, refetch } = useVehicleLocations();
 
+    // El gateway responde 503 si telemetry-gps no está levantado. No es un fallo del
+    // usuario: se trata como "aún no hay datos" y se muestra el estado vacío.
+    const servicioNoDisponible = error?.status === 503 || error?.status === 404;
+
     // El endpoint solo devuelve vehiculos con un alquiler en curso, asi que la
     // lista que llega ya es la de reservas activas. Se filtra igual por si
     // alguno llega sin la referencia al alquiler.
@@ -83,7 +87,7 @@ export default function RouteHistory() {
                     </div>
                 </header>
 
-                {error && (
+                {error && !servicioNoDisponible && (
                     <div className="rh-error" role="alert">
                         <FiAlertCircle />
                         <div>
@@ -93,7 +97,15 @@ export default function RouteHistory() {
                     </div>
                 )}
 
-                {!error && (
+                {servicioNoDisponible && (
+                    <div className="rh-notice rh-notice--info">
+                        <div className="rh-notice-body">
+                            <p>{t("routeHistory.serviceUnavailable")}</p>
+                        </div>
+                    </div>
+                )}
+
+                {(!error || servicioNoDisponible) && (
                     <>
                         {/* ── Aviso principal: cuantas reservas hay para rastrear ── */}
                         {isLoading && !pendientes.length && (

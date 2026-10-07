@@ -4,8 +4,11 @@ import { useNavigate } from "react-router-dom";
 // Componentes Web del proyecto
 import VehicleReservationCard from "../../booking/components/VehicleReservationCard";
 import Navbar from "../../../shared/components/layout/Navbar";
+import NavbarAdmin from "../../../shared/components/layout/NavBarAdmin";
 import InvoiceCard from "../components/InvoiceCard";
 import Footer from "../../../shared/components/layout/Footer";
+import FooterAdmin from "../../../shared/components/layout/FooterAdmin";
+import { useAuth } from "../../../contexts/AuthContext.jsx";
 import BankAccountSelector from "../components/BankAccountSelector";
 import ContinueButton from "../../../shared/components/continueButton";
 import PaymentReceiptUpload from "../components/PaymentReceiptUpload";
@@ -19,13 +22,7 @@ import { usePayment } from "../context/PaymentContext";
 
 import "./Payment.css";
 
-/**
- * Encabezado estándar de cada sección de la página de pago: un
- * punto + título (y opcionalmente subtítulo/badge), igual para
- * Resumen de factura, Cuenta bancaria, Transferencia y Comprobante.
- * Centralizar esto acá evita que cada componente hijo reinvente su
- * propio encabezado con estilos distintos.
- */
+
 function PaySectionHeader({ title, subtitle, badge }) {
     return (
         <div className="pay-card-header">
@@ -51,6 +48,11 @@ export default function PaymentPage() {
 
     const navigate = useNavigate();
 
+    const { user } = useAuth();
+    const isAdmin = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
+    const NavbarComponent = isAdmin ? NavbarAdmin : Navbar;
+    const FooterComponent = isAdmin ? FooterAdmin : Footer;
+
     const { reservation, clearReservation } = useReservation();
     const { clearPayment } = usePayment();
 
@@ -59,21 +61,16 @@ export default function PaymentPage() {
         canCreateReservation,
         isProcessing,
         handlePayment,
+        createPendingReservation,
         days,
         total,
     } = usePaymentForm();
 
-    // Resultado del último intento de envío. No forma parte de
-    // usePaymentForm porque es puramente de presentación (qué mostrar
-    // en esta pantalla), no una regla de negocio.
+
     const [submitError, setSubmitError] = useState(null);
     const [submitted, setSubmitted] = useState(false);
 
-    /**
-     * handlePayment ya valida, crea la Reservation (PENDING_PAYMENT) y
-     * registra el Payment (PENDING_REVIEW). Acá solo se refleja el
-     * resultado en la interfaz: confirmación o error legible.
-     */
+
     const handleSubmit = async () => {
         setSubmitError(null);
 
@@ -90,6 +87,20 @@ export default function PaymentPage() {
         }
     };
 
+    // Crea la reserva en PENDING_PAYMENT sin comprobante: el cliente paga dentro de las 24 h
+    const handleReserveOnly = async () => {
+        setSubmitError(null);
+
+        try {
+            await createPendingReservation();
+            clearReservation();
+            clearPayment();
+            navigate("/HistorialReservation");
+        } catch (error) {
+            setSubmitError(error?.message ?? "No fue posible crear la reserva. Intenta de nuevo.");
+        }
+    };
+
     const handleBackToHome = () => {
         clearReservation();
         clearPayment();
@@ -100,8 +111,6 @@ export default function PaymentPage() {
         reservation?.termsAcceptance
     );
 
-    // No se puede acceder al pago si no existe una reserva completa,
-    // incluida la aceptación de los términos vigentes.
     if (
         (
             !reservation?.vehicle ||
@@ -112,7 +121,7 @@ export default function PaymentPage() {
     ) {
         return (
             <>
-                <Navbar />
+                <NavbarComponent />
                 <div className="pay-page-container">
                     <p className="pay-empty-state">
                         {!reservation?.vehicle
@@ -122,7 +131,7 @@ export default function PaymentPage() {
                                 : "La reserva está incompleta. Regresa y completa los datos antes de pagar."}
                     </p>
                 </div>
-                <Footer />
+                <FooterComponent />
             </>
         );
     }
@@ -130,7 +139,7 @@ export default function PaymentPage() {
     if (submitted) {
         return (
             <>
-                <Navbar />
+                <NavbarComponent />
 
                 <div className="pay-page-container">
                     <section className="pay-card pay-success">
@@ -154,14 +163,14 @@ export default function PaymentPage() {
                     </section>
                 </div>
 
-                <Footer />
+                <FooterComponent />
             </>
         );
     }
 
     return (
         <>
-            <Navbar />
+            <NavbarComponent />
 
             <div className="pay-page-container">
 
@@ -193,7 +202,7 @@ export default function PaymentPage() {
                             <PaySectionHeader
                                 title="Comprobante de pago"
                                 subtitle="Adjunta el comprobante correspondiente a la transferencia realizada."
-                                badge="Obligatorio"
+                                badge="Para pagar ahora"
                             />
                             <PaymentReceiptUpload />
                         </section>
@@ -222,11 +231,23 @@ export default function PaymentPage() {
                                     Procesando tu pago...
                                 </div>
                             ) : (
-                                <ContinueButton
-                                    title="Reservar"
-                                    onPress={handleSubmit}
-                                    disabled={!canSubmit}
-                                />
+                                <>
+                                    <ContinueButton
+                                        title="Reservar y enviar comprobante"
+                                        onPress={handleSubmit}
+                                        disabled={!canSubmit}
+                                    />
+                                    {/* INV-015: la reserva espera el pago 24 h en PENDING_PAYMENT */}
+                                    <ContinueButton
+                                        title="Reservar y pagar después"
+                                        onPress={handleReserveOnly}
+                                        disabled={!canCreateReservation}
+                                    />
+                                    <p className="pay-later-note">
+                                        Si reservas sin pagar, tienes 24 horas para subir el comprobante
+                                        desde "Mis reservas". Pasado ese plazo la reserva se cancela sola.
+                                    </p>
+                                </>
                             )}
                         </div>
                     </aside>
@@ -234,7 +255,7 @@ export default function PaymentPage() {
 
             </div>
 
-            <Footer />
+            <FooterComponent />
         </>
     );
 }

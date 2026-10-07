@@ -1,6 +1,50 @@
 import { isValidTermsAcceptance } from "../data/rentalTerms";
+import { fromApiDateTime, toApiDateTime } from "../../../shared/utils/apiDate";
 
-export function toCreateReservationPayload(reservation, vehicleSubtotal, insuranceSubtotal, totalAmount, clientId) {
+// Estados de booking -> estados que ya usa la interfaz del cliente (estilos estado-*).
+// Las tres primeras son reservas vigentes: se pueden cancelar o modificar dentro de su plazo.
+const UI_STATUS = {
+    PENDING_PAYMENT: 'activa',
+    PENDING_REVIEW: 'activa',
+    CONFIRMED: 'activa',
+    CANCELLED: 'cancelada',
+    COMPLETED: 'completada',
+};
+
+// INV-004: se cancela sin recargo hasta 3 días antes de la fecha de RECOGIDA
+const CANCELLATION_DEADLINE_DAYS = 3;
+const DAY_MS = 1000 * 60 * 60 * 24;
+
+// Respuesta de booking (camelCase) -> forma que usan los view models (snake_case).
+// clientId no viene: booking nunca lo expone, sale del token.
+export function fromApiReservation(reservation) {
+    return {
+        id: reservation.id,
+        vehicle_id: reservation.vehicleId,
+        insurance_type_id: reservation.insuranceTypeId,
+        pickup_branch_id: reservation.pickupBranchId,
+        return_branch_id: reservation.returnBranchId,
+        reservation_date: fromApiDateTime(reservation.reservationDate),
+        start_date: fromApiDateTime(reservation.startDate),
+        end_date: fromApiDateTime(reservation.endDate),
+        vehicle_subtotal: Number(reservation.vehicleSubtotal) || 0,
+        insurance_subtotal: Number(reservation.insuranceSubtotal) || 0,
+        total_amount: Number(reservation.totalAmount) || 0,
+        status: reservation.status,
+        // Solo las reservas ADMIN lo traen; el cliente normal no necesita saber quién hizo la reserva ajena.
+        client_id: reservation.clientId ?? null,
+    };
+}
+
+export function canCancelReservation(reservation, now = Date.now()) {
+    if (UI_STATUS[reservation.status] !== 'activa') return false;
+    const startDate = new Date(reservation.start_date).getTime();
+    return startDate - now > CANCELLATION_DEADLINE_DAYS * DAY_MS;
+}
+
+// Solo lo que el cliente elige. Los subtotales, el total, el estado y la fecha de la
+// reserva los calcula booking; el titular sale del token, nunca del cuerpo.
+export function toCreateReservationPayload(reservation) {
     if (
         !reservation?.vehicle?.vehicleId ||
         !reservation?.pickupBranch?.id ||
@@ -13,23 +57,21 @@ export function toCreateReservationPayload(reservation, vehicleSubtotal, insuran
     }
 
     return {
-        client_id: clientId,
-        vehicle_id: reservation.vehicle.vehicleId,
-        insurance_type_id: reservation.insuranceId ?? null,
-        pickup_branch_id: reservation.pickupBranch.id,
-        return_branch_id: reservation.returnBranch.id,
-        reservation_date: new Date().toISOString(),
-        start_date: new Date(reservation.pickupDate).toISOString(),
-        end_date: new Date(reservation.returnDate).toISOString(),
-        vehicle_subtotal: vehicleSubtotal,
-        insurance_subtotal: insuranceSubtotal,
-        total_amount: totalAmount,
-        status: 'PENDING_PAYMENT',
+        vehicleId: Number(reservation.vehicle.vehicleId),
+        insuranceTypeId: reservation.insuranceId == null ? null : Number(reservation.insuranceId),
+        pickupBranchId: Number(reservation.pickupBranch.id),
+        returnBranchId: Number(reservation.returnBranch.id),
+        startDate: toApiDateTime(reservation.pickupDate),
+        endDate: toApiDateTime(reservation.returnDate),
+        // isValidTermsAcceptance ya se verificó arriba
+        termsAccepted: true,
     };
 }
 
-export function toUpdateReturnBranchPayload(returnBranchId) {
-    return { return_branch_id: returnBranchId };
+// PATCH /reservations/{id}: solo la sucursal de devolución. Booking rechaza newEndDate:
+// la fecha de devolución no se puede modificar.
+export function toModifyReservationPayload(returnBranchId) {
+    return { newReturnBranchId: Number(returnBranchId) };
 }
 
 export function toReservationViewModel(reservation, { vehiclesById = {}, branchesById = {}, insuranceById = {} } = {}) {
@@ -42,7 +84,10 @@ export function toReservationViewModel(reservation, { vehiclesById = {}, branche
 
     return {
         id: reservation.id,
-        status: (reservation.status || '').toLowerCase(),
+        status: UI_STATUS[reservation.status] ?? (reservation.status || '').toLowerCase(),
+        // Estado real de booking (PENDING_PAYMENT, CONFIRMED...) por si la pantalla lo necesita
+        backendStatus: reservation.status,
+        canCancel: canCancelReservation(reservation),
         created_at: reservation.reservation_date,
         pickupBranchId: reservation.pickup_branch_id,
         returnBranchId: reservation.return_branch_id,
@@ -103,9 +148,10 @@ export function toAdminReservationViewModel(reservation, ctx) {
             mileage: vehicle.mileage || 0,
         },
         customer: {
-            name: [customer.first_name, customer.last_name].filter(Boolean).join(' '),
-            email: customer.email,
-            phone: customer.phone,
+            // GET /users de iam devuelve camelCase: firstName/lastName/email
+            name: [customer.firstName, customer.lastName].filter(Boolean).join(' ') || customer.username || '',
+            email: customer.email ?? '',
+            phone: customer.phone ?? '',
         },
         pickup: {
             date: reservation.start_date,

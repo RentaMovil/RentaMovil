@@ -1,6 +1,8 @@
 import { httpClient } from '../../../../shared/api/httpClient';
 import { toLocationViewModel } from "./locationMapper";
-import { carsService } from "../../../vehicles/Services/carsService";
+import { rentalService } from "../../../booking/services/rentalService";
+import { reservationService } from "../../../booking/services/reservationService";
+import { inventoryService } from "../../VehicleInventory/services/inventoryService";
 
 export const locationService = {
     // Vehículos con rental IN_PROGRESS + su última posición conocida.
@@ -8,12 +10,12 @@ export const locationService = {
     // cruzando 4 colecciones — mismo patrón que useReservationsAdmin.
     getTrackedVehicles: async () => {
         const [rentals, gpsDevices, locations, reservations, vehicles] = await Promise.all([
-            httpClient.get('/rentals'),
+            rentalService.getAll(),
+            // /gps y /locations son de telemetry-gps, que todavía no existe
             httpClient.get('/gps'),
             httpClient.get('/locations'),
-            httpClient.get('/reservations'),
-            // fleet-maintenance: la flota completa (un vehículo rentado no está en el catálogo)
-            carsService.getAllForAdmin(),
+            reservationService.getAllAdmin(),
+            inventoryService.getAll(),
         ]);
 
         const gpsById = Object.fromEntries(gpsDevices.map((g) => [g.id, g]));

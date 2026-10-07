@@ -1,3 +1,5 @@
+// Vehículos sin foto en fleet (image_url es opcional): se muestra una genérica
+import carPlaceholder from "../../../../assets/carro.png";
 import { VEHICLE_STATUS_LABEL } from "../../registerVehicle/constans/vehicleStatus"
 export function toInventoryViewModel(vehicle) {
     return {
@@ -10,7 +12,7 @@ export function toInventoryViewModel(vehicle) {
         sucursal: vehicle.location,
         estado: VEHICLE_STATUS_LABEL[vehicle.status] || vehicle.status,
         km: vehicle.mileage,
-        imagen: vehicle.image || null,
+        imagen: vehicle.image || carPlaceholder,
     };
     
 }

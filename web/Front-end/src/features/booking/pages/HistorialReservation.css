@@ -348,3 +348,21 @@
   .reserva-vehiculo { flex-direction: column; align-items: flex-start; }
   .vehiculo-imagen-wrapper { width: 100%; height: 120px; }
 }
+
+/* Estado vacío: sin reservas no se renderiza nada y la página queda en blanco. */
+.historial-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    border: 1px dashed var(--border-Card, #e5e7eb);
+    border-radius: 16px;
+    background: var(--card-bg, transparent);
+}
+
+.historial-empty p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 1rem;
+}

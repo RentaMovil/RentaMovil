@@ -84,7 +84,8 @@ function CheckStatus() {
                 imageUrl = await uploadImage(vehicleFile);
             }
 
-            await updateStatusVehicle(selectedVehicle.plate, { ...data, image: imageUrl });  
+            // Por id (entero), no por placa: la placa ya no es el id del vehículo
+            await updateStatusVehicle(selectedVehicle.id, { ...data, image: imageUrl });
             await refetch();
             closeModal();
         } catch (error) {

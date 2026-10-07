@@ -9,6 +9,7 @@ import carro from "../../../../assets/carro.png";
 import car from "../../../../assets/logo.png";
 import { TfiLayoutGrid2Alt } from "react-icons/tfi";
 import { TfiMenu } from "react-icons/tfi";
+import { FiSearch, FiX } from "react-icons/fi";
 
 export default function VehicleInventory() {
   const navigate = useNavigate();
@@ -22,6 +23,8 @@ export default function VehicleInventory() {
     estado: null,
     sucursal: null,
     tipo: null,
+    marca: null,
+    modelo: null,
   });
 
   const [vista, setVista] = useState("grid");
@@ -45,12 +48,14 @@ export default function VehicleInventory() {
   const handleFilterSelect = (filterType, value) => {
     setSelectedFilters((prev) => ({
       ...prev,
-      [filterType]: prev[filterType] === value ? null : value,
+      [filterType]: ["Todos", "Todas"].includes(value) || prev[filterType] === value ? null : value,
     }));
   };
 
-  const clearAllFilters = () =>
-    setSelectedFilters({ estado: null, sucursal: null, tipo: null });
+  const clearAllFilters = () => {
+    setSearch("");
+    setSelectedFilters({ estado: null, sucursal: null, tipo: null, marca: null, modelo: null });
+  };
 
   const hasActiveFilters = Object.values(selectedFilters).some(
     (v) => v !== null,
@@ -80,12 +85,22 @@ export default function VehicleInventory() {
     })),
   ];
 
+  const MARCAS = [...new Set(inventory.map((v) => v.marca))].filter(Boolean);
+  const MODELOS = [...new Set(inventory.map((v) => v.modelo))].filter(Boolean);
+
+  const FILTERS = [
+    { key: "estado", label: t("VehicleInventary.keyState"), options: ESTADOS },
+    { key: "sucursal", label: t("VehicleInventary.keyBranch"), options: SUCURSALES },
+    { key: "tipo", label: t("VehicleInventary.keyType"), options: TIPOS },
+    { key: "marca", label: t("VehicleInventary.brand", "Marca"), options: [{ value: "Todas", label: t("VehicleInventary.all_f") }, ...MARCAS.map((value) => ({ value, label: value }))] },
+    { key: "modelo", label: t("VehicleInventary.model", "Modelo"), options: [{ value: "Todos", label: t("VehicleInventary.all_m") }, ...MODELOS.map((value) => ({ value, label: value }))] },
+  ];
+
   const filtered = inventory.filter(
     (v) =>
-      (search === "" ||
-        (v.placa || "").toLowerCase().includes(search.toLowerCase()) ||
-        (v.marca || "").toLowerCase().includes(search.toLowerCase()) ||
-        (v.modelo || "").toLowerCase().includes(search.toLowerCase())) &&
+      (search.trim() === "" ||
+        [v.placa, v.marca, v.modelo, v.tipo, v.sucursal]
+          .some((value) => String(value || "").toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()))) &&
       (selectedFilters.estado === null ||
         selectedFilters.estado === "Todos" ||
         v.estado === selectedFilters.estado) &&
@@ -94,7 +109,9 @@ export default function VehicleInventory() {
         (v.sucursal || v.branch) === selectedFilters.sucursal) &&
       (selectedFilters.tipo === null ||
         selectedFilters.tipo === "Todos" ||
-        (v.tipo || v.type) === selectedFilters.tipo),
+        (v.tipo || v.type) === selectedFilters.tipo) &&
+      (selectedFilters.marca === null || selectedFilters.marca === "Todas" || v.marca === selectedFilters.marca) &&
+      (selectedFilters.modelo === null || selectedFilters.modelo === "Todos" || v.modelo === selectedFilters.modelo),
   );
 
   const stats = {
@@ -157,6 +174,7 @@ export default function VehicleInventory() {
 
             <div className="vi-controls">
               <div className="vi-search-wrap">
+                <FiSearch className="vi-search-icon" aria-hidden="true" />
                 <input
                   className="vi-search"
                   type="text"
@@ -164,6 +182,19 @@ export default function VehicleInventory() {
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
+                {search && <button type="button" className="vi-search-clear" aria-label="Limpiar búsqueda" onClick={() => setSearch("")}><FiX /></button>}
+              </div>
+
+              <div className="vi-filters" ref={filtersRef}>
+                {FILTERS.map(({ key, label, options }) => (
+                  <div className="vi-filter-wrap" key={key}>
+                    <button type="button" className={`vi-filter-btn ${activeFilter === key ? "active" : ""} ${selectedFilters[key] !== null ? "selected" : ""}`} onClick={() => handleFilterClick(key)} aria-expanded={activeFilter === key}>
+                      {label}{selectedFilters[key] !== null ? `: ${options.find((option) => option.value === selectedFilters[key])?.label || selectedFilters[key]}` : ""}<span className="vi-filter-arrow">▾</span>
+                    </button>
+                    {activeFilter === key && <div className="vi-dropdown" role="listbox" aria-label={label}>{options.map((option) => <button type="button" key={option.value} className={`vi-dropdown-item ${selectedFilters[key] === option.value ? "chosen" : ""}`} onClick={() => { handleFilterSelect(key, option.value); setActiveFilter(null); }}>{option.label}</button>)}</div>}
+                  </div>
+                ))}
+                {hasActiveFilters || search ? <button type="button" className="vi-clear-btn" onClick={clearAllFilters}>{t("VehicleInventary.CleanFilters")}</button> : null}
               </div>
 
               <div className="vi-view-toggle">
@@ -184,6 +215,8 @@ export default function VehicleInventory() {
                 </button>
               </div>
             </div>
+
+            <p className="vi-results-count">{t("VehicleInventary.resultsCount", { count: filtered.length })}</p>
 
             {/* SECCIÓN RESTAURADA: Renderizado de tarjetas (Grid) o Tabla */}
             {filtered.length === 0 ? (

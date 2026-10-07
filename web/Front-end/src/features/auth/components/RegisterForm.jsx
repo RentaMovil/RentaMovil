@@ -14,6 +14,8 @@ function RegisterForm({ onSubmit, onSwitchToLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  // Un solo toggle para contraseña y su confirmación: es el mismo valor.
+  const [showPassword, setShowPassword] = useState(false);
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -31,12 +33,18 @@ function RegisterForm({ onSubmit, onSwitchToLogin }) {
       return setError(t('register.emailInvalid'));
     }
 
-    if (phone && !/^[0-9]{10}$/.test(phone)) {
+    // Opcional. Si se escribe, lo mismo que acepta el backend: dígitos, espacios y "+" (hasta 20)
+    if (phone && !/^[0-9+ ]{7,20}$/.test(phone)) {
       return setError(t('register.phoneInvalid'));
     }
 
-    if (password.length < 6) {
+    // RegisterRequest exige 8+ caracteres, una mayúscula y un número.
+    if (password.length < 8) {
       return setError(t('register.passwordShort'));
+    }
+
+    if (!/[A-Z]/.test(password) || !/\d/.test(password)) {
+      return setError(t('register.passwordWeak'));
     }
 
     if (password !== confirmPassword) {
@@ -129,25 +137,39 @@ function RegisterForm({ onSubmit, onSwitchToLogin }) {
         {/* Contraseña */}
         <div className="form-group full">
           <label>{t('register.password')}</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder={t('register.passwordPlaceholder')}
-            required
-          />
+          <div className="password-field">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder={t('register.passwordPlaceholder')}
+              required
+            />
+            <button
+              type="button"
+              className="toggle-password"
+              onClick={() => setShowPassword((prev) => !prev)}
+              aria-label={t(showPassword ? 'loginForm.hidePassword' : 'loginForm.showPassword')}
+              title={t(showPassword ? 'loginForm.hidePassword' : 'loginForm.showPassword')}
+            >
+              <i className={showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'} />
+            </button>
+          </div>
         </div>
 
         {/* Confirmar contraseña */}
         <div className="form-group full">
           <label>{t('register.confirmPassword')}</label>
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder={t('register.passwordPlaceholder')}
-            required
-          />
+          {/* Comparte el toggle: es la misma contraseña que se está confirmando */}
+          <div className="password-field">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder={t('register.passwordPlaceholder')}
+              required
+            />
+          </div>
         </div>
 
         {/* Error */}

@@ -1,40 +1,24 @@
 import { tokenStore } from './tokenStore.js';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
-const MOCK_API_URL = import.meta.env.VITE_MOCK_API_URL || 'http://localhost:3100';
+// /api y /mock son rutas del proxy de Vite (vite.config.js): el gateway (:8080) y el mock (:3100).
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+const MOCK_API_URL = import.meta.env.VITE_MOCK_API_URL || '/mock';
 
-// Rutas que ya tienen backend real (van al gateway). Todo lo demás sigue en el mock.
-// Cuando un servicio nuevo esté listo, se agrega su prefijo aquí.
+// Lo que ya tiene servicio real va al gateway; el resto (pagos, cuentas bancarias, GPS) sigue en
+// el mock hasta que su servicio exista. Al publicar uno nuevo se agrega aquí su prefijo.
 const REAL_BACKEND_PREFIXES = [
     '/auth', '/users',
-    // fleet-maintenance
-    '/vehicles', '/branches',
-    '/brands', '/categories', '/engine-types', '/vehicle-models', '/maintenance-types', '/maintenances',
+    '/reservations', '/rentals', '/notifications',
+    '/vehicles', '/branches', '/maintenances',
+    '/brands', '/categories', '/engine-types', '/vehicle-models', '/maintenance-types',
 ];
 
 export function hasRealBackend(endpoint) {
-    // Se compara solo la ruta: '/vehicles?status=ALL' es '/vehicles'
-    const path = endpoint.split('?')[0];
-    return REAL_BACKEND_PREFIXES.some((prefix) => path === prefix || path.startsWith(`${prefix}/`));
+    return REAL_BACKEND_PREFIXES.some((prefix) =>
+        endpoint === prefix || endpoint.startsWith(`${prefix}/`) || endpoint.startsWith(`${prefix}?`));
 }
 
-function baseUrlFor(endpoint) {
-    return hasRealBackend(endpoint) ? API_URL : MOCK_API_URL;
-}
-
-// Error de la API con lo necesario para decidir qué mostrar:
-// status (ej. 423, 429), code (el "error" del backend, ej. ACCOUNT_BLOCKED) y
-// retryAfter (segundos del header Retry-After que pone el rate limit del gateway)
-export class ApiError extends Error {
-    constructor(res, body, endpoint) {
-        super(body?.message || `Error ${res.status} en ${endpoint}`);
-        this.name = 'ApiError';
-        this.status = res.status;
-        this.code = body?.error ?? null;
-        const retryAfter = Number(res.headers.get('Retry-After'));
-        this.retryAfter = Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter : null;
-    }
-}
+const baseUrlFor = (endpoint) => (hasRealBackend(endpoint) ? API_URL : MOCK_API_URL);
 
 let refreshPromise = null;
 async function rawRequest(endpoint, { method = 'GET', body, headers = {} } = {}) {
@@ -64,38 +48,83 @@ async function refreshAccessToken() {
 
     const data = await res.json();
     tokenStore.setAccessToken(data.accessToken);
+    // iam rota el refresh token en cada uso: si no se guarda el nuevo, el siguiente refresh
+    // manda el viejo, iam lo toma como robado y cierra todas las sesiones
     localStorage.setItem('rentamovil_refresh_token', data.refreshToken);
-    return data.accessToken;
+    return data;
+}
+
+// Un solo refresh a la vez para toda la app (el de AuthContext al recargar y el de cualquier 401).
+// Dos refresh con el mismo token = iam lo toma como reuso y cierra todas las sesiones.
+export function refreshSession() {
+    if (!refreshPromise) {
+        refreshPromise = refreshAccessToken().finally(() => {
+            refreshPromise = null;
+        });
+    }
+    return refreshPromise;
+}
+
+// Mensajes pensados para leerse en pantalla: el status y el endpoint no significan nada
+// para quien está usando la app.
+const FRIENDLY_MESSAGES = {
+    404: 'No encontramos lo que buscabas.',
+    401: 'Tu sesión expiró. Vuelve a iniciar sesión.',
+    403: 'No tienes permisos para ver esto.',
+    409: 'No se pudo completar la operación por un conflicto con datos existentes.',
+    429: 'Demasiados intentos. Espera un momento e inténtalo de nuevo.',
+    503: 'El servicio no está disponible en este momento. Inténtalo más tarde.',
+};
+
+function friendlyError(res, endpoint, body) {
+    const status = res.status;
+    // Si el backend manda un mensaje en español, tiene prioridad sobre el genérico.
+    const message = body?.message || FRIENDLY_MESSAGES[status]
+        || 'No se pudo completar la operación. Inténtalo de nuevo.';
+    const error = new Error(message);
+    // Se conserva lo técnico para la consola, pero no se muestra en pantalla.
+    error.status = status;
+    error.endpoint = endpoint;
+    // code: el "error" del backend (ej. ACCOUNT_BLOCKED). retryAfter: segundos del Retry-After
+    // que pone el rate limit del gateway (el login lo muestra en el 429)
+    error.code = body?.error ?? null;
+    const retryAfter = Number(res.headers.get('Retry-After'));
+    error.retryAfter = Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter : null;
+    if (!body?.message) {
+        console.warn(`[http] ${status} en ${endpoint}`);
+    }
+    return error;
 }
 
 async function request(endpoint, options = {}) {
+    // Si la sesión se está renovando, se espera el token nuevo en vez de salir sin él
+    if (refreshPromise) {
+        await refreshPromise.catch(() => {});
+    }
     let res = await rawRequest(endpoint, options);
 
-    // Un 401 por contraseña actual incorrecta (cambiar email/contraseña) no es un token vencido
+    // Un 401 por contraseña actual incorrecta (cambiar correo/contraseña) no es un token vencido
     const wrongPassword = res.status === 401
         && (await res.clone().json().catch(() => null))?.error === 'INCORRECT_PASSWORD';
 
     // Si expiro el access token, intenta refrescar UNA vez y reintenta la peticion original
     if (res.status === 401 && !wrongPassword && endpoint !== '/auth/login' && endpoint !== '/auth/refresh') {
         try {
-            refreshPromise = refreshPromise || refreshAccessToken();
-            await refreshPromise;
-            refreshPromise = null;
+            await refreshSession();
             res = await rawRequest(endpoint, options);
         } catch {
-            refreshPromise = null;
             tokenStore.clear();
             tokenStore.triggerRefreshFail(); // el authService decide qué hacer (ej. redirigir a /Login)
-            throw new Error('Sesión expirada');
+            throw new Error('Tu sesión expiró. Vuelve a iniciar sesión.');
         }
     }
 
     if (!res.ok) {
         const errorBody = await res.json().catch(() => null);
-        throw new ApiError(res, errorBody, endpoint);
+        throw friendlyError(res, endpoint, errorBody);
     }
 
-    // 204 o 202 sin cuerpo (ej. /auth/password/forgot): no hay JSON que leer
+    // 204, o 202 sin cuerpo (ej. /auth/password/forgot): no hay JSON que leer
     const text = await res.text();
     return text ? JSON.parse(text) : null;
 }

@@ -26,4 +26,7 @@ export const carsService = {
     getAllForAdmin: () => getAllPages('status=ALL'),
     // Detalle público de un vehículo, en cualquier estado
     getById: async (id) => fromFleetVehicle(await httpClient.get(`${RESOURCE}/${id}`)),
+    // fleet-maintenance: GET /vehicles/{id}/availability?from=YYYY-MM-DD&to=YYYY-MM-DD
+    getAvailability: async (id, from, to) =>
+        httpClient.get(`${RESOURCE}/${id}/availability?from=${from}&to=${to}`),
 }

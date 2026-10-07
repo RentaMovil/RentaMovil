@@ -9,6 +9,10 @@ import { useDeleteInsurance } from "../hooks/useDeleteInsurance";
 import { useUpdateInsurance } from "../hooks/useUpdateInsurance";
 import { useCreateInsurance } from "../hooks/useCreateInsurance";
 
+// Booking todavía no tiene endpoints para editar ni borrar planes (hay reservas que ya los
+// usan). Cuando existan, basta con poner esto en true para mostrar de nuevo los botones.
+const CAN_EDIT_PLANS = false;
+
 export default function InsuranceTypes() {
     const { t } = useTranslation();
     
@@ -151,6 +155,7 @@ export default function InsuranceTypes() {
                                                 <span className="it-cost-unit">{t("insuranceTypes.perDay")}</span>
                                             </td>
                                             <td className="right">
+                                                {CAN_EDIT_PLANS && (
                                                 <div className="it-actions">
                                                     <button className="it-btn-edit" aria-label={t("insuranceTypes.editAria", { name: item.name })} onClick={() => openEditModal(item)}>
                                                         <FiEdit2 />
@@ -159,6 +164,7 @@ export default function InsuranceTypes() {
                                                         <FiTrash2 />
                                                     </button>
                                                 </div>
+                                                )}
                                             </td>
                                         </tr>
                                     ))}

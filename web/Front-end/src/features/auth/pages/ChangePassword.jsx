@@ -44,13 +44,26 @@ function ChangePassword() {
                             <label className='form-labelP' htmlFor='currentPassword'>
                                 {t('changePassword.currentPassword')}
                             </label>
-                            <input
-                                id='currentPassword'
-                                type="password"
-                                value={currentPassword}
-                                onChange={(e) => setCurrentPassword(e.target.value)}
-                                className={getCurrentPasswordClass()}
-                            />
+                            <div className="inputWrapperP">
+                                <input
+                                    id='currentPassword'
+                                    type={showPassword ? "text" : "password"}
+                                    value={currentPassword}
+                                    onChange={(e) => setCurrentPassword(e.target.value)}
+                                    className={getCurrentPasswordClass()}
+                                />
+
+                                {/* Comparte el toggle del campo nuevo */}
+                                <button
+                                    type="button"
+                                    className="eyeIconP"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    aria-label="Mostrar u ocultar contraseña"
+                                    aria-pressed={showPassword}
+                                >
+                                    {showPassword ? <FaEye /> : <FaEyeSlash />}
+                                </button>
+                            </div>
                         </div>
                         <div className="inputGroupP">
                             <label className='form-labelP' htmlFor='newPassword'>

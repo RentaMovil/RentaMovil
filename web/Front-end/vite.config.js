@@ -1,8 +1,13 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// Quita el header Origin: para el navegador es la misma página (no hay CORS),
-// así el gateway no rechaza el dominio del túnel
+// En local el gateway y el mock están en este PC; en Docker se pasan sus nombres en la red
+// (docker-compose.yml). preview usa el mismo proxy que dev.
+const GATEWAY_URL = process.env.GATEWAY_URL || 'http://localhost:8080'
+const MOCK_URL = process.env.MOCK_URL || 'http://localhost:3100'
+
+// Sin el header Origin, para el gateway es una llamada de servidor a servidor: no aplica CORS
+// (así también funciona abriendo la app por un túnel con otro dominio)
 function stripOrigin(proxy) {
   proxy.on('proxyReq', (proxyReq) => proxyReq.removeHeader('origin'))
 }
@@ -14,17 +19,16 @@ export default defineConfig({
     exclude: ['react-native']
   },
   server: {
-    // El navegador llama a /api y /mock en el mismo origen; Vite lo reenvía desde este PC.
-    // Así funciona también desde el túnel de VS Code (localhost sería el PC del otro).
+    // El navegador llama a /api y /mock en su mismo origen y Vite lo reenvía desde este PC
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
+        target: GATEWAY_URL,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
         configure: stripOrigin,
       },
       '/mock': {
-        target: 'http://localhost:3100',
+        target: MOCK_URL,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/mock/, ''),
         configure: stripOrigin,

@@ -8,7 +8,10 @@ import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
 import Navbar from "../../../shared/components/layout/Navbar";
+import NavbarAdmin from "../../../shared/components/layout/NavBarAdmin";
 import Footer from "../../../shared/components/layout/Footer";
+import FooterAdmin from "../../../shared/components/layout/FooterAdmin";
+import { useAuth } from "../../../contexts/AuthContext.jsx";
 import { useIsMobile } from "../../../shared/hooks/useIsMobile";
 import { useBranches } from "../../admin/branches/hooks/useBranch";
 import FilterCalendar from "../../vehicles/components/FilterCalendar";
@@ -39,6 +42,10 @@ function Reservation() {
     const location = useLocation();
     const filterCalendarRef = useRef(null);
     const { alert } = useDialog();
+    const { user } = useAuth();
+    const isAdmin = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
+    const NavbarComponent = isAdmin ? NavbarAdmin : Navbar;
+    const FooterComponent = isAdmin ? FooterAdmin : Footer;
 
     const {
         vehicle: rawVehicle,
@@ -203,7 +210,7 @@ function Reservation() {
 
     return (
         <>
-            <Navbar />
+            <NavbarComponent />
 
             <div className="containerR">
 
@@ -403,7 +410,7 @@ function Reservation() {
 
             </div>
 
-            <Footer />
+            <FooterComponent />
         </>
     );
 }

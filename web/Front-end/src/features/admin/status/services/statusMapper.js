@@ -1,6 +1,7 @@
 import { VEHICLE_STATUS_LABEL, LABEL_TO_VEHICLE_STATUS } from '../../registerVehicle/constans/vehicleStatus';
 export function toStatusViewModel(vehicle) {
     return {
+        id: vehicle.id,
         plate: vehicle.plate,
         brandName: vehicle.brand,
         modelName: vehicle.model,

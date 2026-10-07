@@ -169,6 +169,15 @@
   border-color: #fcd34d;
   border-left-color: #f59e0b;
 }
+/* Aviso informativo: el servicio aún no tiene datos. Neutro, sin rojo de alarma. */
+.rh-notice--info {
+  border-color: #bfdbfe;
+  border-left-color: #3b82f6;
+  background: #f8fafc;
+}
+.rh-notice--info .rh-notice-body p {
+  color: #475569;
+}
 .rh-notice > svg {
   width: 24px;
   height: 24px;

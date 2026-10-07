@@ -248,10 +248,32 @@
 .vi-search-wrap {
   flex: 1;
   min-width: 260px;
+  position: relative;
+}
+.vi-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--placeholder);
+  pointer-events: none;
+}
+.vi-search-clear {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  padding: 5px;
+  border: 0;
+  background: transparent;
+  color: var(--placeholder);
+  cursor: pointer;
 }
 .vi-search {
   width: 100%;
-  padding: 12px 14px;
+  padding: 12px 38px;
   border: 1.5px solid var(--border);
   border-radius: 10px;
   font: 400 14px inherit;
@@ -294,6 +316,7 @@
   gap: 10px;
   align-items: center;
   flex-wrap: wrap;
+  width: 100%;
 }
 .vi-filter-wrap {
   position: relative;

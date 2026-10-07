@@ -23,8 +23,8 @@
 
 .buttonBack.overlay {
     position: absolute;
-    left: 2;
-    top: 1;
+    left: 2px;
+    top: 1px;
     z-index: 1;
 }
 

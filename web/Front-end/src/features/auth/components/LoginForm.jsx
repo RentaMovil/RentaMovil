@@ -32,6 +32,7 @@
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -42,11 +43,8 @@
         return setError("loginForm.errorFields");
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-        if (!emailRegex.test(email)) {
-        return setError("loginForm.emailInvalid");
-        }
+        // Sin validación de formato: `identifier` acepta correo o username. Si la combinación
+        // no existe, el backend responde 401 y se muestra errorAuthentication.
 
         setLoading(true);
 
@@ -74,7 +72,7 @@
             <label htmlFor="email">{t("loginForm.email")}</label>
             <input
                 id="email"
-                type="email"
+                type="text"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 autoComplete="username"
@@ -85,15 +83,38 @@
 
             <div className="form-group">
             <label htmlFor="password">{t("loginForm.password")}</label>
-            <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
-                placeholder={t("loginForm.passwordPlaceholder")}
-                required
-            />
+            <div className="password-field">
+                <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="current-password"
+                    placeholder={t("loginForm.passwordPlaceholder")}
+                    required
+                />
+                <button
+                    type="button"
+                    className="toggle-password"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    aria-label={t(
+                        showPassword
+                            ? "loginForm.hidePassword"
+                            : "loginForm.showPassword"
+                    )}
+                    title={t(
+                        showPassword
+                            ? "loginForm.hidePassword"
+                            : "loginForm.showPassword"
+                    )}
+                >
+                    <i
+                        className={
+                            showPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"
+                        }
+                    />
+                </button>
+            </div>
             </div>
 
             {error && (
