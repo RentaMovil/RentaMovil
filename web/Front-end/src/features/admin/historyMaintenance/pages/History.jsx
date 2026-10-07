@@ -12,19 +12,30 @@ import FleetChartMaintenance from '../../historyMaintenance/components/FleetChar
 import MonthlyChart from '../../historyMaintenance/components/MonthlyChart.jsx';
 import { useMaintenances } from '../hooks/useMaintenances.js';
 import { useUpdateMaintenance } from '../hooks/useUpdateMaintenance.js';
-import { useDeleteMaintenance } from '../hooks/useDeleteMaintenance.js';
-import { MAINTENANCE_STATUS } from '../../maintenance/constans/maintenanceStatus.js';
+import { useChangeMaintenanceStatus } from '../hooks/useChangeMaintenanceStatus.js';
+import { useMaintenanceTypes } from '../../registerMaintenance/hooks/useMaintenanceTypes.js';
+import { MAINTENANCE_STATUS, MAINTENANCE_STATUS_KEY, isClosedMaintenance } from '../../maintenance/constans/maintenanceStatus.js';
+import { formatDate } from '../../maintenance/service/maintenanceMapper.js';
+
+// Fecha de hoy en formato yyyy-mm-dd (hora local)
+function todayIso() {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+}
+
 function History() {
   const { t } = useTranslation();
   const { register, formState: { errors }, handleSubmit, reset } = useForm();
 
   const { records, refetch } = useMaintenances();
   const { updateMaintenance } = useUpdateMaintenance();
-  const { deleteMaintenance } = useDeleteMaintenance();
+  const { changeStatus } = useChangeMaintenanceStatus();
+  const { maintenanceTypes } = useMaintenanceTypes();
 
   const [selected, setSelected] = useState(null);
-  const [confirmDelete, setConfirmDelete] = useState(false);
+  const [confirmCancel, setConfirmCancel] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [actionError, setActionError] = useState('');
   const [query, setSearch] = useState("");
   const [filterState, setFilterState] = useState("");
 
@@ -46,40 +57,53 @@ function History() {
 
   const closeModal = () => {
     setSelected(null);
-    setConfirmDelete(false);
+    setConfirmCancel(false);
     setIsEditing(false);
+    setActionError('');
   };
 
-  const deleteRecord = async (id) => {
+  // Iniciar, completar o cancelar. "Eliminar" ya no existe: un mantenimiento se cancela (INV-005)
+  const changeRecordStatus = async (status) => {
     try {
-      await deleteMaintenance(id);
+      setActionError('');
+      await changeStatus(selected.id, status);
       await refetch();
       closeModal();
     } catch (error) {
-      console.error('Error al eliminar el registro:', error);
+      console.error('Error al cambiar el estado:', error);
+      setActionError(error.message);
     }
   };
 
   const handleSaveEdit = async (data) => {
     try {
+      setActionError('');
       await updateMaintenance(selected.id, data);
       await refetch();
-      setIsEditing(false);
       closeModal();
     } catch (error) {
       console.error('Error al actualizar el registro:', error);
+      setActionError(error.message);
     }
   };
 
   const openEdit = (rec) => {
     setIsEditing(true);
+    setActionError('');
     reset({
-      model: rec.modelName,
-      maintenanceType: rec.typeMaintenance,
-      date: rec.date.slice(0, 10),
+      maintenanceTypeId: rec.maintenanceTypeId,
+      date: rec.date?.slice(0, 10),
+      price: rec.cost ?? 0,
       observations: rec.description,
-      status: rec.status,
     });
+  };
+
+  // Programado: hoy a dos meses. En progreso: no puede iniciar en el futuro.
+  const validateEditDate = (value) => {
+    if (selected?.status === MAINTENANCE_STATUS.IN_PROGRESS) {
+      return value <= todayIso() || t("History.futureDate");
+    }
+    return ValidateDate(value);
   };
 
   return (
@@ -110,42 +134,30 @@ function History() {
 
               {isEditing ? (
                 <form className={style["history-form"]} onSubmit={handleSubmit(handleSaveEdit)}>
-                  <label htmlFor="model">{t("maintenanceForm.model")}</label>
-                  <input
-                    type="text"
-                    placeholder={t("maintenanceForm.placeholderModel")}
-                    {...register("model", {
-                      required: t("maintenanceForm.requiredModel"),
-                      minLength: { value: 2, message: t("maintenanceForm.minLenghtModel") },
-                      maxLength: { value: 30, message: t("maintenanceForm.maxLenghtModel") },
-                      pattern: { value: /^[A-Za-z0-9\s\-]{2,30}$/, message: t("maintenanceForm.invalidModel") }
-                    })}
-                  />
-                  {errors.model && <p className={style['error-message']}><AiOutlineDashboard /> {errors.model.message}</p>}
-
-                  <label htmlFor="maintenanceType">{t("maintenanceForm.TypeMaintenance")}</label>
-                  <input
-                    type="text"
-                    placeholder={t("maintenanceForm.placeholderMaintenance")}
-                    list="maintenance-options"
-                    {...register("maintenanceType", {
-                      required: t("maintenanceForm.requiredMaintenance"),
-                      minLength: { value: 3, message: t("maintenanceForm.minLenghtMaintenance") },
-                      maxLength: { value: 60, message: t("maintenanceForm.maxLenght") },
-                      pattern: { value: /^[A-Za-zÀ-ÿ0-9\s\-\,\.]{3,60}$/, message: t("maintenanceForm.invalidMaintenance") }
-                    })}
-                  />
-                  <datalist id="maintenance-options">
-                    <option value={t("maintenanceForm.options.option1")} />
-                    <option value={t("maintenanceForm.options.option2")} />
-                  </datalist>
-                  {errors.maintenanceType && <p className={style['error-message']}><AiOutlineDashboard /> {errors.maintenanceType.message}</p>}
+                  <label htmlFor="maintenanceTypeId">{t("maintenanceForm.TypeMaintenance")}</label>
+                  <select {...register("maintenanceTypeId", { required: t("maintenanceForm.requiredMaintenance") })}>
+                    {maintenanceTypes.map((type) => (
+                      <option key={type.id} value={type.id}>{type.name}</option>
+                    ))}
+                  </select>
+                  {errors.maintenanceTypeId && <p className={style['error-message']}><AiOutlineDashboard /> {errors.maintenanceTypeId.message}</p>}
 
                   <label htmlFor="date">{t("maintenanceForm.date")}</label>
                   <input type="date" placeholder={t("maintenanceForm.datePlaceholder")}
-                    {...register("date", { required: t("maintenanceForm.requiredDate"), validate: ValidateDate })}
+                    {...register("date", { required: t("maintenanceForm.requiredDate"), validate: validateEditDate })}
                   />
                   {errors.date && <p className={style['error-message']}><AiOutlineDashboard /> {errors.date.message}</p>}
+
+                  <label htmlFor="price">{t("History.cost")}</label>
+                  <input type="number" step="100"
+                    {...register("price", {
+                      required: t("vehicleForm.priceRequired"),
+                      valueAsNumber: true,
+                      min: { value: 0, message: t("vehicleForm.minLenghtPrice") },
+                      max: { value: 100000000, message: t("vehicleForm.maxLenghtPrice") }
+                    })}
+                  />
+                  {errors.price && <p className={style['error-message']}><AiOutlineDashboard /> {errors.price.message}</p>}
 
                   <label htmlFor="maintenance-notes">{t("MaintenanceForm.observations")}</label>
                   <div className={style['history-form-observations']}>
@@ -166,13 +178,7 @@ function History() {
                   {errors.observations?.type === "minLength" && <p className={style['error-message']}><AiOutlineDashboard /> {errors.observations.message}</p>}
                   {errors.observations?.type === "maxLength" && <p className={style['error-message']}><AiOutlineDashboard /> {errors.observations.message}</p>}
 
-                  <label>{t("FiltrerHistory.state")}</label>
-                  <select defaultValue={selected.status} {...register("status")}>
-                    <option value={MAINTENANCE_STATUS.COMPLETED}>{t("FiltrerHistory.completed")}</option>
-                    <option value={MAINTENANCE_STATUS.PENDING}>{t("FiltrerHistory.pending")}</option>
-                    <option value={MAINTENANCE_STATUS.IN_PROGRESS}>{t("FiltrerHistory.inProgress")}</option>
-                    <option value={MAINTENANCE_STATUS.CANCELLED}>{t("CartVehiculeMaintenance.cancel")}</option>
-                  </select>
+                  {actionError && <p className={style['error-message']}>{actionError}</p>}
 
                   <div className={style['modal-footer']}>
                     <button className={style['modal-button-secondary']} type="button" onClick={() => setIsEditing(false)}>{t("History.cancel")}</button>
@@ -182,24 +188,36 @@ function History() {
               ) : (
                 <>
                   <div className={style["history-details"]}>
-                    <p><strong>{t("History.model")} :</strong> <span>{selected.modelName}</span></p>
+                    <p><strong>{t("History.model")} :</strong> <span>{selected.brandName} {selected.modelName}</span></p>
                     <p><strong>{t("maintenanceForm.TypeMaintenance")} :</strong> <span>{selected.typeMaintenance}</span></p>
-                    <p><strong>{t("maintenanceForm.date")} :</strong> <span>{new Date(selected.date).toLocaleString()}</span></p>
-                    <p><strong>{t("CheckStatus.modal.ubication")} :</strong> <span>{selected.location || 'Sin ubicación'}</span></p>
-                    <p><strong>{t("History.status")} :</strong> <span>{selected.status}</span></p>
+                    <p><strong>{t("maintenanceForm.date")} :</strong> <span>{formatDate(selected.date)}{selected.endDate && ` - ${formatDate(selected.endDate)}`}</span></p>
+                    <p><strong>{t("History.cost")} :</strong> <span>{Number(selected.cost ?? 0).toLocaleString()}</span></p>
+                    <p><strong>{t("History.status")} :</strong> <span>{t(`FleetChartMaintenance.${MAINTENANCE_STATUS_KEY[selected.status]}`)}</span></p>
                     <p><strong>{t("MaintenanceForm.observations")} :</strong> <span>{selected.description || t("maintenanceForm.placeholderObservations")}</span></p>
                   </div>
 
+                  {isClosedMaintenance(selected.status) && <p>{t("History.closedReadOnly")}</p>}
+                  {actionError && <p className={style['error-message']}>{actionError}</p>}
+
                   <div className={style['modal-actions-btn']}>
-                    <button className={style['modal-button-primary']} onClick={() => openEdit(selected)}>{t("History.edit")}</button>
-                    {!confirmDelete && (
-                      <button className={style['modal-button-danger']} onClick={() => setConfirmDelete(true)}>{t("History.delete")}</button>
+                    {/* Acciones según el estado: los cerrados (completado/cancelado) son de solo lectura */}
+                    {!isClosedMaintenance(selected.status) && !confirmCancel && (
+                      <>
+                        <button className={style['modal-button-primary']} onClick={() => openEdit(selected)}>{t("History.edit")}</button>
+                        {selected.status === MAINTENANCE_STATUS.SCHEDULED && (
+                          <button className={style['modal-button-primary']} onClick={() => changeRecordStatus(MAINTENANCE_STATUS.IN_PROGRESS)}>{t("History.start")}</button>
+                        )}
+                        {selected.status === MAINTENANCE_STATUS.IN_PROGRESS && (
+                          <button className={style['modal-button-primary']} onClick={() => changeRecordStatus(MAINTENANCE_STATUS.COMPLETED)}>{t("History.complete")}</button>
+                        )}
+                        <button className={style['modal-button-danger']} onClick={() => setConfirmCancel(true)}>{t("History.cancelMaintenance")}</button>
+                      </>
                     )}
-                    {confirmDelete && (
+                    {confirmCancel && (
                       <div className={style["modal-confirm"]}>
-                        <p>{t("History.delete")}:</p>
-                        <button className={style['modal-button-danger']} onClick={() => deleteRecord(selected.id)}>{t("History.confirm")}</button>
-                        <button className={style['modal-button-secondary']} onClick={() => setConfirmDelete(false)}>{t("History.cancel")}</button>
+                        <p>{t("History.isCancel")}</p>
+                        <button className={style['modal-button-danger']} onClick={() => changeRecordStatus(MAINTENANCE_STATUS.CANCELLED)}>{t("History.confirm")}</button>
+                        <button className={style['modal-button-secondary']} onClick={() => setConfirmCancel(false)}>{t("History.back")}</button>
                       </div>
                     )}
                     <button className={style['modal-button-secondary']} onClick={closeModal}>{t("History.close")}</button>

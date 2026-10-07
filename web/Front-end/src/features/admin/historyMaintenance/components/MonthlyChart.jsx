@@ -9,9 +9,9 @@ function MonthlyChart({ records }) {
     const monthlyData = months.map((month, index) => ({
         month,
         total: records.filter((record) => {
-            const date = record.date ? new Date(record.date) : null;
-            if (!date || Number.isNaN(date.getTime())) return false;
-            return date.getMonth() === index;
+            // startDate llega como yyyy-mm-dd: el mes se lee del texto para no depender de la zona horaria
+            const month = record.date ? Number(String(record.date).slice(5, 7)) : NaN;
+            return month - 1 === index;
         }).length,
     }));
     return (

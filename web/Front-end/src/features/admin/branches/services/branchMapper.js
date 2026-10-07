@@ -1,62 +1,50 @@
-// fleet guarda el horario como 7 días numerados (1 = lunes) con opensAt/closesAt;
-// la pantalla trabaja con ids "mon".."sun" y open/close en "HH:mm".
+// Traduce entre la sucursal de fleet-maintenance y el modelo que usan las pantallas.
+// fleet: operatingHours = [{ dayOfWeek: 1..7, opensAt: "08:00", closesAt: "18:00", closed }]
+// front: schedule       = [{ id: "mon".."sun", open: "08:00", close: "18:00", closed }]
 const DAY_IDS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
-const toHHmm = (time) => (time ? String(time).slice(0, 5) : "08:00");
-
-function toOperatingHours(schedule = []) {
-    const byId = Object.fromEntries(schedule.map((day) => [day.id, day]));
-    // fleet exige los 7 días: los que la pantalla no mande quedan cerrados
-    return DAY_IDS.map((id, index) => {
-        const day = byId[id];
-        const closed = !day || Boolean(day.closed);
-        return {
-            dayOfWeek: index + 1,
-            opensAt: closed ? null : day.open,
-            closesAt: closed ? null : day.close,
-            closed,
-        };
-    });
+// La columna es DECIMAL(9,6): más decimales que eso no aportan nada en un mapa
+function roundCoordinate(value) {
+    return Number.isFinite(value) ? Math.round(value * 1e6) / 1e6 : null;
 }
 
-function fromOperatingHours(operatingHours = []) {
-    return [...operatingHours]
-        .sort((a, b) => a.dayOfWeek - b.dayOfWeek)
-        .map((hour) => ({
-            id: DAY_IDS[hour.dayOfWeek - 1],
-            open: toHHmm(hour.opensAt),
-            close: toHHmm(hour.closesAt ?? "18:00"),
-            closed: Boolean(hour.closed),
-        }));
-}
-
-const toCoordinate = (value) => (value === "" || value == null ? null : Number(value));
-
-// Cuerpo de POST /branches y PUT /branches/{id} (BranchWriteRequest de fleet)
-function toBranchPayload(formData) {
+export function toBranchPayload(formData) {
     return {
         name: formData.name,
+        address: formData.address,
         city: formData.city,
         phone: formData.phone,
-        address: formData.address,
-        latitude: toCoordinate(formData.latitude),
-        longitude: toCoordinate(formData.longitude),
-        operatingHours: toOperatingHours(formData.schedule),
+        // Las dos o ninguna (Branch.INV-001): el mapa siempre devuelve ambas
+        latitude: roundCoordinate(formData.latitude),
+        longitude: roundCoordinate(formData.longitude),
+        operatingHours: formData.schedule.map((day) => ({
+            dayOfWeek: DAY_IDS.indexOf(day.id) + 1,
+            closed: Boolean(day.closed),
+            // Un día cerrado no lleva horas
+            ...(day.closed ? {} : { opensAt: day.open, closesAt: day.close }),
+        })),
     };
 }
 
-export const toCreateBranchPayload = toBranchPayload;
-export const toUpdateBranchPayload = toBranchPayload;
-
 export function toBranchViewModel(branch) {
+    const schedule = [...(branch.operatingHours || [])]
+        .sort((a, b) => a.dayOfWeek - b.dayOfWeek)
+        .map((hour) => ({
+            id: DAY_IDS[hour.dayOfWeek - 1],
+            open: hour.opensAt ?? "00:00",
+            close: hour.closesAt ?? "00:00",
+            closed: Boolean(hour.closed),
+        }));
+
     return {
         id: branch.id,
         name: branch.name,
         city: branch.city,
         phone: branch.phone,
         address: branch.address,
-        latitude: branch.latitude ?? null,
-        longitude: branch.longitude ?? null,
-        schedule: branch.schedule ?? fromOperatingHours(branch.operatingHours),
+        // fleet las manda como número (o null si la sucursal no tiene ubicación)
+        latitude: branch.latitude == null ? null : Number(branch.latitude),
+        longitude: branch.longitude == null ? null : Number(branch.longitude),
+        schedule,
     };
 }

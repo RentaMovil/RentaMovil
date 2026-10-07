@@ -63,8 +63,11 @@ function MapComponent({
 }) {
 
     const isValidCoordinates = (location) => {
+        // null también se descarta: Number(null) es 0 y la sucursal saldría en el punto (0, 0)
         return (
             location &&
+            location.latitude != null &&
+            location.longitude != null &&
             Number.isFinite(Number(location.latitude)) &&
             Number.isFinite(Number(location.longitude))
         );

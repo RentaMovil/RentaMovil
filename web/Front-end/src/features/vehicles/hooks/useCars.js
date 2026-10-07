@@ -3,7 +3,8 @@ import { carsService } from "../Services/carsService";
 import { toClientVehicleViewModel } from "../Services/carsMapper";
 import { branchService } from "../../admin/branches/services/branchService";
 
-export  function useCars() {
+// allStatuses: true = flota completa (pantallas de admin); por defecto, solo el catálogo AVAILABLE
+export  function useCars({ allStatuses = false } = {}) {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
     const [cars, setCars] = useState([]);
@@ -14,7 +15,7 @@ export  function useCars() {
 
         try {
             const [vehiclesResponse, branchesResponse] = await Promise.all([
-                carsService.getAll(),
+                allStatuses ? carsService.getAllForAdmin() : carsService.getAll(),
                 branchService.getAll(),
             ]);
 
@@ -31,7 +32,7 @@ export  function useCars() {
         } finally {
             setIsLoading(false);
         }
-    }, []);
+    }, [allStatuses]);
 
     useEffect(() => { fetchVehicle(); }, [fetchVehicle]);
 

@@ -50,7 +50,9 @@ export default function Branches() {
   const { t } = useTranslation();
 
   const { branches, isLoading, error, refetch } = useBranches();
-  const { cars } = useCars();
+  // Cuenta todos los vehículos de la sucursal (también en mantenimiento o retirados): fleet no deja
+  // eliminar una sucursal mientras alguno la referencie
+  const { cars } = useCars({ allStatuses: true });
   const { createBranch, isLoading: isCreating } = useCreateBranch();
   const { updateBranch, isLoading: isUpdating } = useUpdateBranch();
   const { deleteBranch, isLoading: isDeleting } = useDeleteBranch();
