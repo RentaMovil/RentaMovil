@@ -192,9 +192,18 @@ export default function ReservationsList() {
                             <div className="rs-cell-sub mono">{r.customer.email}</div>
                           </td>
                           <td>
-                            <div className="rs-cell-title">{r.vehicle.name}</div>
-                            <div className="rs-cell-sub">
-                              {r.vehicle.category} • {t("reservations.plate")} <span className="mono strong">{r.vehicle.plate}</span>
+                            <div className="rs-cell-vehicle">
+                              {r.vehicle.img ? (
+                                <img className="rs-vehicle-thumb" src={r.vehicle.img} alt={r.vehicle.name} />
+                              ) : (
+                                <span className="rs-vehicle-thumb rs-vehicle-thumb-empty" aria-hidden="true">🚗</span>
+                              )}
+                              <div>
+                                <div className="rs-cell-title">{r.vehicle.name}</div>
+                                <div className="rs-cell-sub">
+                                  {r.vehicle.category} • {t("reservations.plate")} <span className="mono strong">{r.vehicle.plate}</span>
+                                </div>
+                              </div>
                             </div>
                           </td>
                           <td>

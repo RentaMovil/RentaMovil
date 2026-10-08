@@ -1,0 +1,144 @@
+.urm-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+
+.urm-modal {
+    background: #fff;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 420px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+}
+
+.urm-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.urm-header h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.urm-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    color: #6b7280;
+}
+
+.urm-form {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.urm-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+.urm-field input,
+.urm-field select {
+    font-weight: 400;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+
+.urm-total {
+    background: #f1f5f9;
+    border-radius: 8px;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    text-align: right;
+}
+
+.urm-error {
+    color: #dc2626;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.urm-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.urm-btn-secondary,
+.urm-btn-primary {
+    padding: 0.6rem 1.1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: none;
+}
+
+.urm-btn-secondary {
+    background: #f1f5f9;
+    color: #374151;
+}
+
+.urm-btn-primary {
+    background: #f59e0b;
+    color: #1f2937;
+}
+
+.urm-btn-primary:disabled,
+.urm-btn-secondary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* QR de la cuenta bancaria elegida */
+.urm-qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 0.75rem;
+}
+
+.urm-qr img {
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.urm-qr-download {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #b45309;
+    text-decoration: none;
+}
+
+.urm-qr-download:hover {
+    text-decoration: underline;
+}

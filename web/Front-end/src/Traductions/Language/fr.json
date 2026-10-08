@@ -302,7 +302,12 @@
     "imgp": "Assurez-vous que l'image est nette et montre le véhicule complet. Cela accélère le processus de validation.",
     "imgp2": "Déposez l'image ici...",
     "imgp3": "Faites glisser l'image ici ou cliquez pour sélectionner une image",
-    "changeImage": "Changer l'image"
+    "changeImage": "Changer l'image",
+    "disabledBrand": "Sélectionnez une marque...",
+    "disabledModel": "Sélectionnez un modèle...",
+    "chooseBrandFirst": "Choisissez d'abord une marque",
+    "fromModel": "Rempli en choisissant le modèle",
+    "plateExists": "Un véhicule avec cette plaque existe déjà"
   },
   "contractHistory": {
     "title": "Historique des contrats",
@@ -476,7 +481,8 @@
     "close": "Fermer",
     "stateSee": "Voir état",
     "all_m": "Tous",
-    "all_f": "Toutes"
+    "all_f": "Toutes",
+    "retired": "Retiré"
   },
   "FilterVehicle": {
     "placeholder": "Rechercher par plaque, marque ou modèle..."
@@ -624,7 +630,8 @@
       "option12": "Lavage",
       "option13": "Peinture",
       "option14": "Carrosserie"
-    }
+    },
+    "startNow": "Démarrer maintenant (le véhicule passe en entretien)"
   },
   "CartVehiculeMaintenance": {
     "veicle": "Véhicule",
@@ -675,7 +682,15 @@
       "Oct",
       "Nov",
       "Déc"
-    ]
+    ],
+    "cost": "Coût",
+    "start": "Démarrer",
+    "complete": "Terminer",
+    "cancelMaintenance": "Annuler l'entretien",
+    "isCancel": "Voulez-vous vraiment annuler cet entretien ?",
+    "back": "Retour",
+    "closedReadOnly": "Cet entretien est clôturé et ne peut plus être modifié.",
+    "futureDate": "Un entretien en cours ne peut pas commencer dans le futur"
   },
   "FleetChartMaintenance": {
     "pending": "En attente",

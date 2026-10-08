@@ -1,4 +1,12 @@
 import style from "./VehicleCard.module.css";
+import { VEHICLE_STATUS_LABEL } from "../../registerVehicle/constans/vehicleStatus";
+
+// Clase de color del punto según el estado de fleet
+const STATE_CLASS = {
+    AVAILABLE: 'disponible',
+    RENTED: 'en-uso',
+    MAINTENANCE: 'reservado',
+};
 
 function VehicleCard({ vehicles, selectedVehicle, onSelect, emptyMessage }) {
 
@@ -16,9 +24,9 @@ function VehicleCard({ vehicles, selectedVehicle, onSelect, emptyMessage }) {
                         >
                             <div className={style['vehicle-card-top']}>
                                 <strong>{vehicle.plate}</strong>
-                                <span className={`${style['vehicle-state']} ${style[vehicle.status.replace(' ', '-').toLowerCase()]}`}>
+                                <span className={`${style['vehicle-state']} ${style[STATE_CLASS[vehicle.status]] ?? ''}`}>
                                     <span className={style['state-dot']} />
-                                    {vehicle.status}
+                                    {VEHICLE_STATUS_LABEL[vehicle.status] ?? vehicle.status}
                                 </span>
                             </div>
                             <img src={vehicle.image} alt={vehicle.modelName} />

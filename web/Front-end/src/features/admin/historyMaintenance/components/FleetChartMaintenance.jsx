@@ -3,11 +3,12 @@ import { Pie, PieChart, Cell, Tooltip } from "recharts";// Importar los componen
 import style from "./FleetChartMaintenance.module.css";
 function FleetChartMaintenance({ records }) {
     const { t } = useTranslation();
+    // Llave i18n -> código de estado de fleet-maintenance
     const stateMap = {
-        pending: "Pendiente",
-        inProgress: "En progreso",
-        completed: "Completado",
-        cancel: "Cancelado",
+        pending: "SCHEDULED",
+        inProgress: "IN_PROGRESS",
+        completed: "COMPLETED",
+        cancel: "CANCELLED",
     };
     const COLORS = {
         pending: "#F59E0B",
@@ -18,7 +19,7 @@ function FleetChartMaintenance({ records }) {
     const desiredOrder = ["pending", "inProgress", "completed", "cancel"];
     const data = desiredOrder.map((stateKey) => ({
         name: stateKey,
-        value: records.filter((v) => String(v.status || v.state || '').trim() === stateMap[stateKey]).length,
+        value: records.filter((v) => v.status === stateMap[stateKey]).length,
     }));
 
     const total = records.length;

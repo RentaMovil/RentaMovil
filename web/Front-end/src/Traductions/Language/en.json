@@ -302,7 +302,12 @@
     "imgp": "Make sure the image is clear and shows the full vehicle. This speeds up the validation process.",
     "imgp2": "Drop the image here...",
     "imgp3": "Drag the image here or click to select an image",
-    "changeImage": "Change image"
+    "changeImage": "Change image",
+    "disabledBrand": "Select a brand...",
+    "disabledModel": "Select a model...",
+    "chooseBrandFirst": "Choose a brand first",
+    "fromModel": "Filled in when you choose the model",
+    "plateExists": "A vehicle with this plate already exists"
   },
   "contractHistory": {
     "title": "Contract history",
@@ -479,7 +484,8 @@
     "close": "Close",
     "stateSee": "See status",
     "all_m": "All",
-    "all_f": "All"
+    "all_f": "All",
+    "retired": "Retired"
   },
   "CheckStatus": {
     "checkStatus": "Check status",
@@ -624,7 +630,8 @@
       "option12": "Car wash",
       "option13": "Painting",
       "option14": "Bodywork"
-    }
+    },
+    "startNow": "Start now (the vehicle goes into maintenance)"
   },
   "CartVehiculeMaintenance": {
     "veicle": "Vehicle",
@@ -675,7 +682,15 @@
       "Oct",
       "Nov",
       "Dec"
-    ]
+    ],
+    "cost": "Cost",
+    "start": "Start",
+    "complete": "Complete",
+    "cancelMaintenance": "Cancel maintenance",
+    "isCancel": "Are you sure you want to cancel this maintenance?",
+    "back": "Back",
+    "closedReadOnly": "This maintenance is closed and can no longer be changed.",
+    "futureDate": "A maintenance in progress cannot start in the future"
   },
   "FleetChartMaintenance": {
     "pending": "Pending",

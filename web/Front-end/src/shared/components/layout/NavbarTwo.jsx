@@ -1,5 +1,3 @@
-
-import ReactDOM from "https://esm.sh/react-dom@18.2.0/client"
 import { FaCar } from "react-icons/fa";
 import './NavbarTwo.css';
 

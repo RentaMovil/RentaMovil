@@ -1,26 +1,19 @@
 import { httpClient } from '../../../../shared/api/httpClient';
-import { toVehiclePayload } from './vehicleMapper';
-import { fromApiVehicle, toApiVehicleWrite } from '../../../vehicles/Services/fleetVehicleMapper';
-
+import { carsService } from '../../../vehicles/Services/carsService';
+import { fromFleetVehicle, toFleetVehiclePayload } from '../../../vehicles/Services/fleetVehicleAdapter';
 const RESOURCE = '/vehicles';
 
+// Administración de vehículos en fleet-maintenance (HU-FLEET-004, 005, 006).
+// No hay eliminar: un vehículo se retira (status RETIRED), nunca se borra del sistema.
 export const vehicleService = {
-    getAll: async () => (await httpClient.get(`${RESOURCE}/inventory`)).map(fromApiVehicle),
-    getById: async (id) => fromApiVehicle(await httpClient.get(`${RESOURCE}/${id}`)),
-    create: async (vehicleData) =>
-        fromApiVehicle(await httpClient.post(RESOURCE, await toApiVehicleWrite(toVehiclePayload(vehicleData)))),
-    update: async (id, vehicleData) =>
-        fromApiVehicle(await httpClient.put(`${RESOURCE}/${id}`, await toApiVehicleWrite(toVehiclePayload(vehicleData)))),
-
-    // fleet solo acepta pasar a mantenimiento (con su tipo, ver maintenanceService) o a retirado;
-    // a disponible se vuelve cerrando el mantenimiento
-    updateStatus: async (id, status) => {
-        if (status !== 'Retirado') {
-            throw new Error('Ese cambio de estado se hace desde Mantenimiento');
-        }
-        return fromApiVehicle(await httpClient.patch(`${RESOURCE}/${id}/status`, { status: 'RETIRED' }));
-    },
-
-    // fleet no borra vehículos (tienen reservas e historial): se retiran del catálogo
-    remove: (id) => vehicleService.updateStatus(id, 'Retirado'),
+    // Todos los estados (requiere sesión de administrador)
+    getAll: () => carsService.getAllForAdmin(),
+    getById: (id) => carsService.getById(id),
+    create: async (vehicleData) => fromFleetVehicle(await httpClient.post(RESOURCE, toFleetVehiclePayload(vehicleData))),
+    // Reemplazo completo; el estado no se toca aquí
+    update: async (id, vehicleData) => fromFleetVehicle(await httpClient.put(`${RESOURCE}/${id}`, toFleetVehiclePayload(vehicleData))),
+    // Solo MAINTENANCE (con maintenanceTypeId) o RETIRED: AVAILABLE nunca es un destino manual
+    updateStatus: async (id, status, maintenanceTypeId) =>
+        fromFleetVehicle(await httpClient.patch(`${RESOURCE}/${id}/status`, { status, maintenanceTypeId })),
+    retire: (id) => vehicleService.updateStatus(id, 'RETIRED'),
 };

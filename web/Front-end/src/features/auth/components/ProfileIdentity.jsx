@@ -59,8 +59,9 @@ export default function ProfileIdentity({
         try {
             const url = await uploadImage(archivo);
             setBorrador((b) => ({ ...b, imageUrl: url }));
-        } catch {
-            setUploadError("No se pudo subir la foto. Intenta de nuevo.");
+        } catch (err) {
+            // El servicio ya avisa si el formato o el tamano no sirven; eso se muestra tal cual
+            setUploadError(err.message || "No se pudo subir la foto. Intenta de nuevo.");
         }
     };
 

@@ -11,9 +11,9 @@ import NavBarAdmin from "../../../../shared/components/layout/NavBarAdmin";
 import FooterAdmin from "../../../../shared/components/layout/FooterAdmin";
 import { useReservationsAdmin } from "../../../booking/hooks/useReservationAdmin";
 import { paymentService } from "../../../payment/services/paymentService";
+import { toRejectOutcome } from "../../../payment/services/paymentMapper";
 import { rentalService } from "../../../booking/services/rentalService";
 import { useGps } from "../../vehicleLocation/hooks/useGps";
-import { getStoredUser } from "../../../auth/services/sessionStorage";
 import { getTotal, getDisplayStatus, statusMeta, formatDate, formatTime, formatMoney } from "../services/reservationHelpers";
 import "./Reservations.css";
 import "./ReservationDetail.css";
@@ -72,6 +72,8 @@ export default function ReservationDetail() {
   const operationMode = reservation.rental?.status === "IN_PROGRESS" ? "return" : "pickup";
   const canOperate = reservation.status === "CONFIRMED";
   const trackingAvailable = !!reservation.rental;
+  // Un <img> no renderiza un PDF (queda el ícono roto): el comprobante puede ser imagen o PDF.
+  const receiptIsPdf = reservation.payment?.receiptImageUrl?.toLowerCase().endsWith(".pdf");
 
   const openReject = () => {
     setRejectReason("");
@@ -85,10 +87,9 @@ export default function ReservationDetail() {
   const confirmApprove = async () => {
     setActionError(null);
     try {
-      const reviewer = getStoredUser();
-      // Aprobar el pago lo hace payment-billing; booking recibe el evento y confirma la
-      // reserva por su cuenta (PENDING_REVIEW -> CONFIRMED). El frontend no cambia estados.
-      await paymentService.approve(reservation.payment.id, reviewer?.id);
+      // El revisor sale del JWT en payment-billing, no se manda en el cuerpo. Aprobar genera
+      // la factura y avisa a booking, que confirma la reserva por su cuenta (-> CONFIRMED).
+      await paymentService.approve(reservation.payment.id);
       await refetch();
     } catch (err) {
       setActionError(err.message || "No se pudo aprobar el pago.");
@@ -102,12 +103,13 @@ export default function ReservationDetail() {
     }
     setActionError(null);
     try {
-      const reviewer = getStoredUser();
-      // Igual que al aprobar: booking pasa la reserva a PENDING_PAYMENT o CANCELLED
-      // según el resultado del rechazo que le informe payment-billing (INV-016).
-      // PENDIENTE: rejectAction ("reupload" / "cancel") debe llegar a payment-billing
-      // cuando exista; paymentService.reject todavía no lo envía.
-      await paymentService.reject(reservation.payment.id, reviewer?.id, rejectReason.trim());
+      // rejectAction ("reupload"/"cancel") -> outcome (RETRY_ALLOWED/RESERVATION_CANCELLED):
+      // booking pasa la reserva a PENDING_PAYMENT o CANCELLED según lo que decida el Admin aquí.
+      await paymentService.reject(
+        reservation.payment.id,
+        rejectReason.trim(),
+        toRejectOutcome(rejectAction)
+      );
       await refetch();
       closeReject();
     } catch (err) {
@@ -230,7 +232,8 @@ export default function ReservationDetail() {
                   <div>
                     <p className="rd-customer-name">{reservation.customer.name}</p>
                     <p className="rd-customer-contact">
-                      {reservation.customer.email} • {reservation.customer.phone}
+                      {reservation.customer.email}
+                      {reservation.customer.phone && ` • ${reservation.customer.phone}`}
                     </p>
                   </div>
                 </div>
@@ -356,7 +359,13 @@ export default function ReservationDetail() {
                       </button>
                     </div>
                     <div className="rd-receipt-preview" onClick={() => setReceiptOpen(true)}>
-                      <img src={reservation.payment.receiptImageUrl} alt={t("reservations.receiptLabel")} />
+                      {receiptIsPdf ? (
+                        <div className="rd-receipt-pdf-badge">
+                          <FiFileText /> PDF
+                        </div>
+                      ) : (
+                        <img src={reservation.payment.receiptImageUrl} alt={t("reservations.receiptLabel")} />
+                      )}
                     </div>
                     <p className="rd-receipt-caption">
                       {t("reservations.uploadedBy", { name: reservation.payment.uploadedBy })}
@@ -534,7 +543,15 @@ export default function ReservationDetail() {
               </div>
             </div>
             <div className="rd-receipt-full">
-              <img src={reservation.payment.receiptImageUrl} alt={t("reservations.receiptLabel")} />
+              {receiptIsPdf ? (
+                <iframe
+                  src={reservation.payment.receiptImageUrl}
+                  title={t("reservations.receiptLabel")}
+                  className="rd-receipt-pdf-frame"
+                />
+              ) : (
+                <img src={reservation.payment.receiptImageUrl} alt={t("reservations.receiptLabel")} />
+              )}
             </div>
             {reservation.status === "PENDING_REVIEW" && (
               <div className="rd-modal-footer">

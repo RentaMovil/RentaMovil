@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { maintenanceService } from '../../maintenance/service/maintenanceService';
 
-export function useDeleteMaintenance() {
+export function useChangeMaintenanceStatus() {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    async function deleteMaintenance(id) {
+    async function changeStatus(id, status) {
         setIsLoading(true);
         setError(null);
         try {
-            await maintenanceService.remove(id);
+            return await maintenanceService.changeStatus(id, status);
         } catch (err) {
             setError(err.message);
             throw err;
@@ -18,5 +18,5 @@ export function useDeleteMaintenance() {
         }
     }
 
-    return { deleteMaintenance, isLoading, error };
+    return { changeStatus, isLoading, error };
 }

@@ -1,8 +1,7 @@
-import { httpClient } from "../../../../shared/api/httpClient";
-import { fromApiVehicle } from "../../../vehicles/Services/fleetVehicleMapper";
+import { carsService } from "../../../vehicles/Services/carsService";
 
-// Inventario de administración: todos los vehículos, en cualquier estado
+// El inventario muestra la flota completa (todos los estados), no solo el catálogo
 export const inventoryService = {
-    getAll: async () => (await httpClient.get("/vehicles/inventory")).map(fromApiVehicle),
-    getById: async (id) => fromApiVehicle(await httpClient.get(`/vehicles/${id}`)),
+    getAll: () => carsService.getAllForAdmin(),
+    getById: (id) => carsService.getById(id),
 }

@@ -1,7 +1,7 @@
 import style from './MaintenanceForm.module.css';
 import { AiOutlineDashboard } from 'react-icons/ai';
 import Animation from '../../../../shared/components/layout/Animation';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import ValidateDate from './ValidateDate';
 import VehicleCard from './VehcileCard';
 import { useForm } from 'react-hook-form';
@@ -9,31 +9,32 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import FilterVehicle from './FilterVehicle';
 import { useVehicles } from '../../registerVehicle/hooks/useVehicles';
-import { maintenanceService } from '../../maintenance/service/maintenanceService';
 import { VEHICLE_STATUS } from '../../registerVehicle/constans/vehicleStatus';
 import { useCreateMaintenance } from '../hooks/useCreateMaintenance';
+import { useMaintenanceTypes } from '../hooks/useMaintenanceTypes';
 
 function MaintenanceForm() {
     const navigate = useNavigate();
     const { t } = useTranslation();
-    const { register, formState: { errors }, handleSubmit, reset, setValue, setError } = useForm();
+    const { register, formState: { errors }, handleSubmit, reset, setValue, setError, watch } = useForm();
     const [mos, setMos] = useState(false);
     const [search, setSearch] = useState('');
     const [selectedVehicle, setSelectedVehicle] = useState(null);
+    const [submitError, setSubmitError] = useState('');
 
     const { vehicles, refetch } = useVehicles();
     const { createMaintenance, isLoading } = useCreateMaintenance();
-    const [maintenanceTypes, setMaintenanceTypes] = useState([]);
+    const { maintenanceTypes } = useMaintenanceTypes();
 
-    useEffect(() => {
-        maintenanceService.getTypes().then(setMaintenanceTypes).catch(() => setMaintenanceTypes([]));
-    }, []);
+    // Solo se puede iniciar ya si el vehículo está disponible; si no, se programa
+    const canStartNow = selectedVehicle?.status === VEHICLE_STATUS.AVAILABLE;
+    const startNow = watch('startNow') && canStartNow;
 
     const filteredVehicles = useMemo(() => {
         const searchTerm = search.trim().toLowerCase();
-        const schedulableStatuses = new Set([VEHICLE_STATUS.AVAILABLE, VEHICLE_STATUS.IN_USE]);
+        // Un vehículo retirado no recibe mantenimientos
         return vehicles
-            .filter((vehicle) => schedulableStatuses.has(vehicle.status))
+            .filter((vehicle) => vehicle.status !== VEHICLE_STATUS.RETIRED)
             .filter((vehicle) => {
                 const vehicleName = [vehicle.brandName, vehicle.modelName]
                     .filter(Boolean)
@@ -49,6 +50,7 @@ function MaintenanceForm() {
         setValue('plate', vehicle.plate, { shouldValidate: true });
         setValue('model', vehicle.modelName, { shouldValidate: true });
         setValue('brand', vehicle.brandName, { shouldValidate: true });
+        if (vehicle.status !== VEHICLE_STATUS.AVAILABLE) setValue('startNow', false);
     }
 
     async function insert(data) {
@@ -66,12 +68,13 @@ function MaintenanceForm() {
 
         try {
             setMos(true);
+            setSubmitError('');
 
             data.vehicleId = selectedVehicle.id;
-            data.plate = data.plate.toUpperCase();
+            data.startNow = startNow;
             data.image = selectedVehicle.image || ''; // reutiliza la foto del registro del vehículo
 
-            // Abrir el mantenimiento ya pasa el vehículo a MAINTENANCE en fleet
+            // El backend pone el vehículo en Mantenimiento cuando el mantenimiento inicia
             await createMaintenance(data);
             await refetch();
 
@@ -80,6 +83,7 @@ function MaintenanceForm() {
             setSearch('');
         } catch (error) {
             console.error('Error al enviar los datos:', error);
+            setSubmitError(error.message);
         } finally {
             setMos(false);
         }
@@ -113,17 +117,8 @@ function MaintenanceForm() {
                             <input
                                 type="text"
                                 placeholder={t('CheckStatus.modal.platePlaceholder')}
-                                readOnly={Boolean(selectedVehicle)}
-                                {...register('plate', {
-                                    required: t('CheckStatus.modal.requiredPlate'),
-                                    pattern: {
-                                        value: /^[A-Z]{3}[0-9]{2}[A-Z0-9]?$/,
-                                        message: t('CheckStatus.modal.formatInvalidPlate')
-                                    },
-                                    onChange: (e) => {
-                                        e.target.value = e.target.value.toUpperCase();
-                                    }
-                                })}
+                                readOnly
+                                {...register('plate', { required: t('CheckStatus.modal.requiredPlate') })}
                             />
                             {errors.plate && (
                                 <p className={style['error-message']}>
@@ -137,16 +132,8 @@ function MaintenanceForm() {
                             <input
                                 type="text"
                                 placeholder={t('MaintenanceForm.modelPlaceholder')}
-                                readOnly={Boolean(selectedVehicle)}
-                                {...register('model', {
-                                    required: t('MaintenanceForm.requiredModel'),
-                                    minLength: { value: 2, message: t('MaintenanceForm.requiredModelMinLength') },
-                                    maxLength: { value: 30, message: t('MaintenanceForm.requiredModelMaxLength') },
-                                    pattern: {
-                                        value: /^[A-Za-z0-9\s\-]{2,30}$/,
-                                        message: t('MaintenanceForm.formatInvalidModel')
-                                    }
-                                })}
+                                readOnly
+                                {...register('model', { required: t('MaintenanceForm.requiredModel') })}
                             />
                             {errors.model && (
                                 <p className={style['error-message']}>
@@ -160,35 +147,9 @@ function MaintenanceForm() {
                                 <input
                                     type="text"
                                     placeholder={t('MaintenanceForm.brandPlaceholder')}
-                                    list="brand-options"
-                                    readOnly={Boolean(selectedVehicle)}
-                                    {...register('brand', {
-                                        required: t('MaintenanceForm.requiredBrand'),
-                                        minLength: { value: 2, message: t('MaintenanceForm.minLenghtBrand') },
-                                        maxLength: { value: 30, message: t('MaintenanceForm.maxLenghtBrand') },
-                                        pattern: {
-                                            value: /^[A-Za-z0-9\s\-]{2,30}$/,
-                                            message: t('MaintenanceForm.ivalidBrand')
-                                        }
-                                    })}
+                                    readOnly
+                                    {...register('brand', { required: t('MaintenanceForm.requiredBrand') })}
                                 />
-                                <datalist id="brand-options">
-                                    <option value="Chevrolet" />
-                                    <option value="Renault" />
-                                    <option value="Toyota" />
-                                    <option value="Mazda" />
-                                    <option value="Kia" />
-                                    <option value="Hyundai" />
-                                    <option value="Nissan" />
-                                    <option value="Ford" />
-                                    <option value="Volkswagen" />
-                                    <option value="BMW" />
-                                    <option value="Mercedes-Benz" />
-                                    <option value="Honda" />
-                                    <option value="Suzuki" />
-                                    <option value="Bajaj" />
-                                    <option value="Yamaha" />
-                                </datalist>
                                 {errors.brand && (
                                     <p className={style['error-message']}>
                                         <AiOutlineDashboard /> {errors.brand.message}
@@ -200,11 +161,16 @@ function MaintenanceForm() {
                                 <input
                                     type="date"
                                     placeholder={t('MaintenanceForm.datePlaceholder')}
+                                    disabled={startNow}
                                     {...register('date', {
-                                        required: t('MaintenanceForm.requiredDate'),
-                                        validate: ValidateDate
+                                        required: !startNow && t('MaintenanceForm.requiredDate'),
+                                        validate: (value) => startNow || ValidateDate(value)
                                     })}
                                 />
+                                <label className={style['maintenance-start-now']}>
+                                    <input type="checkbox" disabled={!canStartNow} {...register('startNow')} />
+                                    {t('MaintenanceForm.startNow')}
+                                </label>
                                 {errors.date && (
                                     <p className={style['error-message']}>
                                         <AiOutlineDashboard /> {errors.date.message}
@@ -232,29 +198,18 @@ function MaintenanceForm() {
                             </div>
                             <div className={style['maintenance-form-input']}>
                                 <label htmlFor="maintenanceType">{t("MaintenanceForm.Type")}</label>
-                                <input
-                                    type="text"
-                                    placeholder={t("MaintenanceForm.placeholderType")}
-                                    list="maintenance-options"
-                                    {...register('maintenanceType', {
-                                        required: t("MaintenanceForm.requiredType"),
-                                        minLength: { value: 3, message: t("MaintenanceForm.minLenghtType") },
-                                        maxLength: { value: 60, message: t("MaintenanceForm.maxLenghtType") },
-                                        pattern: {
-                                            value: /^[A-Za-zÀ-ÿ0-9\s\-\,\.]{3,60}$/,
-                                            message: t("MaintenanceForm.invalidType")
-                                        }
-                                    })}
-                                />
-                                {/* Los tipos válidos son los del catálogo de fleet (maintenance_type) */}
-                                <datalist id="maintenance-options">
+                                <select
+                                    defaultValue=""
+                                    {...register('maintenanceTypeId', { required: t("MaintenanceForm.requiredType") })}
+                                >
+                                    <option value="" disabled>{t("MaintenanceForm.placeholderType")}</option>
                                     {maintenanceTypes.map((type) => (
-                                        <option key={type.id} value={type.name} />
+                                        <option key={type.id} value={type.id}>{type.name}</option>
                                     ))}
-                                </datalist>
-                                {errors.maintenanceType && (
+                                </select>
+                                {errors.maintenanceTypeId && (
                                     <p className={style['error-message']}>
-                                        <AiOutlineDashboard /> {errors.maintenanceType.message}
+                                        <AiOutlineDashboard /> {errors.maintenanceTypeId.message}
                                     </p>
                                 )}
                             </div>
@@ -292,6 +247,7 @@ function MaintenanceForm() {
                         <button className="save" type="submit" disabled={isLoading}>
                             {isLoading ? t("MaintenanceForm.saving") : t("MaintenanceForm.save")}
                         </button>
+                        {submitError && <p className={style['error-message']}>{submitError}</p>}
                         <span className={style['vehicule-animation']}>
                             {mos && <Animation />}
                         </span>

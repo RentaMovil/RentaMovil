@@ -44,6 +44,11 @@ export default function PaymentPage() {
 
     const navigate = useNavigate();
 
+    const { user } = useAuth();
+    const isAdmin = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
+    const NavbarComponent = isAdmin ? NavbarAdmin : Navbar;
+    const FooterComponent = isAdmin ? FooterAdmin : Footer;
+
     const { reservation, clearReservation } = useReservation();
     const { clearPayment } = usePayment();
 

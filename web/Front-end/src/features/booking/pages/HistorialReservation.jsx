@@ -7,8 +7,15 @@ import { useReservationsList } from "../hooks/useReservationsList.js";
 import { useCancelReservation } from "../hooks/useCancelReservation.js";
 import { useUpdateReturnBranch } from "../hooks/useUpdateReturnBranch.js";
 import { useBranches } from "../../admin/branches/hooks/useBranch.js";
+import PaymentCountdown from "../components/PaymentCountdown.jsx";
+import UploadReceiptModal from "../components/UploadReceiptModal.jsx";
 function HistorialReservation() {
   const { t } = useTranslation();
+
+  const { user } = useAuth();
+  const isAdmin = ["ADMIN", "SUPER_ADMIN"].includes(user?.role);
+  const NavbarComponent = isAdmin ? NavbarAdmin : Navbar;
+  const FooterComponent = isAdmin ? FooterAdmin : Footer;
 
   const { reservations: reservas, isLoading, error, refetch } = useReservationsList();
   const { cancelReservation } = useCancelReservation();
@@ -19,6 +26,7 @@ function HistorialReservation() {
   const [selectedReserva, setSelectedReserva] = useState(null);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [uploadReserva, setUploadReserva] = useState(null);
 
   const handleCancelReservation = async (id) => {
     await cancelReservation(id);
@@ -153,6 +161,27 @@ function HistorialReservation() {
                       </button>
                     )}
                   </div>
+
+                  {/* "Reservar y pagar después": sin comprobante todavía, con la ventana de
+                      INV-015 corriendo. Ya subido, el admin la revisa (PENDING_REVIEW) y aquí
+                      no hay nada más que hacer hasta que decida. */}
+                  {r.backendStatus === "PENDING_PAYMENT" && (
+                    <div className="reserva-pago-pendiente">
+                      <button
+                        type="button"
+                        className="btn btn-primario"
+                        onClick={() => setUploadReserva(r)}
+                      >
+                        {t("historyReservation.uploadReceipt", "Subir comprobante")}
+                      </button>
+                      <PaymentCountdown createdAt={r.created_at} />
+                    </div>
+                  )}
+                  {r.backendStatus === "PENDING_REVIEW" && (
+                    <p className="reserva-en-revision">
+                      {t("historyReservation.inReview", "Comprobante en revisión por un administrador.")}
+                    </p>
+                  )}
                 </section>
 
               </div>

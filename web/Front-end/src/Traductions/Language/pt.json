@@ -302,7 +302,12 @@
     "imgp": "Certifique-se de que a imagem esteja nítida e mostre o veículo completo. Isso agiliza o processo de validação.",
     "imgp2": "Solte a imagem aqui...",
     "imgp3": "Arraste a imagem aqui ou clique para selecionar uma imagem",
-    "changeImage": "Alterar imagem"
+    "changeImage": "Alterar imagem",
+    "disabledBrand": "Selecione uma marca...",
+    "disabledModel": "Selecione um modelo...",
+    "chooseBrandFirst": "Escolha uma marca primeiro",
+    "fromModel": "Preenchido ao escolher o modelo",
+    "plateExists": "Já existe um veículo com esta placa"
   },
   "contractHistory": {
     "title": "Histórico de contratos",
@@ -476,7 +481,8 @@
     "close": "Fechar",
     "stateSee": "Ver estado",
     "all_m": "Todos",
-    "all_f": "Todas"
+    "all_f": "Todas",
+    "retired": "Retirado"
   },
   "CheckStatus": {
     "checkStatus": "Consultar status",
@@ -624,7 +630,8 @@
       "option12": "Lavagem",
       "option13": "Pintura",
       "option14": "Funilaria"
-    }
+    },
+    "startNow": "Iniciar agora (o veículo entra em manutenção)"
   },
   "CartVehiculeMaintenance": {
     "veicle": "Veículo",
@@ -675,7 +682,15 @@
       "Out",
       "Nov",
       "Dez"
-    ]
+    ],
+    "cost": "Custo",
+    "start": "Iniciar",
+    "complete": "Concluir",
+    "cancelMaintenance": "Cancelar manutenção",
+    "isCancel": "Tem certeza de que deseja cancelar esta manutenção?",
+    "back": "Voltar",
+    "closedReadOnly": "Esta manutenção está encerrada e não pode ser alterada.",
+    "futureDate": "Uma manutenção em andamento não pode começar no futuro"
   },
   "FleetChartMaintenance": {
     "pending": "Pendente",

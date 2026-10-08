@@ -9,11 +9,17 @@ import { getValidVehicleYearRange, validateVehicleYear } from '../../../../share
 import { useCreateVehicle } from '../hooks/useCreateVehicle';
 import { useImageUpload } from '../../../../shared/hooks/useImageUpload';
 import { useBranches } from '../../branches/hooks/useBranch';
+import { useVehicleCatalog } from '../hooks/useVehicleCatalog';
 
 function VehicleForm() {
     const { t } = useTranslation();
     const { branches } = useBranches()
-    const { register, formState: { errors }, handleSubmit, reset, setError, clearErrors } = useForm();
+    const { register, formState: { errors }, handleSubmit, reset, setError, clearErrors, setValue, watch } = useForm();
+    const { brands, models, error: catalogError } = useVehicleCatalog();
+    const [submitError, setSubmitError] = useState(null);
+    const selectedBrandId = watch('brandId');
+    const selectedModel = models.find((model) => String(model.id) === String(watch('modelId')));
+    const brandModels = models.filter((model) => String(model.brand.id) === String(selectedBrandId));
     const [mos, setmos] = useState(false);
     const [vehicleFile, setVehicleFile] = useState(null); // esto verificará el estado del fileDialog
     const [isLoading, setIsLoading] = useState(false);// agrega un estado de carga 
@@ -36,6 +42,7 @@ function VehicleForm() {
             setError('vehicleImage', { type: 'required', message: 'Este apartado es obligatorio' });
             return;
         }
+        setSubmitError(null);
         try {
             data.image = await uploadImage(vehicleFile);
             await createVehicle(data);
@@ -47,7 +54,12 @@ function VehicleForm() {
                 reset();
             }, 2200);
         } catch (err) {
-            console.error('Error al guardar el vehículo:', err);
+            // 409 PLATE_ALREADY_EXISTS va junto a la placa; cualquier otro error, junto al botón
+            if (err.code === 'PLATE_ALREADY_EXISTS') {
+                setError('plate', { type: 'server', message: t('vehicleForm.plateExists') });
+            } else {
+                setSubmitError(err.message);
+            }
         }
     }
     return (
@@ -78,70 +90,47 @@ function VehicleForm() {
 
                             </div>
                             <div className={style['vehicle-form-input']}>
-                                <label htmlFor="brand">{t('vehicleForm.brand')}</label>
-                                <input
-                                    type="text"
-                                    placeholder={t('vehicleForm.placeholderBrand')}
-                                    list='brand-options'
-                                    {...register("brand", {
+                                <label htmlFor="brandId">{t('vehicleForm.brand')}</label>
+                                {/* La marca solo filtra los modelos: lo que se guarda es el modelo */}
+                                <select
+                                    id="brandId"
+                                    {...register("brandId", {
                                         required: t('vehicleForm.requiredBrand'),
-                                        minLength: { value: 2, message: t('vehicleForm.minLenghtBrand') },
-                                        maxLength: { value: 30, message: t('vehicleForm.maxLenghtBrand') },
-                                        pattern: {
-                                            value: /^[A-Za-z0-9\s\-]{2,30}$/,
-                                            message: t('vehicleForm.invalidBrand')
-                                        }
+                                        onChange: () => setValue('modelId', ''),
                                     })}
-                                />
-                                <datalist id="brand-options">
-                                    <option value="Chevrolet" />
-                                    <option value="Renault" />
-                                    <option value="Toyota" />
-                                    <option value="Mazda" />
-                                    <option value="Kia" />
-                                    <option value="Hyundai" />
-                                    <option value="Nissan" />
-                                    <option value="Ford" />
-                                    <option value="Volkswagen" />
-                                    <option value="BMW" />
-                                    <option value="Mercedes-Benz" />
-                                    <option value="Honda" />
-                                    <option value="Suzuki" />
-                                    <option value="Bajaj" />
-                                    <option value="Yamaha" />
-                                </datalist>
-
-                                {errors.brand && (
+                                    defaultValue="">
+                                    <option value="" disabled>{t('vehicleForm.disabledBrand')}</option>
+                                    {brands.map((brand) => (
+                                        <option key={brand.id} value={brand.id}>{brand.name}</option>
+                                    ))}
+                                </select>
+                                {errors.brandId && (
                                     <p className={style['error-message']}>
-                                        <AiOutlineDashboard /> {errors.brand.message}
+                                        <AiOutlineDashboard /> {errors.brandId.message}
                                     </p>
-
                                 )}
-
                             </div>
 
                             <div className={style['vehicle-form-input']}>
-                                <label htmlFor="model">{t('vehicleForm.model')}</label>
-                                <input
-                                    type="text"
-                                    placeholder={t('vehicleForm.placeholderModel')}
-                                    {...register("model", {
-
-                                        required: t("MaintenanceForm.requiredModel"),
-                                        minLength: { value: 2, message: t("MaintenanceForm.requiredModelMinLength") },
-                                        maxLength: { value: 30, message: t("MaintenanceForm.requiredModelMinLength") },
-
-                                        pattern: {
-                                            value: /^[A-Za-z0-9\s\-]{2,30}$/,
-                                            message: t('vehicleForm.invalidModel')
-                                        }
-                                    })}
-                                />
-                                {errors.model && (
+                                <label htmlFor="modelId">{t('vehicleForm.model')}</label>
+                                <select
+                                    id="modelId"
+                                    disabled={!selectedBrandId}
+                                    {...register("modelId", { required: t("MaintenanceForm.requiredModel") })}
+                                    defaultValue="">
+                                    <option value="" disabled>
+                                        {selectedBrandId ? t('vehicleForm.disabledModel') : t('vehicleForm.chooseBrandFirst')}
+                                    </option>
+                                    {brandModels.map((model) => (
+                                        <option key={model.id} value={model.id}>{model.name}</option>
+                                    ))}
+                                </select>
+                                {errors.modelId && (
                                     <p className={style['error-message']}>
-                                        <AiOutlineDashboard /> {errors.model.message}
+                                        <AiOutlineDashboard /> {errors.modelId.message}
                                     </p>
                                 )}
+                                {catalogError && <p className={style['error-message']}><AiOutlineDashboard /> {catalogError}</p>}
                             </div>
                             <div className={style['vehicle-form-input']}>
                                 <label htmlFor="price">{t("vehicleForm.price")}</label>
@@ -234,57 +223,18 @@ function VehicleForm() {
                                 )}
                             </div>
 
+                            {/* Categoría y tipo de motor son del modelo, no de cada vehículo: solo se muestran */}
                             <div className={style['vehicle-form-input']}>
-                                <label htmlFor="type">{t('vehicleForm.Type')}</label>
-                                <select
-                                    {...register("vehicleType", {
-                                        required: t('vehicleForm.requiredType'),
-                                        validate: value => value !== "" || t('vehicleForm.requiredType')
-                                    })}
-                                    defaultValue="">
-                                    <option value="" disabled>{t('vehicleForm.disabledType')}</option>
-                                    <optgroup label={t('vehicleForm.labelType1')}>
-                                        <option value="Sedán">Sedán</option>
-                                        <option value="Hatchback">Hatchback</option>
-                                        <option value="SUV">SUVs</option>
-                                        <option value="Camioneta">Camioneta</option>
-                                        <option value="Pickup">Pickup</option>
-                                        <option value="Van">Van</option>
-                                        <option value="Coupé">Coupé</option>
-                                    </optgroup>
-                                    <optgroup label={t('vehicleForm.labelType2')}>
-                                        <option value="Camión">{t('vehicleForm.cargaType1')}</option>
-                                        <option value="Tractocamión">{t('vehicleForm.cargaType2')}</option>
-                                        <option value="Furgón">{t('vehicleForm.cargaType3')}</option>
-                                    </optgroup>
-                                </select>
-                                {errors.vehicleType && (
-                                    <p className={style['error-message']}>
-                                        <AiOutlineDashboard /> {errors.vehicleType.message}
-                                    </p>
-                                )}
+                                <label htmlFor="vehicleType">{t('vehicleForm.Type')}</label>
+                                <input id="vehicleType" type="text" readOnly
+                                    value={selectedModel?.category.name ?? ''}
+                                    placeholder={t('vehicleForm.fromModel')} />
                             </div>
                             <div className={style['vehicle-form-input']}>
                                 <label htmlFor="fuelType">{t('vehicleForm.FuelType')}</label>
-                                <select
-                                    {...register("fuelType", {
-                                        required: t('vehicleForm.requiredFuelType'),
-                                        validate: value => value !== "" || t('vehicleForm.requiredFuelType')
-                                    })}
-                                    defaultValue="">
-                                    <option value="" disabled>{t('vehicleForm.disabledFuelType')}</option>
-                                    <option value="Gasolina">{t('vehicleForm.fuelType1')}</option>
-                                    <option value="Diésel">{t('vehicleForm.fuelType2')}</option>
-                                    <option value="Eléctrico">{t('vehicleForm.fuelType4')}</option>
-                                    <option value="Híbrido">{t('vehicleForm.fuelType3')}</option>
-                                    <option value="Gas natural">{t('vehicleForm.fuelType5')}</option>
-                                    <option value="Gas propano">{t('vehicleForm.fuelType6')}</option>
-                                </select>
-                                {errors.fuelType && (
-                                    <p className={style['error-message']}>
-                                        <AiOutlineDashboard /> {errors.fuelType.message}
-                                    </p>
-                                )}
+                                <input id="fuelType" type="text" readOnly
+                                    value={selectedModel?.engineType.name ?? ''}
+                                    placeholder={t('vehicleForm.fromModel')} />
                             </div>
                             <div className={style['vehicle-form-input']}>
                                 <label htmlFor="branchId">{t('vehicleForm.branch')}</label>
@@ -311,6 +261,7 @@ function VehicleForm() {
                             {errors.vehicleImage && (<p className={style['error-message']}><AiOutlineDashboard />{errors.vehicleImage?.message}</p>)}
                         </div>
                     </div>
+                    {submitError && <p className={style['error-message']}><AiOutlineDashboard /> {submitError}</p>}
                     <button className={style.save} type="submit" disabled={isLoading}>
                         {isLoading ? t('vehicleForm.saving') : t('vehicleForm.saveVehicle')}
                     </button>

@@ -366,3 +366,22 @@
     color: #6b7280;
     font-size: 1rem;
 }
+
+/* Botón de subir comprobante + cuenta regresiva (INV-015), bajo los botones de acción */
+.reserva-pago-pendiente {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px dashed #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.reserva-en-revision {
+    margin: 0.75rem 0 0;
+    padding-top: 0.75rem;
+    border-top: 1px dashed #e5e7eb;
+    font-size: 0.85rem;
+    color: #6b7280;
+}

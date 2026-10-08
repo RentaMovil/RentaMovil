@@ -66,6 +66,7 @@ export default function VehicleInventory() {
     { value: "Disponible", label: t("VehicleInventary.available") },
     { value: "En uso", label: t("VehicleInventary.inUse") },
     { value: "Mantenimiento", label: t("VehicleInventary.maintenance") },
+    { value: "Retirado", label: t("VehicleInventary.retired") },
   ];
 
   const SUCURSALES = [
