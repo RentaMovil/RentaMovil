@@ -126,7 +126,7 @@ export function toAdminReservationViewModel(reservation, ctx) {
     const insurancePlan = insuranceById[reservation.insurance_type_id];
     const payment = paymentsByReservation[reservation.id];
     const rental = rentalsByReservation[reservation.id];
-    const bankAccount = payment ? bankAccountsById[payment.bank_account_id] : null;
+    const bankAccount = payment ? bankAccountsById[payment.bankAccountId] : null;
     const gps = rental ? gpsById[rental.gps_id] : null;
 
     const durationDays = Math.max(
@@ -140,6 +140,7 @@ export function toAdminReservationViewModel(reservation, ctx) {
         rentalSubtotal: reservation.vehicle_subtotal,
         durationDays,
         vehicle: {
+            img: vehicle.image || null,
             name: [vehicle.brand, vehicle.model].filter(Boolean).join(' '),
             plate: vehicle.plate,
             category: vehicle.vehicleType,
@@ -170,14 +171,14 @@ export function toAdminReservationViewModel(reservation, ctx) {
         payment: payment ? {
             id: payment.id,
             amount: payment.amount,
-            bank: bankAccount?.bank_name,
-            reference: payment.reference_number,
-            receivedAt: payment.payment_date,
-            receiptImageUrl: payment.receipt_file_url,
+            bank: bankAccount?.bankName,
+            reference: payment.referenceNumber,
+            receivedAt: payment.paymentDate,
+            receiptImageUrl: payment.receiptFileUrl,
             uploadedBy: customer.username,
-            rejectionReason: payment.rejection_reason,
-            reviewedBy: payment.reviewed_by,
-            reviewedAt: payment.reviewed_at,
+            rejectionReason: payment.rejectionReason,
+            reviewedBy: payment.reviewedBy,
+            reviewedAt: payment.reviewedAt,
         } : null,
         rental: rental ? {
             id: rental.id,

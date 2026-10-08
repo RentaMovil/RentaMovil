@@ -5,7 +5,8 @@ import { toCreateBankAccountPayload } from "./bankAccountMapper";
 const RESOURCE = "/bank-accounts";
 
 export const bankAccountService = {
-    getAll: () => httpClient.get(RESOURCE),
+    getAll: (includeInactive = false) =>
+        httpClient.get(includeInactive ? `${RESOURCE}?includeInactive=true` : RESOURCE),
     create: (formData) => httpClient.post(RESOURCE, toCreateBankAccountPayload(formData)),
-    setActive: (id, isActive) => httpClient.patch(`${RESOURCE}/${id}`, { is_active: isActive }),
+    setActive: (id, isActive) => httpClient.patch(`${RESOURCE}/${id}`, { isActive }),
 };

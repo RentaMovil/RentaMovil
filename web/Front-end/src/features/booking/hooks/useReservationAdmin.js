@@ -35,7 +35,7 @@ export function useReservationsAdmin() {
                 branchService.getAll(),
                 insuranceService.getAll(),
                 httpClient.get('/payments'),
-                httpClient.get('/bankAccounts'),
+                httpClient.get('/bank-accounts'),
                 httpClient.get('/gps'),
                 httpClient.get('/users'),
             ]);
@@ -46,7 +46,13 @@ export function useReservationsAdmin() {
                 vehiclesById: Object.fromEntries(vehiclesRes.map((v) => [v.id, v])),
                 branchesById: Object.fromEntries(branchesRes.map((b) => [b.id, b])),
                 insuranceById: Object.fromEntries(insuranceRes.map((i) => [i.id, i])),
-                paymentsByReservation: Object.fromEntries(paymentsRes.map((p) => [p.reservation_id, p])),
+                // payment-billing devuelve del más nuevo al más viejo: con varios intentos por
+                // reserva (uno REJECTED y luego uno PENDING_REVIEW), el primero que aparece para
+                // cada reservationId es el vigente — por eso no se sobreescribe si ya hay uno.
+                paymentsByReservation: paymentsRes.reduce((acc, p) => {
+                    if (!acc[p.reservationId]) acc[p.reservationId] = p;
+                    return acc;
+                }, {}),
                 rentalsByReservation: Object.fromEntries(rentalsRes.map((r) => [r.reservation_id, r])),
                 bankAccountsById: Object.fromEntries(bankAccountsRes.map((b) => [b.id, b])),
                 gpsById: Object.fromEntries(gpsRes.map((g) => [g.id, g])),

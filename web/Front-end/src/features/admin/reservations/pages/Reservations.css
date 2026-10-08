@@ -401,3 +401,26 @@
   .rs-controls { flex-direction: column; align-items: stretch; }
   .rs-date-range { justify-content: center; }
 }
+
+/* Miniatura del vehículo en la columna VEHÍCULO de la tabla de reservas */
+.rs-cell-vehicle {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.rs-vehicle-thumb {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.rs-vehicle-thumb-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f5f9;
+    font-size: 1.1rem;
+}
