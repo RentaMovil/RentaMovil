@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import "./RegisterForm.css";
 import Quotes from '../../../shared/components/Quotes';
 import { useTranslation } from 'react-i18next'; 
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 
 function RegisterForm({ onSubmit, onSwitchToLogin }) {
@@ -152,7 +153,7 @@ function RegisterForm({ onSubmit, onSwitchToLogin }) {
               aria-label={t(showPassword ? 'loginForm.hidePassword' : 'loginForm.showPassword')}
               title={t(showPassword ? 'loginForm.hidePassword' : 'loginForm.showPassword')}
             >
-              <i className={showPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'} />
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
         </div>

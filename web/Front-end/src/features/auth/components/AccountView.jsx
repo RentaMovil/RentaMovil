@@ -3,10 +3,7 @@ import { FaGlobe, FaMoon, FaPen, FaSignOutAlt, FaTimes, FaInfoCircle, FaEye, FaE
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import Navbar from "../../../shared/components/layout/Navbar";
-import NavbarAdmin from "../../../shared/components/layout/NavBarAdmin";
-import Footer from "../../../shared/components/layout/Footer";
-import FooterAdmin from "../../../shared/components/layout/FooterAdmin";
+import { RoleNavbar, RoleFooter } from "../../../shared/components/layout/RoleChrome";
 import ButtonBack from "../../../shared/components/buttonBack";
 import { useAuth } from "../../../contexts/AuthContext";
 import ProfileIdentity from "./ProfileIdentity";
@@ -16,7 +13,7 @@ import english from "../../../assets/img/eeuu.png";
 import french from "../../../assets/img/francia2.png";
 import portuguese from "../../../assets/img/portugal.png";
 
-export default function AccountView({ theme, setTheme, admin = false }) {
+export default function AccountView({ theme, setTheme }) {
     const navigate = useNavigate();
     const { t, i18n } = useTranslation();
     const { user, isLoading, error, refreshProfile, updateProfile, changeEmail, logout } = useAuth();
@@ -69,9 +66,6 @@ export default function AccountView({ theme, setTheme, admin = false }) {
             setIsSaving(false);
         }
     };
-
-    const NavbarComponent = admin ? NavbarAdmin : Navbar;
-    const FooterComponent = admin ? FooterAdmin : Footer;
 
     const openEmailModal = () => {
         setNewEmail("");
@@ -155,7 +149,7 @@ export default function AccountView({ theme, setTheme, admin = false }) {
     if (!user) {
         return (
             <>
-                <NavbarComponent />
+                <RoleNavbar />
                 <div className="containerC">
                     <div className="cardC">
                         <p className="account-error" role="alert">
@@ -175,14 +169,14 @@ export default function AccountView({ theme, setTheme, admin = false }) {
                         </div>
                     </div>
                 </div>
-                <FooterComponent />
+                <RoleFooter />
             </>
         );
     }
 
     return (
         <>
-            <NavbarComponent />
+            <RoleNavbar />
             <div className="containerC">
                 <div className="cardC">
                     <div className="header-page">
@@ -550,7 +544,7 @@ export default function AccountView({ theme, setTheme, admin = false }) {
                 </div>
             )}
 
-            <FooterComponent />
+            <RoleFooter />
         </>
     );
 }

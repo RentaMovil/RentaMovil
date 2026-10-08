@@ -1,7 +1,6 @@
 import './ChangePassword.css'
 import {  FaEye, FaEyeSlash } from "react-icons/fa";
-import Navbar from "../../../shared/components/layout/Navbar.jsx";
-import Footer from '../../../shared/components/layout/FooterAdmin';
+import { RoleNavbar, RoleFooter } from "../../../shared/components/layout/RoleChrome.jsx";
 import { useTranslation } from "react-i18next";
 import useChangePassword from "../hooks/useChangePassword.js";
 
@@ -32,7 +31,7 @@ function ChangePassword() {
 
     return (
         <>
-            <Navbar />
+            <RoleNavbar />
 
             <div className='containerP'>
                 <div className='cardP'>
@@ -146,7 +145,7 @@ function ChangePassword() {
                 </div>
             </div>
 
-            <Footer />
+            <RoleFooter />
         </>
     );
 }
