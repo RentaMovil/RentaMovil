@@ -95,6 +95,10 @@ export const authService = {
     forgotPassword: (email) =>
         httpClient.post(`${RESOURCE}/password/forgot`, { email }),
 
+    // Verificar codigo
+    verifyCode: (email, code) =>
+        httpClient.post (`${RESOURCE}/verify-code`, {email, code}),
+
     // { email, code, newPassword }. El código se valida aquí (no hay paso aparte de verificar).
     resetPassword: (payload) =>
         httpClient.post(`${RESOURCE}/password/reset`, payload),
