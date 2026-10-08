@@ -106,7 +106,6 @@ export default function BankAccounts() {
       await createBankAccount({
         bankName: data.get("bankName"),
         holderName: data.get("holderName"),
-        accountNumber: data.get("accountNumber"),
         qrImageUrl,
       });
       await refetch();
@@ -196,9 +195,6 @@ export default function BankAccounts() {
 
                   <div className="ba-card-info">
                     <h3>{a.bankName}</h3>
-                    <p className="ba-card-account">
-                      {a.accountType && `${a.accountType} • `}{a.accountNumber}
-                    </p>
                     <p className="ba-card-holder">{a.holderName}</p>
                   </div>
                 </div>
@@ -234,11 +230,6 @@ export default function BankAccounts() {
               <label className="ba-field">
                 {t("bankAccounts.modal.holderName")}
                 <input name="holderName" type="text" required placeholder={t("bankAccounts.modal.holderNamePlaceholder")} />
-              </label>
-
-              <label className="ba-field">
-                {t("bankAccounts.modal.accountNumber")}
-                <input name="accountNumber" type="text" required placeholder={t("bankAccounts.modal.accountNumberPlaceholder")} />
               </label>
 
               <div className="ba-field">
