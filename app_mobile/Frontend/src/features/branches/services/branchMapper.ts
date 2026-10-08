@@ -2,7 +2,7 @@ import type { Branch } from "../../../types";
 
 export function toBranchViewModel(branch: any): Branch {
     return {
-        id: branch.id,
+        id: String(branch.id),
         name: branch.name,
         address: branch.address,
         city: branch.city,

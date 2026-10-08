@@ -7,7 +7,7 @@ import { Platform } from "react-native";
  * `app.json > expo.extra.apiUrl` para no depender del bundler.
  */
 
-const DEFAULT_DEV_PORT = 3001;
+const DEFAULT_DEV_PORT = 3100;
 
 /**
  * Host por defecto para desarrollo.

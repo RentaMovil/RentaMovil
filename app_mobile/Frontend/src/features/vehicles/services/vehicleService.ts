@@ -58,46 +58,51 @@ function applyFilters(
 
 export const vehicleService = {
   async getVehicles(filters?: VehicleFilters): Promise<Vehicle[]> {
-    const all = await httpClient.get<Vehicle[]>(API_ROUTES.vehicles);
+    const response = await httpClient.get<Vehicle[]>(API_ROUTES.vehicles);
+    const all = response.map((vehicle) => ({
+      ...vehicle,
+      id: String(vehicle.id),
+    }));
 
     return applyFilters(all, filters);
   },
 
   async getVehicleById(id: string): Promise<Vehicle | undefined> {
-    return httpClient.get<Vehicle>(`${API_ROUTES.vehicles}/${id}`);
+    const vehicle = await httpClient.get<Vehicle>(`${API_ROUTES.vehicles}/${id}`);
+    return { ...vehicle, id: String(vehicle.id) };
   },
 
   /** Marcas disponibles, derivadas del catalogo completo. */
   async getBrands(): Promise<string[]> {
-    const all = await httpClient.get<Vehicle[]>(API_ROUTES.vehicles);
+    const all = await this.getVehicles();
 
     return [...new Set(all.map((v) => v.brand))];
   },
 
   /** Tipos de vehiculo disponibles. */
   async getVehicleTypes(): Promise<string[]> {
-    const all = await httpClient.get<Vehicle[]>(API_ROUTES.vehicles);
+    const all = await this.getVehicles();
 
     return [...new Set(all.map((v) => v.vehicleType))];
   },
 
   /** Tipos de combustible disponibles. */
   async getFuelTypes(): Promise<string[]> {
-    const all = await httpClient.get<Vehicle[]>(API_ROUTES.vehicles);
+    const all = await this.getVehicles();
 
     return [...new Set(all.map((v) => v.fuelType))];
   },
 
   /** Ubicaciones disponibles (la API lo llama `location`). */
   async getLocations(): Promise<string[]> {
-    const all = await httpClient.get<Vehicle[]>(API_ROUTES.vehicles);
+    const all = await this.getVehicles();
 
     return [...new Set(all.map((v) => v.location))];
   },
 
   /** Rango de precios del catalogo. */
   async getPriceRange(): Promise<{ min: number; max: number }> {
-    const all = await httpClient.get<Vehicle[]>(API_ROUTES.vehicles);
+    const all = await this.getVehicles();
 
     const prices = all.map((v) => v.price);
 

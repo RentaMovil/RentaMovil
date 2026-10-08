@@ -17,7 +17,7 @@ import { usePayment } from "../context/PaymentContext";
 import { calculateDays } from "../utils/calculateDays";
 import { calculateInvoiceTotal } from "../utils/calculateInvoiceTotal";
 
-import type { InsuranceType } from "../../../types";
+import type { InsuranceType, PaymentReceiptFile } from "../../../types";
 
 import { createStyles } from "./PaymentPage.styles";
 
@@ -38,7 +38,7 @@ export default function PaymentPage() {
   const { reservation, createdReservation } = useReservation();
 
   const [insuranceOptions, setInsuranceOptions] = useState<InsuranceType[]>([]);
-  const [receiptFile, setReceiptFile] = useState<string | null>(null);
+  const [receiptFile, setReceiptFile] = useState<PaymentReceiptFile | null>(null);
   const [referenceNumber, setReferenceNumber] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -81,7 +81,7 @@ export default function PaymentPage() {
     !!createdReservation && !!selectedBankAccount && !!receiptFile && !isSubmitting;
 
   async function handlePayment() {
-    if (!canPay || !createdReservation || !selectedBankAccount) {
+    if (!canPay || !createdReservation || !selectedBankAccount || !receiptFile) {
       return;
     }
 
@@ -93,7 +93,7 @@ export default function PaymentPage() {
         bankAccountId: selectedBankAccount.id,
         amount: total,
         ...(referenceNumber ? { referenceNumber } : {}),
-        receiptFile: receiptFile as string,
+        receiptFile,
       });
 
       Alert.alert(

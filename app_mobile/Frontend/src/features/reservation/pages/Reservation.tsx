@@ -5,25 +5,25 @@ import { ScrollView, Text, View } from "react-native";
 import { useReservation } from "../context/ReservationContext";
 
 import ContinueButton from "../../../shared/components/Button/ContinueButton";
+import BranchSelectorModal from "../components/BranchSelectorModal";
 import InsuranceSelector from "../components/InsuranceSelector";
 import ReservationInfoCard from "../components/ReservationInfoCard";
 import VehicleSummaryCard from "../components/VehicleSummaryCard";
-import BranchSelectorModal from "../components/BranchSelectorModal";
 
 import { getBranches } from "../../branches/services/branchService";
 import { getInsuranceOptions } from "../../insurance/services/insuranceService";
 
-import { buildReservationRequest } from "../utils/buildReservationRequest";
 import { createReservation } from "../services/reservationService";
+import { buildReservationRequest } from "../utils/buildReservationRequest";
 
 import { themes } from "../../../theme/themes";
 import { useTheme } from "../../../theme/useTheme";
 
 import { createStyles } from "./Reservation.styles";
 
-import type { Branch } from "../../../types/branch";
 import type { InsuranceType } from "../../../types";
-
+import type { Branch } from "../../../types/branch";
+import { useAuth } from "../../auth/context/AuthContext";
 export default function ReservationPage() {
   const {
     reservation,
@@ -34,7 +34,8 @@ export default function ReservationPage() {
   const { themeName } = useTheme();
   const colors = themes[themeName];
   const styles = createStyles(colors);
-
+  const { user } = useAuth();
+  
   const [showReturnModal, setShowReturnModal] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -79,10 +80,7 @@ export default function ReservationPage() {
     setIsCreating(true);
 
     try {
-      const created = await createReservation(
-        buildReservationRequest(reservation),
-      );
-
+      const created = await createReservation(buildReservationRequest(reservation), user!.id);
       setCreatedReservation(created);
 
       router.push("/payment");
