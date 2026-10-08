@@ -10,19 +10,13 @@ export const paymentService = {
             : null;
         return httpClient.post(RESOURCE, toCreatePaymentPayload(paymentData, receiptFileUrl));
     },
-    approve: (id, reviewerId) =>
-        httpClient.patch(`/payments/${id}`, {
-            status: 'APPROVED',
-            reviewed_by: reviewerId,
-            reviewed_at: new Date().toISOString(),
-        }),
-    reject: (id, reviewerId, reason) =>
-        httpClient.patch(`/payments/${id}`, {
-            status: 'REJECTED',
-            reviewed_by: reviewerId,
-            reviewed_at: new Date().toISOString(),
-            rejection_reason: reason,
-        }),
+    // El revisor sale del JWT en el backend; ya no se manda en el cuerpo.
+    approve: (id) => httpClient.patch(`${RESOURCE}/${id}/approve`),
+    reject: (id, reason, outcome) =>
+        httpClient.patch(`${RESOURCE}/${id}/reject`, { reason, outcome }),
+    // Para la cola de admin / detalle de reserva: sin reservationId trae todos los pagos.
+    getAll: (reservationId) =>
+        httpClient.get(reservationId ? `${RESOURCE}?reservationId=${reservationId}` : RESOURCE),
 };
 
 // El comprobante es una imagen/PDF — reutiliza el mismo patrón de subida que ya usamos
