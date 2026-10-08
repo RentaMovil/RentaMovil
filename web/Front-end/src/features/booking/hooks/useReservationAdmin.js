@@ -56,7 +56,9 @@ export function useReservationsAdmin() {
                 rentalsByReservation: Object.fromEntries(rentalsRes.map((r) => [r.reservation_id, r])),
                 bankAccountsById: Object.fromEntries(bankAccountsRes.map((b) => [b.id, b])),
                 gpsById: Object.fromEntries(gpsRes.map((g) => [g.id, g])),
-                usersById: Object.fromEntries(usersRes.map((u) => [u.id, u])),
+                // reservation.client_id es iam.person.person_id, no user_id: hay que indexar por
+                // personId para que el cruce con la reserva funcione (iam-progress, personId en UserSummary).
+                usersById: Object.fromEntries(usersRes.map((u) => [u.personId, u])),
             };
 
             setReservations(reservationsRes.map((r) => toAdminReservationViewModel(r, ctx)));
