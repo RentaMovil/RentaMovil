@@ -16,7 +16,6 @@ const CANCELLATION_DEADLINE_DAYS = 3;
 const DAY_MS = 1000 * 60 * 60 * 24;
 
 // Respuesta de booking (camelCase) -> forma que usan los view models (snake_case).
-// clientId no viene: booking nunca lo expone, sale del token.
 export function fromApiReservation(reservation) {
     return {
         id: reservation.id,
