@@ -54,8 +54,10 @@ export function fromApiVehicle(dto: FleetVehicleDto): Vehicle {
     capacity: dto.capacity,
     vehicleType: dto.model.category.name,
     fuelType: dto.model.engineType.name,
-    // La API da branch como catalogo (id + name); el dominio solo pide el nombre como texto.
+    // La API da branch como catalogo (id + name); el dominio pide el nombre como texto
+    // para mostrar, y el id aparte para poder filtrar por sucursal.
     location: dto.branch?.name ?? "",
+    branchId: dto.branch ? String(dto.branch.id) : undefined,
     image: dto.imageUrl ?? "",
     status: dto.status,
   };

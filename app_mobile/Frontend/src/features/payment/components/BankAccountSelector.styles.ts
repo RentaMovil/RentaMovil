@@ -119,6 +119,19 @@ export const createStyles = (colors: any) => {
       lineHeight: 18,
     },
 
+    qrBox: {
+      alignItems: "center",
+      marginTop: 4,
+      padding: 12,
+      borderRadius: 8,
+      backgroundColor: colors.backgroundCard,
+    },
+
+    qrImage: {
+      width: 160,
+      height: 160,
+    },
+
     radio: {
       width: 20,
       height: 20,

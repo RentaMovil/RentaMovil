@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 
 import AppCard from "../../../shared/components/AppCard/AppCard";
 
@@ -107,13 +107,20 @@ export default function BankAccountSelector() {
                 */}
 
                 {/*
-                  QR: no se muestra. `qrImageUrl` es null en todas las cuentas
-                  (tambien en el web) y el QR bancario es de valor fijo,
-                  mientras que aqui el monto se calcula por reserva. Se deja
-                  el hueco commented por si el backend llegara a servirlo:
-                  para entonces haria falta generar el QR con el monto, no
-                  reutilizar una imagen fija.
+                  El QR es fijo (una imagen por cuenta, no por reserva): no
+                  codifica el monto a transferir, solo identifica la cuenta.
+                  El cliente ve el total a pagar en esta misma pantalla y lo
+                  transfiere aparte, como con cualquier QR bancario real.
                 */}
+                {account.qrImageUrl && (
+                  <View style={styles.qrBox}>
+                    <Image
+                      source={{ uri: account.qrImageUrl }}
+                      style={styles.qrImage}
+                      resizeMode="contain"
+                    />
+                  </View>
+                )}
               </View>
 
               <View

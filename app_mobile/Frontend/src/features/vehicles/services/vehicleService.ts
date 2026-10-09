@@ -70,6 +70,19 @@ export const vehicleService = {
     return fromApiVehicle(vehicle);
   },
 
+  /**
+   * GET /vehicles/{id}/availability?from=&to= (rtm-fleet-maintenance).
+   * Revisa el estado del vehiculo Y que no se cruce con otra reserva
+   * (reservationOccupancyPort), no solo Vehicle.status. `from`/`to` deben
+   * ir como fecha simple (yyyy-MM-dd), sin hora.
+   */
+  async getAvailability(id: string, from: string, to: string): Promise<boolean> {
+    const res = await httpClient.get<{ available: boolean }>(
+      `${API_ROUTES.vehicles}/${id}/availability?from=${from}&to=${to}`,
+    );
+    return res.available;
+  },
+
   /** Marcas disponibles, derivadas del catalogo completo. */
   async getBrands(): Promise<string[]> {
     const all = await this.getVehicles();
