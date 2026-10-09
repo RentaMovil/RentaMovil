@@ -1,16 +1,14 @@
 import { useState } from "react";
 import "./HistorialReservation.css";
-import Navbar from "../../../shared/components/layout/Navbar.jsx";
-import NavbarAdmin from "../../../shared/components/layout/NavBarAdmin.jsx";
-import Footer from "../../../shared/components/layout/Footer.jsx";
-import FooterAdmin from "../../../shared/components/layout/FooterAdmin.jsx";
-import { useAuth } from "../../../contexts/AuthContext.jsx";
+import { RoleNavbar, RoleFooter } from "../../../shared/components/layout/RoleChrome.jsx";
 import ReservationDetailModal from "../components/HistoryReservationDetail.jsx";
 import { useTranslation } from "react-i18next";
 import { useReservationsList } from "../hooks/useReservationsList.js";
 import { useCancelReservation } from "../hooks/useCancelReservation.js";
 import { useUpdateReturnBranch } from "../hooks/useUpdateReturnBranch.js";
 import { useBranches } from "../../admin/branches/hooks/useBranch.js";
+import PaymentCountdown from "../components/PaymentCountdown.jsx";
+import UploadReceiptModal from "../components/UploadReceiptModal.jsx";
 function HistorialReservation() {
   const { t } = useTranslation();
 
@@ -23,12 +21,12 @@ function HistorialReservation() {
   const { cancelReservation } = useCancelReservation();
   const { updateReturnBranch } = useUpdateReturnBranch();
   const { branches } = useBranches();
-
   const getBranchById = (id) => branches.find((b) => b.id === id);
 
   const [selectedReserva, setSelectedReserva] = useState(null);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [uploadReserva, setUploadReserva] = useState(null);
 
   const handleCancelReservation = async (id) => {
     await cancelReservation(id);
@@ -48,7 +46,7 @@ function HistorialReservation() {
 
   return (
     <>
-      <NavbarComponent />
+      <RoleNavbar />
       <div className="historial-page">
         <div className="cards-container">
 
@@ -163,6 +161,27 @@ function HistorialReservation() {
                       </button>
                     )}
                   </div>
+
+                  {/* "Reservar y pagar después": sin comprobante todavía, con la ventana de
+                      INV-015 corriendo. Ya subido, el admin la revisa (PENDING_REVIEW) y aquí
+                      no hay nada más que hacer hasta que decida. */}
+                  {r.backendStatus === "PENDING_PAYMENT" && (
+                    <div className="reserva-pago-pendiente">
+                      <button
+                        type="button"
+                        className="btn btn-primario"
+                        onClick={() => setUploadReserva(r)}
+                      >
+                        {t("historyReservation.uploadReceipt", "Subir comprobante")}
+                      </button>
+                      <PaymentCountdown createdAt={r.created_at} />
+                    </div>
+                  )}
+                  {r.backendStatus === "PENDING_REVIEW" && (
+                    <p className="reserva-en-revision">
+                      {t("historyReservation.inReview", "Comprobante en revisión por un administrador.")}
+                    </p>
+                  )}
                 </section>
 
               </div>
@@ -200,7 +219,7 @@ function HistorialReservation() {
         onUpdateReturnBranch={handleUpdateReturnBranch}
       />
 
-      <FooterComponent />
+      <RoleFooter />
     </>
   );
 }

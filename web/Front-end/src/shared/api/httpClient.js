@@ -11,6 +11,7 @@ const REAL_BACKEND_PREFIXES = [
     '/reservations', '/rentals', '/notifications',
     '/vehicles', '/branches', '/maintenances',
     '/brands', '/categories', '/engine-types', '/vehicle-models', '/maintenance-types',
+    '/payments', '/invoices', '/bank-accounts',
 ];
 
 export function hasRealBackend(endpoint) {
