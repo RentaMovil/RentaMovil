@@ -72,9 +72,12 @@ export function AuthProvider({ children }: Props) {
           return;
         }
 
-        const { accessToken } = await refreshService(refreshToken);
+        const response = await refreshService(refreshToken);
 
-        tokenStore.setAccessToken(accessToken);
+        tokenStore.setAccessToken(response.accessToken);
+        // rtm-iam rota el refresh token: hay que guardar el nuevo o la
+        // siguiente renovacion reenvia uno ya invalido (ver httpClient.ts).
+        await tokenStore.setRefreshToken(response.refreshToken);
 
         const currentUser = await getCurrentUser();
 

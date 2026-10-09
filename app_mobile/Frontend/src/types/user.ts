@@ -96,8 +96,14 @@ export type AuthResponse = AuthTokens & {
   user: User;
 };
 
-/** Respuesta de `POST /auth/refresh`: no renueva el refresh token. */
-export type RefreshResponse = {
-  accessToken: string;
-  expiresIn: number;
-};
+/**
+ * Respuesta de `POST /auth/refresh`.
+ *
+ * El backend real SI rota el refresh token (de un solo uso: el que se
+ * mando queda invalido): devuelve el mismo AuthResponse completo que login,
+ * con un `refreshToken` nuevo que hay que persistir. Guardar solo el
+ * accessToken y descartar este deja el refresh token viejo guardado, que
+ * el servidor ya invalido; la siguiente renovacion lo manda de nuevo, el
+ * backend lo detecta como reutilizado y cierra todas las sesiones.
+ */
+export type RefreshResponse = AuthResponse;
