@@ -1,37 +1,31 @@
 import { httpClient } from "../../../shared/api/httpClient";
 import type { Reservation, ReservationRequest, ReservationResponse } from "../../../types";
-import { getInsuranceOptions } from "../../insurance/services/insuranceService";
-import { vehicleService } from "../../vehicles/services/vehicleService";
 import { toCreateReservationPayload, toReservationResponse, toReservationViewModel } from "./reservationMapper";
 
 const RESOURCE = "/reservations";
 
+/**
+ * Servicio de reservas contra rtm-booking-reservation (a traves del gateway).
+ *
+ * El `clientId` ya no se usa para armar el payload ni para filtrar: el
+ * backend siempre toma el titular del token (JWT), nunca de un parametro ni
+ * del cuerpo (ver README del servicio, "El clientId sale del token"). Se
+ * deja el parametro en las funciones para no tocar cada pantalla que ya
+ * las llama con el id del usuario logueado.
+ */
 export async function createReservation(
     data: ReservationRequest,
-    clientId: string,
+    _clientId: string,
 ): Promise<ReservationResponse> {
-    const vehicle = await vehicleService.getVehicleById(data.vehicleId);
-    if (!vehicle) {
-        throw new Error("No se encontro el vehiculo de la reserva.");
-    }
-
-    const insurance = data.insuranceTypeId
-        ? (await getInsuranceOptions()).find((option) => option.id === data.insuranceTypeId)
-        : undefined;
-    if (data.insuranceTypeId && !insurance) {
-        throw new Error("No se encontro el seguro seleccionado.");
-    }
-
-    const payload = toCreateReservationPayload(data, clientId, vehicle, insurance);
+    const payload = toCreateReservationPayload(data);
     const raw = await httpClient.post<any>(RESOURCE, payload);
     return toReservationResponse(raw);
 }
 
-export async function getMyReservations(clientId: string): Promise<Reservation[]> {
-    const all = await httpClient.get<any[]>(RESOURCE);
-    return all
-        .filter((reservation) => String(reservation.client_id ?? reservation.clientId) === String(clientId))
-        .map(toReservationViewModel);
+/** GET /reservations/mine: ya viene filtrado al usuario del token, no hay que filtrar aqui. */
+export async function getMyReservations(_clientId: string): Promise<Reservation[]> {
+    const all = await httpClient.get<any[]>(`${RESOURCE}/mine`);
+    return all.map(toReservationViewModel);
 }
 
 export async function getReservationById(id: string): Promise<Reservation | undefined> {
@@ -43,7 +37,11 @@ export async function getReservationById(id: string): Promise<Reservation | unde
     }
 }
 
+/**
+ * POST /reservations/{id}/cancel (no PATCH con status: la cancelacion tiene
+ * su propia ruta; PATCH /reservations/{id} solo acepta newReturnBranchId).
+ */
 export async function cancelReservation(id: string): Promise<Reservation | undefined> {
-    const raw = await httpClient.patch<any>(`${RESOURCE}/${id}`, { status: "CANCELLED" });
+    const raw = await httpClient.post<any>(`${RESOURCE}/${id}/cancel`);
     return toReservationViewModel(raw);
 }

@@ -8,6 +8,7 @@ import ContinueButton from "../../../shared/components/Button/ContinueButton";
 import BranchSelectorModal from "../components/BranchSelectorModal";
 import InsuranceSelector from "../components/InsuranceSelector";
 import ReservationInfoCard from "../components/ReservationInfoCard";
+import TermsCheckbox from "../components/TermsCheckbox";
 import VehicleSummaryCard from "../components/VehicleSummaryCard";
 
 import { getBranches } from "../../branches/services/branchService";
@@ -28,6 +29,7 @@ export default function ReservationPage() {
   const {
     reservation,
     updateReturnBranch,
+    updateTermsAccepted,
     setCreatedReservation,
   } = useReservation();
 
@@ -75,7 +77,7 @@ export default function ReservationPage() {
    * pantalla no exige metodo de pago ni lo necesita para continuar.
    */
   const handleContinue = async () => {
-    if (!reservation || isCreating) return;
+    if (!reservation || isCreating || !reservation.termsAccepted) return;
 
     setIsCreating(true);
 
@@ -123,9 +125,15 @@ export default function ReservationPage() {
 
       <InsuranceSelector options={insuranceOptions} />
 
+      <TermsCheckbox
+        checked={reservation.termsAccepted}
+        onToggle={updateTermsAccepted}
+      />
+
       <ContinueButton
         title={isCreating ? "Creando reserva..." : "Continuar"}
         onPress={handleContinue}
+        disabled={!reservation.termsAccepted || isCreating}
       />
     </ScrollView>
   );

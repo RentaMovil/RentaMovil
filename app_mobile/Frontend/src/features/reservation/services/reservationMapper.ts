@@ -1,9 +1,7 @@
 import type {
-    InsuranceType,
     Reservation,
     ReservationRequest,
     ReservationResponse,
-    Vehicle,
 } from "../../../types";
 import { RESERVATION_STATUS } from "../../../types";
 
@@ -12,38 +10,24 @@ function toApiId(id: string): string | number {
     return Number.isFinite(numericId) ? numericId : id;
 }
 
-export function toCreateReservationPayload(
-    request: ReservationRequest,
-    clientId: string,
-    vehicle: Vehicle,
-    insurance?: InsuranceType,
-) {
-    const days = Math.max(
-        1,
-        Math.ceil(
-            (new Date(request.returnDate).getTime() - new Date(request.pickupDate).getTime()) /
-            (1000 * 60 * 60 * 24),
-        ),
-    );
-    const vehicleSubtotal = days * vehicle.price;
-    const insuranceSubtotal = days * (insurance?.price ?? 0);
-
+/**
+ * Payload de CreateReservationRequest (rtm-booking-reservation).
+ *
+ * El backend calcula el precio y las fechas: NO se le mandan dias,
+ * subtotales ni total (eso lo hace el servidor contra el precio real del
+ * vehiculo, via fleet-maintenance). Tampoco lleva clientId: el titular sale
+ * del token (ver CreateReservationRequest.java). Por eso, a diferencia del
+ * payload del mock, este es solo lo que el formulario pide: ids y fechas.
+ */
+export function toCreateReservationPayload(request: ReservationRequest) {
     return {
-        client_id: toApiId(clientId),
-        vehicle_id: toApiId(request.vehicleId),
-        insurance_type_id: request.insuranceTypeId ? toApiId(request.insuranceTypeId) : null,
-        pickup_branch_id: toApiId(request.pickupBranchId),
-        return_branch_id: toApiId(request.returnBranchId),
-        reservation_date: new Date().toISOString(),
-        start_date: request.pickupDate,
-        end_date: request.returnDate,
-        days,
-        price_per_day: vehicle.price,
-        vehicle_subtotal: vehicleSubtotal,
-        insurance_per_day: insurance?.price ?? 0,
-        insurance_subtotal: insuranceSubtotal,
-        total_amount: vehicleSubtotal + insuranceSubtotal,
-        status: RESERVATION_STATUS.PENDING_PAYMENT,
+        vehicleId: toApiId(request.vehicleId),
+        insuranceTypeId: request.insuranceTypeId ? toApiId(request.insuranceTypeId) : null,
+        pickupBranchId: toApiId(request.pickupBranchId),
+        returnBranchId: toApiId(request.returnBranchId),
+        startDate: request.pickupDate,
+        endDate: request.returnDate,
+        termsAccepted: request.termsAccepted,
     };
 }
 
@@ -54,36 +38,40 @@ export function toReservationResponse(raw: any): ReservationResponse {
     };
 }
 
+/**
+ * ReservationResponse (rtm-booking-reservation): camelCase, sin clientId
+ * (nunca se expone; el titular siempre es el usuario autenticado).
+ */
 export function toReservationViewModel(raw: any): Reservation {
-    const startDate = raw.start_date ?? raw.startDate;
-    const endDate = raw.end_date ?? raw.endDate;
+    const startDate = raw.startDate;
+    const endDate = raw.endDate;
     const days = Math.max(
         1,
         Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24)),
     );
-    const vehicleSubtotal = raw.vehicle_subtotal ?? raw.subtotal_vehicle ?? 0;
-    const insuranceSubtotal = raw.insurance_subtotal ?? raw.subtotal_insurance ?? 0;
+    const vehicleSubtotal = Number(raw.vehicleSubtotal) || 0;
+    const insuranceSubtotal = Number(raw.insuranceSubtotal) || 0;
 
     return {
         id: String(raw.id),
-        created_at: raw.created_at ?? raw.reservation_date ?? "",
+        created_at: raw.reservationDate ?? "",
         status: raw.status ?? RESERVATION_STATUS.PENDING_PAYMENT,
-        currency: raw.currency ?? "COP",
-        clientId: String(raw.client_id ?? raw.clientId ?? ""),
-        vehicleId: String(raw.vehicle_id ?? raw.vehicleId ?? ""),
-        ...(raw.insurance_type_id || raw.insuranceTypeId
-            ? { insuranceTypeId: String(raw.insurance_type_id ?? raw.insuranceTypeId) }
-            : {}),
-        pickupBranchId: String(raw.pickup_branch_id ?? raw.pickupBranchId ?? ""),
-        returnBranchId: String(raw.return_branch_id ?? raw.returnBranchId ?? ""),
+        currency: "COP",
+        // El backend no expone clientId (siempre es el usuario autenticado); se
+        // completa en el servicio, que sí conoce quién hizo la petición.
+        clientId: raw.clientId !== undefined ? String(raw.clientId) : "",
+        vehicleId: String(raw.vehicleId),
+        ...(raw.insuranceTypeId ? { insuranceTypeId: String(raw.insuranceTypeId) } : {}),
+        pickupBranchId: String(raw.pickupBranchId),
+        returnBranchId: String(raw.returnBranchId),
         start_date: startDate,
         end_date: endDate,
-        days: raw.days ?? days,
-        price_per_day: raw.price_per_day ?? raw.pricePerDay ?? (vehicleSubtotal / days),
+        days,
+        price_per_day: vehicleSubtotal / days,
         subtotal_vehicle: vehicleSubtotal,
-        insurance_per_day: raw.insurance_per_day ?? raw.insurancePerDay ?? (insuranceSubtotal / days),
+        insurance_per_day: insuranceSubtotal / days,
         subtotal_insurance: insuranceSubtotal,
-        total_price: raw.total_amount ?? raw.total_price ?? (vehicleSubtotal + insuranceSubtotal),
-        insurance_included: raw.insurance_included ?? Boolean(raw.insurance_type_id ?? raw.insuranceTypeId),
+        total_price: Number(raw.totalAmount) || vehicleSubtotal + insuranceSubtotal,
+        insurance_included: Boolean(raw.insuranceTypeId),
     } as Reservation;
 }
