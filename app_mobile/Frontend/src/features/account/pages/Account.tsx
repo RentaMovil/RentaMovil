@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import * as ImagePicker from "expo-image-picker";
 
@@ -21,6 +21,7 @@ import ThemeSelector from "../../../shared/components/Select/SelectTheme";
 import AppCard from "../../../shared/components/AppCard/AppCard";
 
 import { useAuth } from "../../auth/context/AuthContext";
+import { uploadProfileImage } from "../services/profileImageService";
 
 
 const defaultUser =
@@ -40,6 +41,13 @@ export default function Account() {
     } = useAuth();
 
     const [saveError, setSaveError] = useState<string | null>(null);
+    const [isSaving, setIsSaving] = useState(false);
+
+    // Login/registro no traen el telefono (UserResponse no lo incluye); se
+    // completa pidiendo el perfil completo (GET /users/me, con phone).
+    useEffect(() => {
+        refreshUser().catch(() => undefined);
+    }, [refreshUser]);
     const {
         themeName,
     } = useTheme();
@@ -80,7 +88,7 @@ export default function Account() {
     ] =
         useState(
             user
-                ? `${user.first_name} ${user.last_name}`
+                ? `${user.firstName} ${user.lastName}`
                 : ""
         );
 
@@ -92,6 +100,16 @@ export default function Account() {
         useState(
             user?.phone ?? ""
         );
+
+    // `user` llega primero sin phone (login/registro) y luego se completa con
+    // refreshUser() (GET /users/me). Sincroniza los campos cuando eso pasa,
+    // pero no mientras el usuario esta editando (no le pisa lo que escribio).
+    useEffect(() => {
+        if (!user || editing) return;
+
+        setName(`${user.firstName} ${user.lastName}`);
+        setPhone(user.phone ?? "");
+    }, [user, editing]);
 
 
     const pickImage =
@@ -125,16 +143,22 @@ export default function Account() {
         if (!user) return;
 
         setSaveError(null);
+        setIsSaving(true);
 
         const [firstName, ...rest] = name.trim().split(" ");
         const lastName = rest.join(" ");
 
         try {
+            // `image` es una URI local (expo-image-picker): PATCH /users/me
+            // rechaza cualquier imageUrl que no empiece con el prefijo de
+            // nuestra cuenta de Cloudinary, asi que se sube antes de guardar.
+            const imageUrl = image ? await uploadProfileImage(image) : undefined;
+
             await updateProfile({
-                first_name: firstName,
-                last_name: lastName,
+                firstName,
+                lastName,
                 phone,
-                photo: image ?? null,
+                imageUrl,
             });
 
             setEditing(false);
@@ -142,6 +166,8 @@ export default function Account() {
             setSaveError(
                 err instanceof Error ? err.message : "No se pudo guardar el perfil.",
             );
+        } finally {
+            setIsSaving(false);
         }
     }
 
@@ -200,7 +226,7 @@ export default function Account() {
                     </TouchableOpacity>
 
                 </View>
-                <Text style={styles.pageTitle}>{user ? `${user.first_name} ${user.last_name}` : "Mi cuenta"}</Text>
+                <Text style={styles.pageTitle}>{user ? `${user.firstName} ${user.lastName}` : "Mi cuenta"}</Text>
                 <Text style={styles.pageSubtitle}>Gestiona tu información y preferencias.</Text>
             </View>
 
@@ -442,6 +468,7 @@ export default function Account() {
 
                 <TouchableOpacity
                     style={styles.editButton}
+                    disabled={isSaving}
                     onPress={() => {
 
                         if (editing) {
@@ -458,7 +485,7 @@ export default function Account() {
                 >
                     <Text style={styles.buttonEditar}>
 
-                        {editing ? "Guardar" : "Editar"}
+                        {editing ? (isSaving ? "Guardando..." : "Guardar") : "Editar"}
 
                     </Text>
                 </TouchableOpacity>

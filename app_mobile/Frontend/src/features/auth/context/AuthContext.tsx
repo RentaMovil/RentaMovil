@@ -41,7 +41,7 @@ type AuthContextType = {
   resetPassword: (email: string, newPassword: string) => Promise<void>;
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
   refreshUser: () => Promise<void>;
-  updateProfile: (data: { first_name: string; last_name: string; phone: string; photo?: string | null }) => Promise<void>;
+  updateProfile: (data: { firstName: string; lastName: string; phone: string; imageUrl?: string | null }) => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -170,7 +170,7 @@ export function AuthProvider({ children }: Props) {
     [],
   );
 const updateProfile = useCallback(
-    async (data: { first_name: string; last_name: string; phone: string; photo?: string | null }) => {
+    async (data: { firstName: string; lastName: string; phone: string; imageUrl?: string | null }) => {
         const updatedUser = await updateProfileService(data);
         setUser(updatedUser);
     },

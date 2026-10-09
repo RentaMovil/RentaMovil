@@ -52,11 +52,14 @@ export const API_ROUTES = {
     register: "/auth/register",
     refresh: "/auth/refresh",
     logout: "/auth/logout",
-    me: "/auth/me",
+    // ProfileController vive en /users/me (sin StripPrefix), no bajo /auth: el
+    // gateway solo quita el prefijo "/auth" para AuthController (login/register/
+    // refresh/logout), que vive en la raiz. /users/** se enruta tal cual.
+    me: "/users/me",
     forgotPassword: "/auth/forgot-password",
     verifyCode: "/auth/verify-code",
     resetPassword: "/auth/reset-password",
-    changePassword: "/auth/me/password",
+    changePassword: "/users/me/password",
   },
   vehicles: "/vehicles",
   branches: "/branches",
