@@ -7,7 +7,7 @@ import { Platform } from "react-native";
  * `app.json > expo.extra.apiUrl` para no depender del bundler.
  */
 
-const DEFAULT_DEV_PORT = 3100;
+const DEFAULT_DEV_PORT = 8080;
 
 /**
  * Host por defecto para desarrollo.
@@ -39,11 +39,12 @@ export const API_URL = readApiUrl();
 export const IS_API_CONFIGURED = Boolean(process.env.EXPO_PUBLIC_API_URL);
 
 /**
- * Direcciones tipadas de la API mock.
+ * Direcciones tipadas de la API.
  *
- * Solo lo que `mock-server.cjs` expone de verdad. Las colecciones que
- * json-server sirve salen de las claves de `db.json`; el resto son rutas
- * custom del server.
+ * Auth, vehicles y notifications van contra el gateway real (rtm-api-gateway),
+ * que las enruta a iam y fleet-maintenance. Branches y reservations/rentals
+ * se agregan aqui a medida que se conectan sus servicios reales
+ * (fleet-maintenance y booking-reservation).
  */
 export const API_ROUTES = {
   auth: {
@@ -58,6 +59,8 @@ export const API_ROUTES = {
     changePassword: "/auth/me/password",
   },
   vehicles: "/vehicles",
-  maintenances: "/maintenances",
+  branches: "/branches",
+  reservations: "/reservations",
+  rentals: "/rentals",
   notifications: "/notifications",
 } as const;

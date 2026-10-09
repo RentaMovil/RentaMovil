@@ -1,19 +1,18 @@
 import { API_ROUTES } from "../../../config/env";
 import { httpClient } from "../../../shared/api/httpClient";
+import { fromApiVehicle, fromApiVehiclePage, type FleetVehicleDto, type FleetVehiclePage } from "./vehicleMapper";
 
 import type { Vehicle, VehicleFilters } from "../../../types";
 
 /**
- * Servicio de vehiculos contra la API mock.
+ * Servicio de vehiculos contra rtm-fleet-maintenance (a traves del gateway).
  *
- * A diferencia del resto, esta entidad SI existe en `db.json`, asi que se
- * consume por HTTP real contra `/vehicles` en vez de un mock local.
- *
- * `json-server` no soporta filtros en el servidor, asi que el filtrado se
- * hace del lado del cliente sobre el conjunto completo, que es el mismo
- * criterio que usa el web (`carsService.js` deriva sus listas con
- * `new Set(cars.map(...))` sobre el catalogo completo).
+ * El catalogo publico (`GET /vehicles`) pagina y solo trae AVAILABLE; se pide
+ * la pagina maxima (100, igual que el web) porque el filtrado sigue haciendose
+ * en el cliente sobre el conjunto completo, mismo criterio que usa el web
+ * (`carsService.js` deriva sus listas con `new Set(cars.map(...))`).
  */
+const PAGE_SIZE = 100;
 
 function matchesSearch(vehicle: Vehicle, query: string): boolean {
   const q = query.toLowerCase();
@@ -58,18 +57,17 @@ function applyFilters(
 
 export const vehicleService = {
   async getVehicles(filters?: VehicleFilters): Promise<Vehicle[]> {
-    const response = await httpClient.get<Vehicle[]>(API_ROUTES.vehicles);
-    const all = response.map((vehicle) => ({
-      ...vehicle,
-      id: String(vehicle.id),
-    }));
+    const page = await httpClient.get<FleetVehiclePage>(
+      `${API_ROUTES.vehicles}?limit=${PAGE_SIZE}`,
+    );
+    const all = fromApiVehiclePage(page);
 
     return applyFilters(all, filters);
   },
 
   async getVehicleById(id: string): Promise<Vehicle | undefined> {
-    const vehicle = await httpClient.get<Vehicle>(`${API_ROUTES.vehicles}/${id}`);
-    return { ...vehicle, id: String(vehicle.id) };
+    const vehicle = await httpClient.get<FleetVehicleDto>(`${API_ROUTES.vehicles}/${id}`);
+    return fromApiVehicle(vehicle);
   },
 
   /** Marcas disponibles, derivadas del catalogo completo. */
