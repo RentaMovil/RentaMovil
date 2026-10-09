@@ -1,7 +1,6 @@
 import './ChangePassword.css'
 import {  FaEye, FaEyeSlash } from "react-icons/fa";
-import Navbar from "../../../shared/components/layout/Navbar.jsx";
-import Footer from '../../../shared/components/layout/FooterAdmin';
+import { RoleNavbar, RoleFooter } from "../../../shared/components/layout/RoleChrome.jsx";
 import { useTranslation } from "react-i18next";
 import useChangePassword from "../hooks/useChangePassword.js";
 
@@ -32,7 +31,7 @@ function ChangePassword() {
 
     return (
         <>
-            <Navbar />
+            <RoleNavbar />
 
             <div className='containerP'>
                 <div className='cardP'>
@@ -61,7 +60,7 @@ function ChangePassword() {
                                     aria-label="Mostrar u ocultar contraseña"
                                     aria-pressed={showPassword}
                                 >
-                                    {showPassword ? <FaEye /> : <FaEyeSlash />}
+                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
                                 </button>
                             </div>
                         </div>
@@ -86,7 +85,7 @@ function ChangePassword() {
                                     aria-label="Mostrar u ocultar contraseña"
                                     aria-pressed={showPassword}
                                 >
-                                    {showPassword ? <FaEye /> : <FaEyeSlash /> }
+                                    {showPassword ? <FaEyeSlash /> : <FaEye /> }
                                 </button>
                             </div>
                         </div>
@@ -123,7 +122,7 @@ function ChangePassword() {
                                     aria-label="Mostrar u ocultar confirmación"
                                     aria-pressed={showConfirm}
                                 >
-                                    {showConfirm ? <FaEye /> : <FaEyeSlash />}
+                                    {showConfirm ? <FaEyeSlash /> : <FaEye />}
                                 </button>
                             </div>
                             {confirmPassword.length > 0 && !passwordsMatch && (
@@ -146,7 +145,7 @@ function ChangePassword() {
                 </div>
             </div>
 
-            <Footer />
+            <RoleFooter />
         </>
     );
 }

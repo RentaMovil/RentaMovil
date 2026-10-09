@@ -35,13 +35,13 @@
 
 .login-form input {
   padding: 14px 16px;
-  border: 2px solid #e5e7eb;
+  border: 3px solid var(--border);
   border-radius: 10px;
   font-size: 15px;
   font-family: inherit;
   transition: all 0.3s ease;
   background: var(--card-bg);
-  color: #1f2937;
+  color: var(--text);
 }
 
 .login-form input:focus {
@@ -66,17 +66,17 @@
 
 .toggle-password {
   position: absolute;
-  right: 6px;
+  right: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   padding: 0;
-  border: none;
   border-radius: 8px;
   background: transparent;
-  color: #6b7280;
+  border: none;
+  color: var(--accent);
   font-size: 16px;
   cursor: pointer;
   transition: color 0.2s ease, background 0.2s ease;
@@ -96,6 +96,9 @@
   color: #9ca3af;
 }
 
+.showPassword {
+  color: var(--accent);
+}
 .login-error {
   padding: 12px 16px;
   background: #fee2e2;
@@ -132,7 +135,7 @@
 .email-btn {
   padding: 14px 24px;
   background: var(--button);
-  color: white;
+  color: var(--text);
   border: none;
   border-radius: 10px;
   font-size: 15px;
