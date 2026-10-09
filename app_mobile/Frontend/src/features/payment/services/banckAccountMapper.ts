@@ -1,13 +1,16 @@
 import type { BankAccount } from "../../../types";
 
+/**
+ * Forma real de BankAccountResponse (rtm-payment-billing): camelCase, con
+ * `accountHolder` (no `holderName`) e `isActive` ya como ese nombre exacto.
+ * No hay accountNumber/accountType: no existen en ese dominio.
+ */
 export function toBankAccountViewModel(raw: any): BankAccount {
     return {
         id: String(raw.id),
-        bankName: raw.bank_name ?? raw.bankName,
-        holderName: raw.account_holder ?? raw.holderName,
-        accountNumber: raw.account_number ?? raw.accountNumber,
-        accountType: raw.account_type ?? raw.accountType ?? "",
-        qrImageUrl: raw.qr_image_url ?? raw.qrImageUrl ?? null,
-        isActive: raw.is_active ?? raw.isActive,
+        bankName: raw.bankName,
+        holderName: raw.accountHolder,
+        qrImageUrl: raw.qrImageUrl ?? null,
+        isActive: raw.isActive,
     };
 }

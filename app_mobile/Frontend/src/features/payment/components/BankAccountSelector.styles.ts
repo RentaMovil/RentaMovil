@@ -107,11 +107,6 @@ export const createStyles = (colors: any) => {
       color: colors.textHeading,
     },
 
-    accountType: {
-      ...text.caption,
-      fontSize: 12,
-    },
-
     // `.bank-account-holder`: caja con fondo `--input`.
     holder: {
       ...text.caption,
@@ -122,46 +117,6 @@ export const createStyles = (colors: any) => {
       backgroundColor: colors.input,
       color: colors.text,
       lineHeight: 18,
-    },
-
-    // `.bank-account-number-box`.
-    numberBox: {
-      marginBottom: 4,
-    },
-
-    // `.bank-account-number-label`: 0.68rem/700 con letter-spacing.
-    numberLabel: {
-      ...text.overline,
-      fontSize: 10,
-    },
-
-    // `.bank-account-number-value`: monoespaciada, para leer el digito a digito.
-    accountNumber: {
-      ...text.mono,
-      marginTop: 4,
-      color: colors.textHeading,
-    },
-
-    // `.bank-account-copy-btn`: boton para copiar el numero. En movil es mas
-    // util que el QR, porque el usuario pega directo en la app del banco.
-    copyButton: {
-      flexDirection: "row",
-      alignItems: "center",
-      gap: 6,
-      alignSelf: "flex-start",
-      marginTop: 8,
-      paddingHorizontal: 12,
-      paddingVertical: 7,
-      borderRadius: 8,
-      borderWidth: 1,
-      borderColor: colors.border,
-      backgroundColor: colors.backgroundCard,
-    },
-
-    copyButtonText: {
-      ...text.label,
-      fontSize: 12,
-      color: colors.textHeading,
     },
 
     radio: {

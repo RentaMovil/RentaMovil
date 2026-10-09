@@ -4,9 +4,11 @@ import type { BankAccount, Payment, PaymentDraft } from "../../../types";
 import { toBankAccountViewModel } from "./banckAccountMapper";
 import { toCreatePaymentPayload, toPaymentViewModel } from "./paymentMapper";
 
+// GET /bank-accounts (rtm-payment-billing), no /bankAccounts: el gateway solo enruta
+// /payments/**, /invoices/** y /bank-accounts/** hacia ese servicio.
 export async function getActiveBankAccounts(): Promise<BankAccount[]> {
-    const raw = await httpClient.get<any[]>("/bankAccounts");
-    return raw.filter((account) => account.is_active).map(toBankAccountViewModel);
+    const raw = await httpClient.get<any[]>("/bank-accounts");
+    return raw.filter((account) => account.isActive).map(toBankAccountViewModel);
 }
 
 export async function createPayment(draft: PaymentDraft): Promise<Payment> {
@@ -30,9 +32,8 @@ export async function createPayment(draft: PaymentDraft): Promise<Payment> {
         receiptFileUrl,
     }));
 
-    // El pago PENDING_REVIEW también mueve la reserva a PENDING_REVIEW
-    // (mismo pendiente que quedó marcado del lado web — ver nota abajo)
-    await httpClient.patch(`/reservations/${draft.reservationId}`, { status: "PENDING_REVIEW" });
-
+    // No hace falta mover la reserva a PENDING_REVIEW a mano: al subir el pago,
+    // rtm-payment-billing manda el evento PaymentSubmitted a booking-reservation
+    // (POST /internal/events), que es quien cambia el estado (BookingEventForwarderAdapter).
     return toPaymentViewModel(raw);
 }
