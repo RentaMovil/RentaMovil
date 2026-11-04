@@ -18,7 +18,14 @@ const RECONNECT_DELAY_MS = 3000;
 export function useNotificationStream({ onNotification, onAdminNotification } = {}) {
   const { isAuthenticated } = useAuth();
   const handlersRef = useRef({ onNotification, onAdminNotification });
-  handlersRef.current = { onNotification, onAdminNotification };
+
+  // Sin deps: debe correr en cada render para que la conexión SSE (que no se
+  // reabre por esto) siempre llame a los handlers más recientes. Pero tiene que
+  // vivir en un efecto, no en el cuerpo del render: React no garantiza que un
+  // render que escribe en un ref así se confirme siempre (modo concurrente).
+  useEffect(() => {
+    handlersRef.current = { onNotification, onAdminNotification };
+  });
 
   useEffect(() => {
     if (!isAuthenticated) return undefined;
