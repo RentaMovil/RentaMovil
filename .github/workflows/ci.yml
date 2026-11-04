@@ -28,6 +28,8 @@ jobs:
       - name: Lint (non-blocking)
         run: npm run lint || true
 
+      - run: npm test
+
       - run: npm run build
 
   mobile:
