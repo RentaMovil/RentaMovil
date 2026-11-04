@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaMapMarkerAlt, FaBuilding, FaPen, FaCheckCircle } from "react-icons/fa";
 import "./HistoryReservationDetail.css";
@@ -19,16 +19,39 @@ function ReservationDetailModal({ isOpen, reserva, onClose, onUpdateReturnBranch
     const [selectedReturnBranchId, setSelectedReturnBranchId] = useState(
         reserva?.returnBranchId || ""
     );
+    // INV-013: ¿todavía se puede modificar la sucursal de devolución? Se calcula en el
+    // efecto de abajo (no en el render, que debe ser puro) junto con el resto del estado
+    // que depende de `reserva`, no cada vez que el componente renderiza por otro motivo.
+    const [canEditReturnBranch, setCanEditReturnBranch] = useState(false);
 
     const getBranchById = (id) => branches.find((b) => b.id === id);
 
-    // Mantener seleccionada la sucursal actual de devolución
+    // Deliberado: sincroniza el estado local del modal con la reserva que llega por prop
+    // cada vez que cambia (abrir el modal con otra reserva, o refrescar la actual).
     useEffect(() => {
-        if (!reserva) return;
+        if (!reserva) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setCanEditReturnBranch(false);
+            return;
+        }
 
         setSelectedReturnBranchId(reserva.returnBranchId || "");
         setIsEditingReturnBranch(false);
         setSaveError(null);
+
+        if (reserva.status !== "activa") {
+            setCanEditReturnBranch(false);
+            return;
+        }
+
+        const endDate = new Date(reserva.tiempos.end_date);
+        if (Number.isNaN(endDate.getTime())) {
+            setCanEditReturnBranch(false);
+            return;
+        }
+
+        const daysUntilEnd = (endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24);
+        setCanEditReturnBranch(daysUntilEnd > MIN_DAYS_BEFORE_RETURN_TO_EDIT);
     }, [reserva]);
 
     // La reserva solo guarda el id de cada sucursal (pickupBranchId /
@@ -36,19 +59,6 @@ function ReservationDetailModal({ isOpen, reserva, onClose, onUpdateReturnBranch
     // contra el catálogo real de /branches.
     const pickUpBranch = reserva ? getBranchById(reserva.pickupBranchId) : null;
     const returnBranch = reserva ? getBranchById(reserva.returnBranchId) : null;
-
-    // INV-013: ¿todavía se puede modificar la sucursal de devolución?
-    const canEditReturnBranch = useMemo(() => {
-        if (!reserva || reserva.status !== "activa") return false;
-
-        const endDate = new Date(reserva.tiempos.end_date);
-        if (Number.isNaN(endDate.getTime())) return false;
-
-        const daysUntilEnd =
-            (endDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24);
-
-        return daysUntilEnd > MIN_DAYS_BEFORE_RETURN_TO_EDIT;
-    }, [reserva]);
 
     if (!isOpen || !reserva) return null;
 
