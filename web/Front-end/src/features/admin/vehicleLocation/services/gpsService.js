@@ -1,4 +1,5 @@
 import { httpClient } from "../../../../shared/api/httpClient";
-export const gpsService = { 
-    getAll: () => httpClient.get("/gps") 
+// Dispositivos GPS registrados en telemetry-gps (no posiciones: eso sale de /tracking/**)
+export const gpsService = {
+    getAll: () => httpClient.get("/gps")
 };

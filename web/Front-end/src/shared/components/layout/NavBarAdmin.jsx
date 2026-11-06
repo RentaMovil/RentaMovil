@@ -40,7 +40,7 @@ function NavbarAdmin() {
       <header className="navbar-admin">
         <div className="navbar-admin-content">
           <Link to="/HomeAdmin" className="navbar-admin-logo" onClick={closeAll}>
-            <span className="logo-text">Renta<span className="logo-container2">Movil</span></span>
+            <span className="logo-text">A<span className="logo-container2">DSO</span></span>
             <LogoCar className="navbar-admin-logo-icon" />
           </Link>
 
