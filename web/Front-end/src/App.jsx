@@ -63,6 +63,8 @@ import MobileAppBanner from './shared/components/MobileAppBanner/MobileAppBanner
 // Admin con sesión ya restaurada: lleva directo a HomeAdmin, sin esperar a que
 // entre a /account para que la navbar refleje el rol real.
 const ROLES_ADMIN = ["ADMIN", "SUPER_ADMIN"];
+// Algunas rutas se repiten en distinta capitalización (/HomeAdmin, /homeAdmin, /home-admin):
+// quedaron de enlaces viejos en otras pantallas y se mantienen para no romperlos.
 
 function HomeGate() {
   const { user } = useAuth();
