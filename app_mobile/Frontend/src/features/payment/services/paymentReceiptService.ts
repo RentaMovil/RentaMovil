@@ -2,6 +2,15 @@ import { Platform } from "react-native";
 
 import type { PaymentReceiptFile } from "../../../types";
 
+/**
+ * Sube el comprobante de pago a Cloudinary (misma cuenta que la foto de
+ * perfil, ver `profileImageService.ts`) y devuelve la URL subida.
+ *
+ * `POST /payments` (rtm-payment-billing) valida que `receiptFileUrl` venga
+ * de nuestra cuenta de Cloudinary; una URI local no pasa esa validacion, por
+ * eso el archivo se sube antes de registrar el pago. Admite PDF ademas de
+ * imagenes porque el comprobante puede ser un voucher escaneado.
+ */
 const CLOUD_NAME =
     process.env.EXPO_PUBLIC_CLOUDINARY_CLOUD_NAME || "dz6ohgjub";
 const UPLOAD_PRESET =
